@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+skillswap/node_modules/
+skillswap-backend/node_modules/
+
+# Environment variables
+skillswap-backend/.env
+skillswap/.env
+
+# Build output
+skillswap/dist/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
