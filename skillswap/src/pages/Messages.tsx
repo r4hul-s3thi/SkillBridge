@@ -13,15 +13,27 @@ import { format } from 'date-fns';
 import type { Message } from '@/types';
 
 export default function Messages() {
-  const { conversations } = useAppStore();
+  const { conversations, matches } = useAppStore();
   const { user } = useAuthStore();
-  const [selectedId, setSelectedId] = useState<number | null>(conversations[0]?.id ?? null);
+
+  // Build conversations from matches if none exist (new user)
+  const effectiveConversations = conversations.length > 0
+    ? conversations
+    : matches.map((m, i) => ({
+        id: m.id,
+        participant: m.matchedUser,
+        lastMessage: 'Say hello! 👋',
+        lastMessageAt: new Date(Date.now() - i * 60000).toISOString(),
+        unreadCount: 0,
+      }));
+
+  const [selectedId, setSelectedId] = useState<number | null>(effectiveConversations[0]?.id ?? null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
-  const selected = conversations.find((c) => c.id === selectedId);
+  const selected = effectiveConversations.find((c) => c.id === selectedId);
 
   useEffect(() => {
     if (!selected) return;
@@ -102,7 +114,7 @@ export default function Messages() {
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Conversations</p>
           </div>
           <ScrollArea className="flex-1">
-            {conversations.map((conv) => (
+            {effectiveConversations.map((conv) => (
               <button
                 key={conv.id}
                 onClick={() => setSelectedId(conv.id)}
@@ -238,7 +250,7 @@ export default function Messages() {
           <div className="flex-1 flex items-center justify-center text-muted-foreground">
             <div className="text-center space-y-2">
               <MessageSquare className="w-10 h-10 mx-auto opacity-30" />
-              <p className="text-sm">Select a conversation to start chatting</p>
+              <p className="text-sm">Connect with someone on Matches to start chatting</p>
             </div>
           </div>
         )}

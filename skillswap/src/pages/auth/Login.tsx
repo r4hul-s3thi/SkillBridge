@@ -84,7 +84,7 @@ export default function Login() {
         <div className="relative z-10">
           <div className="flex items-center gap-3">
             <SkillSwapLogo size={42} />
-            <span className="text-white font-bold text-xl tracking-tight">SkillSwap</span>
+            <span className="text-white font-bold text-xl tracking-tight">SkillBridge</span>
           </div>
         </div>
         <div className="relative z-10 space-y-6">
@@ -115,7 +115,7 @@ export default function Login() {
         <div className="w-full max-w-sm">
           <div className="flex items-center gap-2 mb-8 lg:hidden">
             <SkillSwapLogo size={32} />
-            <span className="font-bold text-lg text-foreground">SkillSwap</span>
+            <span className="font-bold text-lg text-foreground">SkillBridge</span>
           </div>
 
           <Card className="border border-border/60 shadow-sm">

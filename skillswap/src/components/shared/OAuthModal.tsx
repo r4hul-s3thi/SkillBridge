@@ -9,15 +9,15 @@ interface OAuthAccount {
 }
 
 const GOOGLE_ACCOUNTS: OAuthAccount[] = [
-  { name: 'Aarav Patel',  email: 'aarav.patel@gmail.com',  avatar: 'https://i.pravatar.cc/150?u=aarav-patel' },
-  { name: 'Priya Sharma', email: 'priya.sharma@gmail.com', avatar: 'https://i.pravatar.cc/150?u=priya-sharma' },
-  { name: 'Ananya Bose',  email: 'ananya.bose@gmail.com',  avatar: 'https://i.pravatar.cc/150?u=ananya-bose' },
+  { name: 'Aarav Patel',  email: 'aarav.patel@gmail.com',  avatar: 'https://randomuser.me/api/portraits/men/32.jpg' },
+  { name: 'Priya Sharma', email: 'priya.sharma@gmail.com', avatar: 'https://randomuser.me/api/portraits/women/44.jpg' },
+  { name: 'Ananya Bose',  email: 'ananya.bose@gmail.com',  avatar: 'https://randomuser.me/api/portraits/women/65.jpg' },
 ];
 
 const GITHUB_ACCOUNTS: OAuthAccount[] = [
-  { name: 'Rahul Singh',  email: 'rahul.singh@github.com',  avatar: 'https://i.pravatar.cc/150?u=rahul-singh' },
-  { name: 'Vikram Desai', email: 'vikram.desai@github.com', avatar: 'https://i.pravatar.cc/150?u=vikram-desai' },
-  { name: 'Arjun Mehta',  email: 'arjun.mehta@github.com',  avatar: 'https://i.pravatar.cc/150?u=arjun-mehta' },
+  { name: 'Rahul Singh',  email: 'rahul.singh@github.com',  avatar: 'https://randomuser.me/api/portraits/men/46.jpg' },
+  { name: 'Vikram Desai', email: 'vikram.desai@github.com', avatar: 'https://randomuser.me/api/portraits/men/55.jpg' },
+  { name: 'Arjun Mehta',  email: 'arjun.mehta@github.com',  avatar: 'https://randomuser.me/api/portraits/men/77.jpg' },
 ];
 
 function GoogleIcon({ className }: { className?: string }) {
@@ -71,7 +71,7 @@ export function OAuthModal({ provider, onSelect, onClose, loading }: OAuthModalP
                 Sign in with {isGoogle ? 'Google' : 'GitHub'}
               </h2>
               <p className={`text-xs mt-0.5 ${isGoogle ? 'text-gray-500' : 'text-gray-400'}`}>
-                Choose an account to continue to SkillSwap
+                Choose an account to continue to SkillBridge
               </p>
             </div>
           </div>

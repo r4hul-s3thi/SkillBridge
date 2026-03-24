@@ -72,3 +72,28 @@ CREATE TABLE IF NOT EXISTS ratings (
   FOREIGN KEY (to_user_id) REFERENCES users(id) ON DELETE CASCADE,
   UNIQUE KEY unique_rating (from_user_id, to_user_id)
 );
+
+CREATE TABLE IF NOT EXISTS collab_posts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  title VARCHAR(200) NOT NULL,
+  description TEXT NOT NULL,
+  skills_have TEXT NOT NULL,
+  skills_needed TEXT NOT NULL,
+  project_type VARCHAR(100),
+  status ENUM('open', 'closed') DEFAULT 'open',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS collab_requests (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  post_id INT NOT NULL,
+  requester_id INT NOT NULL,
+  message TEXT,
+  status ENUM('pending', 'accepted', 'rejected') DEFAULT 'pending',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (post_id) REFERENCES collab_posts(id) ON DELETE CASCADE,
+  FOREIGN KEY (requester_id) REFERENCES users(id) ON DELETE CASCADE,
+  UNIQUE KEY unique_request (post_id, requester_id)
+);

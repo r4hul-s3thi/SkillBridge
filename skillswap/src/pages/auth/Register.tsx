@@ -48,7 +48,7 @@ export default function Register() {
     try {
       const res = await authService.loginWithGoogle({ name: account.name, email: account.email, avatar: account.avatar });
       setAuth(res.data.user, res.data.token);
-      toast.success(`Welcome to SkillSwap, ${res.data.user.name}!`);
+      toast.success(`Welcome to SkillBridge, ${res.data.user.name}!`);
       navigate('/dashboard');
     } catch {
       toast.error('Sign up failed. Please try again.');
@@ -76,7 +76,7 @@ export default function Register() {
     try {
       const result = await registerUser(form.name, form.email, form.password);
       setAuth(result.user, result.token);
-      toast.success(`Welcome to SkillSwap, ${result.user.name}!`);
+      toast.success(`Welcome to SkillBridge, ${result.user.name}!`);
       navigate('/dashboard');
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } };
@@ -95,7 +95,7 @@ export default function Register() {
         <div className="relative z-10">
           <div className="flex items-center gap-3">
             <SkillSwapLogo size={42} />
-            <span className="text-white font-bold text-xl tracking-tight">SkillSwap</span>
+            <span className="text-white font-bold text-xl tracking-tight">SkillBridge</span>
           </div>
         </div>
         <div className="relative z-10 space-y-6">
@@ -124,7 +124,7 @@ export default function Register() {
         <div className="w-full max-w-sm">
           <div className="flex items-center gap-2 mb-8 lg:hidden">
             <SkillSwapLogo size={32} />
-            <span className="font-bold text-lg">SkillSwap</span>
+            <span className="font-bold text-lg">SkillBridge</span>
           </div>
 
           <Card className="border border-border/60 shadow-sm">

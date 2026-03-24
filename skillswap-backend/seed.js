@@ -20,13 +20,13 @@ async function seed() {
 
   // Insert users
   const users = [
-    [1, 'Aarav Patel',   'aarav.patel@example.com',   password, 'https://i.pravatar.cc/150?u=aarav-patel',   'Full-stack developer passionate about teaching and learning.',        'Bengaluru, India', 4.8, 24],
-    [2, 'Priya Sharma',  'priya.sharma@example.com',  password, 'https://i.pravatar.cc/150?u=priya-sharma',  'UI/UX Designer with 5 years of experience. Figma expert.',            'Mumbai, India',    4.9, 31],
-    [3, 'Rahul Singh',   'rahul.singh@example.com',   password, 'https://i.pravatar.cc/150?u=rahul-singh',   'Backend engineer specializing in Java and Spring Boot.',              'Delhi, India',     4.7, 18],
-    [4, 'Ananya Bose',   'ananya.bose@example.com',   password, 'https://i.pravatar.cc/150?u=ananya-bose',   'Data Scientist. Python, ML, TensorFlow expert.',                      'Kolkata, India',   4.6, 22],
-    [5, 'Vikram Desai',  'vikram.desai@example.com',  password, 'https://i.pravatar.cc/150?u=vikram-desai',  'DevOps engineer. Docker, Kubernetes, AWS.',                           'Pune, India',      4.5, 15],
-    [6, 'Neha Reddy',    'neha.reddy@example.com',    password, 'https://i.pravatar.cc/150?u=neha-reddy',    'Frontend engineer with React and Vue expertise.',                     'Hyderabad, India', 4.8, 20],
-    [7, 'Arjun Mehta',   'arjun.mehta@example.com',   password, 'https://i.pravatar.cc/150?u=arjun-mehta',   'Cloud architect with AWS and Azure skills.',                          'Chennai, India',   4.7, 17],
+    [1, 'Aarav Patel',   'aarav.patel@example.com',   password, 'https://randomuser.me/api/portraits/men/32.jpg',   'Full-stack developer passionate about teaching and learning.',        'Bengaluru, India', 4.8, 24],
+    [2, 'Priya Sharma',  'priya.sharma@example.com',  password, 'https://randomuser.me/api/portraits/women/44.jpg',  'UI/UX Designer with 5 years of experience. Figma expert.',            'Mumbai, India',    4.9, 31],
+    [3, 'Rahul Singh',   'rahul.singh@example.com',   password, 'https://randomuser.me/api/portraits/men/46.jpg',   'Backend engineer specializing in Java and Spring Boot.',              'Delhi, India',     4.7, 18],
+    [4, 'Ananya Bose',   'ananya.bose@example.com',   password, 'https://randomuser.me/api/portraits/women/65.jpg',  'Data Scientist. Python, ML, TensorFlow expert.',                      'Kolkata, India',   4.6, 22],
+    [5, 'Vikram Desai',  'vikram.desai@example.com',  password, 'https://randomuser.me/api/portraits/men/55.jpg',   'DevOps engineer. Docker, Kubernetes, AWS.',                           'Pune, India',      4.5, 15],
+    [6, 'Neha Reddy',    'neha.reddy@example.com',    password, 'https://randomuser.me/api/portraits/women/26.jpg',  'Frontend engineer with React and Vue expertise.',                     'Hyderabad, India', 4.8, 20],
+    [7, 'Arjun Mehta',   'arjun.mehta@example.com',   password, 'https://randomuser.me/api/portraits/men/77.jpg',   'Cloud architect with AWS and Azure skills.',                          'Chennai, India',   4.7, 17],
   ];
 
   for (const u of users) {

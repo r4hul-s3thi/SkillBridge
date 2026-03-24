@@ -1,4 +1,4 @@
-import { MessageSquare, UserPlus, TrendingUp } from 'lucide-react';
+import { MessageSquare, UserPlus, TrendingUp, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -65,18 +65,24 @@ function MatchCard({ match }: { match: Match }) {
 
             {/* Skills exchange */}
             <div className="mt-3 space-y-1.5">
-              <div className="flex flex-wrap items-center gap-1.5">
-                <span className="text-xs text-muted-foreground shrink-0">teaches:</span>
-                {match.matchedSkills.want.map((s) => (
-                  <SkillBadge key={s} skill={s} type="offer" size="sm" />
-                ))}
-              </div>
-              <div className="flex flex-wrap items-center gap-1.5">
-                <span className="text-xs text-muted-foreground shrink-0">wants to learn:</span>
-                {match.matchedSkills.offer.map((s) => (
-                  <SkillBadge key={s} skill={s} type="want" size="sm" />
-                ))}
-              </div>
+              {match.matchedSkills.want.length === 0 && match.matchedSkills.offer.length === 0 ? (
+                <p className="text-xs text-muted-foreground italic">Add skills to your profile to see skill overlap.</p>
+              ) : (
+                <>
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <span className="text-xs text-muted-foreground shrink-0">teaches:</span>
+                    {match.matchedSkills.want.map((s) => (
+                      <SkillBadge key={s} skill={s} type="offer" size="sm" />
+                    ))}
+                  </div>
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <span className="text-xs text-muted-foreground shrink-0">wants to learn:</span>
+                    {match.matchedSkills.offer.map((s) => (
+                      <SkillBadge key={s} skill={s} type="want" size="sm" />
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Actions */}
@@ -109,6 +115,14 @@ export default function Matches() {
   const pendingMatches = matches.filter((m) => m.status === 'pending');
   const hasSkills = skills.length > 0;
 
+  // Matches with no skill overlap — show as suggestions
+  const suggestedMatches = pendingMatches.filter(
+    (m) => m.matchedSkills.offer.length === 0 && m.matchedSkills.want.length === 0
+  );
+  const realPendingMatches = pendingMatches.filter(
+    (m) => m.matchedSkills.offer.length > 0 || m.matchedSkills.want.length > 0
+  );
+
   return (
     <div className="space-y-6 max-w-4xl">
       <div>
@@ -123,18 +137,24 @@ export default function Matches() {
 
       {!hasSkills && (
         <div className="rounded-lg border border-amber-200 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-800 px-4 py-3 text-sm text-amber-700 dark:text-amber-300">
-          Add skills on your <a href="/profile" className="underline font-medium">Profile</a> to improve your match scores.
+          Add skills on your <a href="/profile" className="underline font-medium">Profile</a> to unlock skill-based matching.
         </div>
       )}
 
-      <Tabs defaultValue="active">
+      <Tabs defaultValue={activeMatches.length > 0 ? 'active' : suggestedMatches.length > 0 ? 'suggested' : 'pending'}>
         <TabsList className="h-8">
           <TabsTrigger value="active" className="text-xs">
             Active <Badge variant="secondary" className="ml-1.5 text-xs h-4 px-1.5">{activeMatches.length}</Badge>
           </TabsTrigger>
           <TabsTrigger value="pending" className="text-xs">
-            Pending <Badge variant="secondary" className="ml-1.5 text-xs h-4 px-1.5">{pendingMatches.length}</Badge>
+            Pending <Badge variant="secondary" className="ml-1.5 text-xs h-4 px-1.5">{realPendingMatches.length}</Badge>
           </TabsTrigger>
+          {suggestedMatches.length > 0 && (
+            <TabsTrigger value="suggested" className="text-xs">
+              <Sparkles className="w-3 h-3 mr-1" />
+              Suggested <Badge variant="secondary" className="ml-1.5 text-xs h-4 px-1.5">{suggestedMatches.length}</Badge>
+            </TabsTrigger>
+          )}
         </TabsList>
 
         <TabsContent value="active" className="mt-4">
@@ -144,7 +164,7 @@ export default function Matches() {
             ))}
             {activeMatches.length === 0 && (
               <p className="text-sm text-muted-foreground col-span-2 py-8 text-center">
-                No active matches yet. Add more skills to improve matching.
+                No active matches yet. Send a request to connect with someone.
               </p>
             )}
           </div>
@@ -152,14 +172,25 @@ export default function Matches() {
 
         <TabsContent value="pending" className="mt-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {pendingMatches.map((match) => (
+            {realPendingMatches.map((match) => (
               <MatchCard key={match.id} match={match} />
             ))}
-            {pendingMatches.length === 0 && (
+            {realPendingMatches.length === 0 && (
               <p className="text-sm text-muted-foreground col-span-2 py-8 text-center">
-                No pending matches.
+                No skill-based matches yet. Add skills to your profile to get matched.
               </p>
             )}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="suggested" className="mt-4">
+          <p className="text-xs text-muted-foreground mb-4">
+            These users are on SkillSwap. Add skills to your profile to see how well you match — or send a request now!
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {suggestedMatches.map((match) => (
+              <MatchCard key={match.id} match={match} />
+            ))}
           </div>
         </TabsContent>
       </Tabs>

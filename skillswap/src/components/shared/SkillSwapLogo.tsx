@@ -14,51 +14,41 @@ export function SkillSwapLogo({ size = 32, className }: LogoProps) {
       className={className}
     >
       {/* Background rounded square */}
-      <rect width="40" height="40" rx="10" fill="url(#grad)" />
+      <rect width="40" height="40" rx="10" fill="url(#bgrad)" />
 
-      {/* Top arrow → right (teach) */}
+      {/* Bridge deck */}
       <path
-        d="M10 14 H26 L22 10"
+        d="M6 26 H34"
         stroke="white"
-        strokeWidth="2.8"
+        strokeWidth="2.5"
         strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      />
-      <path
-        d="M26 14 L22 18"
-        stroke="white"
-        strokeWidth="2.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
       />
 
-      {/* Bottom arrow ← left (learn) */}
+      {/* Left tower */}
+      <path d="M12 26 V13" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
+      {/* Right tower */}
+      <path d="M28 26 V13" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
+
+      {/* Arch / cables from towers to center */}
       <path
-        d="M30 26 H14 L18 22"
+        d="M12 13 Q20 7 28 13"
         stroke="white"
-        strokeWidth="2.8"
+        strokeWidth="2"
         strokeLinecap="round"
-        strokeLinejoin="round"
         fill="none"
-        opacity="0.75"
-      />
-      <path
-        d="M14 26 L18 30"
-        stroke="white"
-        strokeWidth="2.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-        opacity="0.75"
+        opacity="0.9"
       />
 
-      {/* Center spark dot */}
-      <circle cx="20" cy="20" r="2.2" fill="white" opacity="0.9" />
+      {/* Suspender cables */}
+      <line x1="17" y1="18" x2="17" y2="26" stroke="white" strokeWidth="1.4" strokeLinecap="round" opacity="0.7" />
+      <line x1="20" y1="15" x2="20" y2="26" stroke="white" strokeWidth="1.4" strokeLinecap="round" opacity="0.7" />
+      <line x1="23" y1="18" x2="23" y2="26" stroke="white" strokeWidth="1.4" strokeLinecap="round" opacity="0.7" />
+
+      {/* Road below bridge */}
+      <path d="M6 29 H34" stroke="white" strokeWidth="1.2" strokeLinecap="round" opacity="0.35" strokeDasharray="3 3" />
 
       <defs>
-        <linearGradient id="grad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+        <linearGradient id="bgrad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="#6366f1" />
           <stop offset="100%" stopColor="#8b5cf6" />
         </linearGradient>

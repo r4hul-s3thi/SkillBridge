@@ -5,19 +5,19 @@ export const currentUser: User = {
   name: 'Aarav Patel',
   email: 'aarav.patel@example.in',
   bio: 'Full-stack developer passionate about teaching and learning. I love JavaScript, React, and helping others grow.',
-  avatar: 'https://i.pravatar.cc/150?u=aarav-patel',
+  avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
   location: 'Bengaluru, India',
   rating: 4.8,
   totalSessions: 24,
 };
 
 export const mockUsers: User[] = [
-  { id: 2, name: 'Priya Sharma', email: 'priya.sharma@example.in', bio: 'UI/UX Designer with 5 years of experience. Figma expert.', avatar: 'https://i.pravatar.cc/150?u=priya-sharma', location: 'Mumbai, India', rating: 4.9, totalSessions: 31 },
-  { id: 3, name: 'Rahul Singh', email: 'rahul.singh@example.in', bio: 'Backend engineer specializing in Java and Spring Boot.', avatar: 'https://i.pravatar.cc/150?u=rahul-singh', location: 'Delhi, India', rating: 4.7, totalSessions: 18 },
-  { id: 4, name: 'Ananya Bose', email: 'ananya.bose@example.in', bio: 'Data Scientist. Python, ML, TensorFlow expert.', avatar: 'https://i.pravatar.cc/150?u=ananya-bose', location: 'Kolkata, India', rating: 4.6, totalSessions: 22 },
-  { id: 5, name: 'Vikram Desai', email: 'vikram.desai@example.in', bio: 'DevOps engineer. Docker, Kubernetes, AWS.', avatar: 'https://i.pravatar.cc/150?u=vikram-desai', location: 'Pune, India', rating: 4.5, totalSessions: 15 },
-  { id: 6, name: 'Neha Reddy', email: 'neha.reddy@example.in', bio: 'Frontend engineer with React and Vue expertise.', avatar: 'https://i.pravatar.cc/150?u=neha-reddy', location: 'Hyderabad, India', rating: 4.8, totalSessions: 20 },
-  { id: 7, name: 'Arjun Mehta', email: 'arjun.mehta@example.in', bio: 'Cloud architect with AWS and Azure skills.', avatar: 'https://i.pravatar.cc/150?u=arjun-mehta', location: 'Chennai, India', rating: 4.7, totalSessions: 17 },
+  { id: 2, name: 'Priya Sharma', email: 'priya.sharma@example.in', bio: 'UI/UX Designer with 5 years of experience. Figma expert.', avatar: 'https://randomuser.me/api/portraits/women/44.jpg', location: 'Mumbai, India', rating: 4.9, totalSessions: 31 },
+  { id: 3, name: 'Rahul Singh', email: 'rahul.singh@example.in', bio: 'Backend engineer specializing in Java and Spring Boot.', avatar: 'https://randomuser.me/api/portraits/men/46.jpg', location: 'Delhi, India', rating: 4.7, totalSessions: 18 },
+  { id: 4, name: 'Ananya Bose', email: 'ananya.bose@example.in', bio: 'Data Scientist. Python, ML, TensorFlow expert.', avatar: 'https://randomuser.me/api/portraits/women/65.jpg', location: 'Kolkata, India', rating: 4.6, totalSessions: 22 },
+  { id: 5, name: 'Vikram Desai', email: 'vikram.desai@example.in', bio: 'DevOps engineer. Docker, Kubernetes, AWS.', avatar: 'https://randomuser.me/api/portraits/men/55.jpg', location: 'Pune, India', rating: 4.5, totalSessions: 15 },
+  { id: 6, name: 'Neha Reddy', email: 'neha.reddy@example.in', bio: 'Frontend engineer with React and Vue expertise.', avatar: 'https://randomuser.me/api/portraits/women/26.jpg', location: 'Hyderabad, India', rating: 4.8, totalSessions: 20 },
+  { id: 7, name: 'Arjun Mehta', email: 'arjun.mehta@example.in', bio: 'Cloud architect with AWS and Azure skills.', avatar: 'https://randomuser.me/api/portraits/men/77.jpg', location: 'Chennai, India', rating: 4.7, totalSessions: 17 },
 ];
 
 export const mockSkills: Skill[] = [

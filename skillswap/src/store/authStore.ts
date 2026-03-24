@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { AuthUser } from '@/types';
+import { useAppStore } from './appStore';
 
 interface AuthState {
   user: AuthUser | null;
@@ -17,8 +18,15 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       token: null,
       isAuthenticated: false,
-      setAuth: (user, token) => set({ user, token, isAuthenticated: true }),
-      logout: () => set({ user: null, token: null, isAuthenticated: false }),
+      setAuth: (user, token) => {
+        // Clear previous user's data before setting new auth
+        useAppStore.setState({ skills: [], matches: [], conversations: [], sessions: [], ratings: [] });
+        set({ user, token, isAuthenticated: true });
+      },
+      logout: () => {
+        useAppStore.setState({ skills: [], matches: [], conversations: [], sessions: [], ratings: [] });
+        set({ user: null, token: null, isAuthenticated: false });
+      },
       updateUser: (data) =>
         set((state) => ({
           user: state.user ? { ...state.user, ...data } : null,

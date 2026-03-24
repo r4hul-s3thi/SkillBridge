@@ -7,6 +7,7 @@ import {
   Star,
   User,
   LogOut,
+  Handshake,
 } from 'lucide-react';
 import { SkillSwapLogo } from '@/components/shared/SkillSwapLogo';
 import {
@@ -30,6 +31,7 @@ import { useAppStore } from '@/store/appStore';
 const navItems = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/matches', label: 'Matches', icon: Users2 },
+  { to: '/collabs', label: 'Collab Board', icon: Handshake },
   { to: '/messages', label: 'Messages', icon: MessageSquare },
   { to: '/sessions', label: 'Sessions', icon: CalendarClock },
   { to: '/ratings', label: 'Ratings', icon: Star },
@@ -60,7 +62,7 @@ export function AppSidebar() {
             >
               <SkillSwapLogo size={34} />
               <div className="flex flex-col leading-tight">
-                <span className="font-bold text-sidebar-foreground text-sm">SkillSwap</span>
+                <span className="font-bold text-sidebar-foreground text-sm">SkillBridge</span>
                 <span className="text-xs text-sidebar-foreground/50 font-normal">Peer Learning</span>
               </div>
             </SidebarMenuButton>

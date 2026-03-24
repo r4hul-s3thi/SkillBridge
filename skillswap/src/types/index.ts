@@ -66,6 +66,27 @@ export interface Rating {
   createdAt: string;
 }
 
+export interface CollabPost {
+  id: number;
+  title: string;
+  description: string;
+  skillsHave: string[];
+  skillsNeeded: string[];
+  projectType?: string;
+  status: 'open' | 'closed';
+  createdAt: string;
+  author: Pick<User, 'id' | 'name' | 'avatar' | 'location' | 'rating'>;
+}
+
+export interface CollabRequest {
+  id: number;
+  postId: number;
+  message?: string;
+  status: 'pending' | 'accepted' | 'rejected';
+  createdAt: string;
+  requester: Pick<User, 'id' | 'name' | 'avatar' | 'location' | 'rating'>;
+}
+
 export interface AuthUser {
   id: number;
   name: string;
