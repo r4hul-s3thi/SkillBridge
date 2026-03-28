@@ -23,7 +23,7 @@ const statusConfig: Record<SessionStatus, { label: string; icon: React.Component
   completed: { label: 'Completed', icon: CheckCircle2, className: 'text-muted-foreground bg-muted border-border' },
 };
 
-function SessionCard({ session, onAccept, onReject }: { session: Session; onAccept?: (id: number) => void; onReject?: (id: number) => void }) {
+function SessionCard({ session, onAccept, onReject, onComplete }: { session: Session; onAccept?: (id: number) => void; onReject?: (id: number) => void; onComplete?: (id: number) => void }) {
   const cfg = statusConfig[session.status];
   const StatusIcon = cfg.icon;
 
@@ -62,6 +62,14 @@ function SessionCard({ session, onAccept, onReject }: { session: Session; onAcce
                 </Button>
               </div>
             )}
+            {session.status === 'accepted' && onComplete && (
+              <div className="flex gap-2 mt-3">
+                <Button size="sm" className="h-7 text-xs bg-emerald-600 hover:bg-emerald-700" onClick={() => onComplete(session.id)}>
+                  <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
+                  Mark as Complete
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </CardContent>
@@ -92,6 +100,11 @@ export default function Sessions() {
   const handleReject = (id: number) => {
     updateStatus(id, 'rejected');
     toast.info('Session rejected.');
+  };
+
+  const handleComplete = (id: number) => {
+    updateStatus(id, 'completed');
+    toast.success('Session marked as complete! 🎉');
   };
 
   const handleSchedule = async () => {
@@ -179,7 +192,7 @@ export default function Sessions() {
 
             <TabsContent value="upcoming" className="space-y-3">
               {upcoming.map((s) => (
-                <SessionCard key={s.id} session={s} onAccept={handleAccept} onReject={handleReject} />
+                <SessionCard key={s.id} session={s} onAccept={handleAccept} onReject={handleReject} onComplete={handleComplete} />
               ))}
               {upcoming.length === 0 && (
                 <p className="text-sm text-muted-foreground py-8 text-center">No upcoming sessions. Schedule one!</p>

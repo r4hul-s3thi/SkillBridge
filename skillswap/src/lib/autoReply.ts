@@ -1,5 +1,3 @@
-// Each user has a personality and topic-aware replies
-
 type ReplySet = {
   greetings: string[];
   skillTalk: string[];
@@ -14,37 +12,37 @@ const personalities: Record<number, { name: string; replies: ReplySet }> = {
     name: 'Priya',
     replies: {
       greetings: [
-        'Hey! Great to hear from you 😊',
-        'Hi there! How are you doing?',
-        'Hello! Always happy to chat!',
+        'Hey Aarav! Kya haal hai? 😊',
+        'Hi yaar! Bahut dino baad baat ho rahi hai!',
+        'Hello! Flipkart mein aaj bahut kaam tha, ab free hoon 😄',
       ],
       skillTalk: [
-        'I can definitely help you with UI/UX! Figma is my go-to tool 🎨',
-        'Design thinking is so important — happy to walk you through my process.',
-        'I have been using Figma for 5 years now, we can do a deep dive anytime!',
-        'React and design go hand in hand — I would love to learn more React from you!',
+        'UI/UX mein main zaroor help karungi! Figma mera favourite tool hai 🎨',
+        'Design thinking bahut important hai — apna process share karungi tumse.',
+        'Main 5 saal se Figma use kar rahi hoon, deep dive karte hain kabhi!',
+        'React aur design saath mein bahut kaam aata hai — mujhe bhi React seekhna hai!',
       ],
       scheduling: [
-        'Sure! How about we schedule a session this weekend? 📅',
-        'I am free on Saturday afternoon, does that work for you?',
-        'Let us set up a 1-hour session — I can share my screen and walk you through Figma.',
+        'Weekend pe session karte hain? Saturday afternoon free hoon 📅',
+        'Kal shaam 6 baje Google Meet pe? Screen share karke Figma dikhaungi.',
+        'Ek ghante ka session rakhte hain — main apna Flipkart project bhi dikhaungi!',
       ],
       compliments: [
-        'That is so kind of you, thank you! 🙏',
-        'Aww thanks! You are great to work with too!',
-        'Really appreciate that, means a lot!',
+        'Arre yaar, bahut shukriya! 🙏',
+        'Aww thanks! Tum bhi bahut achhe ho!',
+        'Dil khush kar diya tumne, thank you!',
       ],
       questions: [
-        'What specific part of UI/UX are you most interested in?',
-        'Have you used Figma before or are you starting from scratch?',
-        'What kind of projects are you working on right now?',
+        'UI/UX mein kya specifically seekhna hai — Figma ya design principles?',
+        'Pehle kabhi Figma use kiya hai ya bilkul naya hai?',
+        'Abhi kaunse projects pe kaam kar rahe ho?',
       ],
       fallback: [
-        'That sounds interesting! Tell me more 😊',
-        'I totally agree with that!',
-        'Good point! I had not thought of it that way.',
-        'Haha yes exactly! 😄',
-        'Makes sense to me!',
+        'Interesting! Aur batao 😊',
+        'Haan yaar, bilkul sahi keh rahe ho!',
+        'Achha point hai, socha nahi tha is angle se.',
+        'Haha sahi hai! 😄',
+        'Makes sense yaar!',
       ],
     },
   },
@@ -52,36 +50,36 @@ const personalities: Record<number, { name: string; replies: ReplySet }> = {
     name: 'Rahul',
     replies: {
       greetings: [
-        'Hey! What is up?',
-        'Hi! Good to see you here.',
-        'Hello! Ready to talk tech?',
+        'Hey bhai! Kya chal raha hai?',
+        'Hi! TCS se abhi nikla hoon, thoda thaka hoon 😅',
+        'Hello! Java aur chai — yahi meri zindagi hai ☕',
       ],
       skillTalk: [
-        'Spring Boot is amazing for building REST APIs — I can show you the full setup.',
-        'Java is verbose but very powerful once you get the hang of it 💪',
-        'I have built microservices with Spring Boot for 3 years, happy to share what I know.',
-        'Node.js is on my learning list — would love to swap knowledge!',
+        'Spring Boot REST APIs ke liye main full setup dikhaunga — ekdum production-ready.',
+        'Java verbose hai but bahut powerful — ek baar samajh gaye toh maza aata hai 💪',
+        '3 saal se microservices bana raha hoon TCS mein — sab share karunga.',
+        'Node.js mujhe bhi seekhna hai — knowledge exchange karte hain!',
       ],
       scheduling: [
-        'Let us do a session next week. I can cover Spring Boot basics in 90 minutes.',
-        'How about Tuesday evening? I am free after 7pm.',
-        'We can do a live coding session — I will build a REST API from scratch for you.',
+        'Agli week session karte hain. 90 minute mein Spring Boot basics cover ho jayenge.',
+        'Tuesday shaam 7 baje ke baad free hoon — theek rahega?',
+        'Live coding session karte hain — ek REST API scratch se banaunga tumhare saath.',
       ],
       compliments: [
-        'Thanks man, appreciate it!',
-        'That means a lot, cheers!',
-        'Thanks! You are pretty solid yourself.',
+        'Thanks bhai, dil khush ho gaya!',
+        'Yaar bahut shukriya, matlab rakhta hai!',
+        'Thanks! Tum bhi solid developer ho.',
       ],
       questions: [
-        'Do you have any Java background or are you completely new to it?',
-        'What kind of backend are you trying to build?',
-        'Are you more interested in REST APIs or microservices architecture?',
+        'Java background hai ya bilkul naya hai?',
+        'Kaunsa backend banana chahte ho — REST ya microservices?',
+        'Interview prep ke liye hai ya actual project ke liye?',
       ],
       fallback: [
-        'Yeah that makes sense.',
-        'Interesting, I will look into that.',
-        'Good to know!',
-        'Haha true 😄',
+        'Haan bhai, sahi baat hai.',
+        'Interesting, dekhta hoon.',
+        'Achha hai yaar!',
+        'Haha sach mein 😄',
         'Agreed, solid point.',
       ],
     },
@@ -90,37 +88,37 @@ const personalities: Record<number, { name: string; replies: ReplySet }> = {
     name: 'Ananya',
     replies: {
       greetings: [
-        'Hi! Excited to connect with you! 🤗',
+        'Hi! Kolkata se bol rahi hoon, chai pi rahi thi 😄',
         'Hello! Data science enthusiast here 👋',
-        'Hey! Always happy to talk ML and Python!',
+        'Hey! ML aur Python ki baat karni hai? Main ready hoon!',
       ],
       skillTalk: [
-        'Python for ML is such a fun journey — NumPy, Pandas, Scikit-learn, TensorFlow! 🐍',
-        'I have trained models on real datasets, happy to walk you through the whole pipeline.',
-        'Machine learning sounds complex but once you understand the math it clicks!',
-        'I would love to learn JavaScript from you — it is the one gap in my skill set.',
+        'Python for ML ek mast journey hai — NumPy, Pandas, Scikit-learn, TensorFlow sab sikhenge! 🐍',
+        'Infosys mein real datasets pe kaam kiya hai — poora pipeline dikhaungi.',
+        'Machine learning complex lagta hai but maths samajh aaye toh click ho jaata hai!',
+        'JavaScript mujhe bhi seekhna hai — mera ek weak point hai woh.',
       ],
       scheduling: [
-        'Let us do a Python session! I can start with the basics and go from there 📊',
-        'How about a 2-hour deep dive into data science fundamentals?',
-        'I am free most evenings — just pick a day and we will get started!',
+        'Python session karte hain! Basics se shuru karke aage badhenge 📊',
+        'Do ghante ka data science fundamentals session kaisa rahega?',
+        'Main zyaadatar evenings free hoon — koi bhi din choose karo!',
       ],
       compliments: [
-        'Thank you so much! That really motivates me 😊',
-        'Aww that is so sweet, thank you!',
-        'Really appreciate the kind words!',
+        'Bahut shukriya! Isse motivation milta hai 😊',
+        'Aww yaar, bahut sweet ho tum!',
+        'Dil se thank you!',
       ],
       questions: [
-        'What is your goal with ML — research, industry, or just curiosity?',
-        'Have you done any Python before or is this your first time?',
-        'Are you more interested in data analysis or building predictive models?',
+        'ML ka goal kya hai — research, industry job, ya curiosity?',
+        'Python pehle use kiya hai ya bilkul fresh start?',
+        'Data analysis mein interest hai ya predictive models banana chahte ho?',
       ],
       fallback: [
-        'Oh interesting! I never thought about it that way 🤔',
-        'That is a great perspective!',
-        'Haha yes, totally agree! 😄',
-        'Makes a lot of sense!',
-        'Cool, let me know how it goes!',
+        'Oh interesting! Aisa socha nahi tha 🤔',
+        'Bahut achha perspective hai!',
+        'Haha haan, bilkul agree! 😄',
+        'Bahut sense banta hai!',
+        'Cool, batate rehna!',
       ],
     },
   },
@@ -128,36 +126,36 @@ const personalities: Record<number, { name: string; replies: ReplySet }> = {
     name: 'Vikram',
     replies: {
       greetings: [
-        'Hey! DevOps guy here 🚀',
-        'Hi! What is up?',
-        'Hello! Ready to talk Docker and Kubernetes?',
+        'Hey! Wipro ka DevOps banda bol raha hoon 🚀',
+        'Hi bhai! Kya haal?',
+        'Hello! Docker aur Kubernetes ki baat karni hai?',
       ],
       skillTalk: [
-        'Docker changed the way I deploy apps — containerization is a must-know skill.',
-        'Kubernetes is complex at first but once it clicks, it is incredibly powerful ⚙️',
-        'AWS has so many services — I can help you navigate the ones that matter most.',
-        'CI/CD pipelines are my specialty — happy to set one up with you.',
+        'Docker ne deployment ka tarika hi badal diya — containerization must-know skill hai.',
+        'Kubernetes pehle complex lagta hai but ek baar samajh aaye toh bahut powerful hai ⚙️',
+        'AWS ke bahut saare services hain — main bataunga kaunse actually kaam ke hain.',
+        'CI/CD pipelines meri specialty hai — saath mein ek setup karte hain.',
       ],
       scheduling: [
-        'Let us do a hands-on Docker session — we will containerize a real app together.',
-        'I can walk you through Kubernetes in 2 sessions — basics first, then advanced.',
-        'Free this weekend — want to do a live AWS walkthrough?',
+        'Hands-on Docker session karte hain — ek real app containerize karenge saath mein.',
+        'Kubernetes 2 sessions mein cover karunga — pehle basics, phir advanced.',
+        'Is weekend free hoon — AWS walkthrough karte hain live?',
       ],
       compliments: [
-        'Thanks! Appreciate it 🙌',
-        'Cheers mate!',
-        'That is good to hear, thanks!',
+        'Thanks yaar! 🙌',
+        'Shukriya bhai!',
+        'Achha laga sunke, thanks!',
       ],
       questions: [
-        'Are you deploying to AWS, GCP or Azure?',
-        'Have you used Docker before or starting fresh?',
-        'What kind of app are you trying to deploy?',
+        'AWS, GCP ya Azure — kahan deploy karna hai?',
+        'Docker pehle use kiya hai ya fresh start?',
+        'Kaunsa app deploy karna chahte ho?',
       ],
       fallback: [
-        'Yeah solid point.',
-        'Makes sense to me.',
+        'Haan solid point hai.',
+        'Makes sense yaar.',
         'Interesting approach!',
-        'Good to know, thanks!',
+        'Achha hai, thanks!',
         'Haha fair enough 😄',
       ],
     },
@@ -166,36 +164,36 @@ const personalities: Record<number, { name: string; replies: ReplySet }> = {
     name: 'Neha',
     replies: {
       greetings: [
-        'Hey! So happy to connect 😊',
-        'Hi there! Frontend dev here!',
-        'Hello! Vue and React are my world 💻',
+        'Hey! Swiggy se abhi order kiya aur ab chat kar rahi hoon 😄',
+        'Hi yaar! Frontend dev here!',
+        'Hello! Vue aur React meri duniya hai 💻',
       ],
       skillTalk: [
-        'Vue 3 with the Composition API is so clean — I love it!',
-        'TypeScript makes frontend code so much more maintainable 💪',
-        'I have been doing frontend for 4 years — happy to share what I have learned.',
-        'React is on my list to master — would love to learn from you!',
+        'Vue 3 Composition API bahut clean hai — main love karti hoon isse!',
+        'TypeScript frontend code ko bahut maintainable banata hai 💪',
+        '4 saal se frontend kar rahi hoon — sab kuch share karungi.',
+        'React master karna hai mujhe — tumse seekhna chahti hoon!',
       ],
       scheduling: [
-        'Let us do a Vue session! I can show you how I structure large projects.',
-        'How about a TypeScript deep dive? It will change how you write code.',
-        'I am free most mornings — just say when!',
+        'Vue session karte hain! Main dikhaungi kaise large projects structure karte hain.',
+        'TypeScript deep dive kaisa rahega? Code likhne ka tarika hi badal jaayega.',
+        'Main zyaadatar mornings free hoon — bas bolo kab!',
       ],
       compliments: [
-        'Aww thank you so much! 😊',
-        'That is really sweet, thanks!',
-        'You are too kind!',
+        'Aww yaar bahut shukriya! 😊',
+        'Bahut sweet ho tum, thanks!',
+        'Dil khush kar diya!',
       ],
       questions: [
-        'Are you more into React or open to learning Vue as well?',
-        'What kind of frontend projects are you building?',
-        'Do you use TypeScript already or still on plain JavaScript?',
+        'React mein ho ya Vue bhi seekhna chahte ho?',
+        'Kaunse frontend projects bana rahe ho abhi?',
+        'TypeScript already use karte ho ya plain JavaScript?',
       ],
       fallback: [
-        'Oh that is cool!',
-        'Totally agree with you!',
-        'Haha yes exactly 😄',
-        'Interesting, tell me more!',
+        'Oh cool hai yaar!',
+        'Bilkul agree karti hoon!',
+        'Haha haan exactly 😄',
+        'Interesting, aur batao!',
         'Makes sense!',
       ],
     },
@@ -204,36 +202,36 @@ const personalities: Record<number, { name: string; replies: ReplySet }> = {
     name: 'Arjun',
     replies: {
       greetings: [
-        'Hey! Cloud architect here ☁️',
-        'Hi! Good to connect.',
-        'Hello! AWS and Azure are my playground.',
+        'Hey! HCL ka cloud architect bol raha hoon ☁️',
+        'Hi! IIT Madras se hoon, Chennai mein hoon abhi.',
+        'Hello! AWS aur Azure mera playground hai.',
       ],
       skillTalk: [
-        'AWS has over 200 services — I can help you focus on the ones you actually need.',
-        'Cloud architecture is all about trade-offs — cost, performance, reliability.',
-        'I have designed systems that handle millions of requests — happy to share patterns.',
-        'React is something I want to learn — would love to exchange knowledge!',
+        'AWS ke 200+ services hain — main bataunga kaunse actually important hain.',
+        'Cloud architecture trade-offs ke baare mein hai — cost, performance, reliability.',
+        'Millions of requests handle karne wale systems design kiye hain — patterns share karunga.',
+        'React seekhna hai mujhe — knowledge exchange karte hain!',
       ],
       scheduling: [
-        'Let us do an AWS fundamentals session — I will cover EC2, S3, RDS and Lambda.',
-        'How about a system design session? Very useful for interviews too.',
-        'I am free on weekends — pick a time and we will get started.',
+        'AWS fundamentals session karte hain — EC2, S3, RDS aur Lambda cover karunga.',
+        'System design session kaisa rahega? Interviews ke liye bhi bahut useful hai.',
+        'Weekends pe free hoon — time choose karo aur shuru karte hain.',
       ],
       compliments: [
-        'Thanks, appreciate it!',
-        'That means a lot, cheers!',
-        'Thank you! You are great to work with.',
+        'Thanks yaar, appreciate it!',
+        'Bahut shukriya, matlab rakhta hai!',
+        'Thank you! Tum bhi bahut achhe ho.',
       ],
       questions: [
-        'What AWS services are you most interested in?',
-        'Are you preparing for AWS certification or just learning for projects?',
-        'What scale are you building for — startup or enterprise?',
+        'AWS ke kaunse services mein interest hai?',
+        'AWS certification ke liye prepare kar rahe ho ya project ke liye?',
+        'Startup scale ke liye hai ya enterprise?',
       ],
       fallback: [
-        'Good point!',
+        'Achha point hai!',
         'Interesting perspective.',
-        'Makes sense to me.',
-        'Haha yeah, fair enough 😄',
+        'Makes sense yaar.',
+        'Haha haan, fair enough 😄',
         'Noted, thanks for sharing!',
       ],
     },
@@ -242,10 +240,10 @@ const personalities: Record<number, { name: string; replies: ReplySet }> = {
 
 function detectIntent(message: string): keyof ReplySet {
   const msg = message.toLowerCase();
-  if (/hi|hello|hey|howdy|sup|what.?s up/.test(msg)) return 'greetings';
-  if (/skill|teach|learn|react|python|java|docker|figma|vue|aws|node|ml|machine|design|typescript/.test(msg)) return 'skillTalk';
-  if (/schedule|session|meet|time|free|when|available|book|call/.test(msg)) return 'scheduling';
-  if (/thanks|thank|great|awesome|amazing|good|nice|excellent|love|appreciate/.test(msg)) return 'compliments';
+  if (/hi|hello|hey|haan|kya haal|namaste|kaise|sup/.test(msg)) return 'greetings';
+  if (/skill|teach|learn|sikho|sikhao|react|python|java|docker|figma|vue|aws|node|ml|machine|design|typescript/.test(msg)) return 'skillTalk';
+  if (/schedule|session|meet|time|free|when|available|book|call|kab|milte|kal|aaj/.test(msg)) return 'scheduling';
+  if (/thanks|thank|shukriya|great|awesome|amazing|good|nice|excellent|love|appreciate|bahut achha/.test(msg)) return 'compliments';
   if (/\?/.test(msg)) return 'questions';
   return 'fallback';
 }
@@ -261,7 +259,6 @@ export function getAutoReply(userId: number, userMessage: string): string {
   return getRandom(persona.replies[intent]);
 }
 
-// Random delay between 1.5s and 3.5s to feel natural
 export function getReplyDelay(): number {
   return 1500 + Math.random() * 2000;
 }

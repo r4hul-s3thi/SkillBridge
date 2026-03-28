@@ -8,6 +8,7 @@ import {
   User,
   LogOut,
   Handshake,
+  Trophy,
 } from 'lucide-react';
 import { SkillSwapLogo } from '@/components/shared/SkillSwapLogo';
 import {
@@ -35,6 +36,7 @@ const navItems = [
   { to: '/messages', label: 'Messages', icon: MessageSquare },
   { to: '/sessions', label: 'Sessions', icon: CalendarClock },
   { to: '/ratings', label: 'Ratings', icon: Star },
+  { to: '/leaderboard', label: 'Leaderboard', icon: Trophy },
 ];
 
 export function AppSidebar() {
@@ -43,6 +45,8 @@ export function AppSidebar() {
   const navigate = useNavigate();
 
   const unreadCount = conversations.reduce((acc, c) => acc + c.unreadCount, 0);
+  const { sessions } = useAppStore();
+  const pendingSessions = sessions.filter((s) => s.status === 'pending').length;
 
   const handleLogout = () => {
     logout();
@@ -98,6 +102,11 @@ export function AppSidebar() {
                   {label === 'Messages' && unreadCount > 0 && (
                     <SidebarMenuBadge className="bg-primary text-primary-foreground text-xs">
                       {unreadCount}
+                    </SidebarMenuBadge>
+                  )}
+                  {label === 'Sessions' && pendingSessions > 0 && (
+                    <SidebarMenuBadge className="bg-amber-500 text-white text-xs">
+                      {pendingSessions}
                     </SidebarMenuBadge>
                   )}
                 </SidebarMenuItem>

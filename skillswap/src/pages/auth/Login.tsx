@@ -1,216 +1,344 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Github } from 'lucide-react';
-import { SkillSwapLogo } from '@/components/shared/SkillSwapLogo';
-import { OAuthModal } from '@/components/shared/OAuthModal';
-import type { OAuthAccount } from '@/components/shared/OAuthModal';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { useAuthStore } from '@/store/authStore';
-import { authService } from '@/services/authService';
-import { toast } from 'sonner';
-import type { AuthUser } from '@/types';
+import { useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import { Eye, EyeOff, Github, Sparkles, ArrowRight } from "lucide-react"
+import { SkillSwapLogo } from "@/components/shared/SkillSwapLogo"
+import { OAuthModal } from "@/components/shared/OAuthModal"
+import type { OAuthAccount } from "@/components/shared/OAuthModal"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Separator } from "@/components/ui/separator"
+import { useAuthStore } from "@/store/authStore"
+import { authService } from "@/services/authService"
+import { toast } from "sonner"
+import type { AuthUser } from "@/types"
 
 function GoogleIcon({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
-      <path fill="#4285F4" d="M21.35 11.1H12v2.8h5.35c-.23 1.36-1.22 2.59-2.72 3.34l2.2 1.75c1.62-1.5 2.56-3.69 2.56-6.24 0-.42-.04-.84-.09-1.25z" />
-      <path fill="#34A853" d="M12 22c2.7 0 4.95-.9 6.6-2.45l-2.2-1.75c-1.05.7-2.4 1.1-4.4 1.1-3.4 0-6.26-2.3-7.29-5.4L2 14.9C3.75 18.8 7.6 22 12 22z" />
-      <path fill="#FBBC05" d="M4.71 13.25a7.92 7.92 0 010-2.5L2 9.1a11.98 11.98 0 000 5.8l2.71-1.65z" />
-      <path fill="#EA4335" d="M12 6.5c1.56 0 2.97.55 4.08 1.63l3.06-3.06C16.9 3.2 14.7 2 12 2 7.6 2 3.75 5.2 2 9.1l2.71 1.65C5.74 8.8 8.6 6.5 12 6.5z" />
+      <path
+        fill="#4285F4"
+        d="M21.35 11.1H12v2.8h5.35c-.23 1.36-1.22 2.59-2.72 3.34l2.2 1.75c1.62-1.5 2.56-3.69 2.56-6.24 0-.42-.04-.84-.09-1.25z"
+      />
+      <path
+        fill="#34A853"
+        d="M12 22c2.7 0 4.95-.9 6.6-2.45l-2.2-1.75c-1.05.7-2.4 1.1-4.4 1.1-3.4 0-6.26-2.3-7.29-5.4L2 14.9C3.75 18.8 7.6 22 12 22z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M4.71 13.25a7.92 7.92 0 010-2.5L2 9.1a11.98 11.98 0 000 5.8l2.71-1.65z"
+      />
+      <path
+        fill="#EA4335"
+        d="M12 6.5c1.56 0 2.97.55 4.08 1.63l3.06-3.06C16.9 3.2 14.7 2 12 2 7.6 2 3.75 5.2 2 9.1l2.71 1.65C5.74 8.8 8.6 6.5 12 6.5z"
+      />
     </svg>
-  );
+  )
 }
 
-async function loginUser(email: string, password: string): Promise<{ user: AuthUser; token: string }> {
-  const response = await authService.login(email, password);
-  return response.data;
+async function loginUser(
+  email: string,
+  password: string
+): Promise<{ user: AuthUser; token: string }> {
+  const response = await authService.login(email, password)
+  return response.data
+}
+
+function wait(ms: number) {
+  return new Promise((resolve) => window.setTimeout(resolve, ms))
 }
 
 export default function Login() {
-  const navigate = useNavigate();
-  const { setAuth } = useAuthStore();
-  const [email, setEmail] = useState('aarav.patel@example.com');
-  const [password, setPassword] = useState('password123');
-  const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [oauthModal, setOauthModal] = useState<'google' | 'github' | null>(null);
-  const [oauthLoading, setOauthLoading] = useState(false);
+  const navigate = useNavigate()
+  const { setAuth } = useAuthStore()
+  const [email, setEmail] = useState("aarav.patel@example.com")
+  const [password, setPassword] = useState("password123")
+  const [showPassword, setShowPassword] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [oauthModal, setOauthModal] = useState<"google" | "github" | null>(null)
+  const [oauthLoading, setOauthLoading] = useState(false)
 
   const handleOAuthSelect = async (account: OAuthAccount) => {
-    setOauthLoading(true);
+    setOauthLoading(true)
     try {
-      const res = await authService.loginWithGoogle({ name: account.name, email: account.email, avatar: account.avatar });
-      setAuth(res.data.user, res.data.token);
-      toast.success(`Welcome back, ${res.data.user.name}!`);
-      navigate('/dashboard');
+      const res = await authService.loginWithGoogle({
+        name: account.name,
+        email: account.email,
+        avatar: account.avatar,
+      })
+      setAuth(res.data.user, res.data.token)
+      toast.success(`Welcome back, ${res.data.user.name}!`)
+      await wait(1200)
+      navigate("/dashboard")
     } catch {
-      toast.error('Sign in failed. Please try again.');
+      toast.error("Sign in failed. Please try again.")
     } finally {
-      setOauthLoading(false);
-      setOauthModal(null);
+      setOauthLoading(false)
+      setOauthModal(null)
     }
-  };
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     if (!email || !password) {
-      toast.error('Please fill in all fields');
-      return;
+      toast.error("Please fill in all fields")
+      return
     }
-    setLoading(true);
+
+    setLoading(true)
     try {
-      const result = await loginUser(email, password);
-      setAuth(result.user, result.token);
-      toast.success(`Welcome back, ${result.user.name}!`);
-      navigate('/dashboard');
+      const result = await loginUser(email, password)
+      setAuth(result.user, result.token)
+      toast.success(`Welcome back, ${result.user.name}!`)
+      await wait(1200)
+      navigate("/dashboard")
     } catch (error: unknown) {
-      const err = error as { response?: { data?: { message?: string } } };
-      const message = err.response?.data?.message ?? 'Invalid email or password';
-      toast.error(message);
+      const err = error as { response?: { data?: { message?: string } } }
+      toast.error(err.response?.data?.message ?? "Invalid email or password")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
-    <div className="min-h-screen flex">
-      {/* Left panel */}
-      <div className="hidden lg:flex flex-1 flex-col justify-between bg-[#0F1A2E] p-12 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-accent/10 to-transparent" />
-        <div className="relative z-10">
+    <div className="login-cosmos flex min-h-screen">
+      <div className="login-beam animate-beam-pulse top-[10%] left-[-8rem] -rotate-12 bg-cyan-400/30" />
+      <div className="login-beam animate-beam-pulse top-[28%] right-[-10rem] rotate-12 bg-orange-400/25 [animation-delay:1.6s]" />
+      <div className="login-orbit-ring animate-slow-spin top-[12%] left-[8%] h-[26rem] w-[26rem]" />
+      <div className="login-orbit-ring animate-slow-spin top-[46%] right-[12%] h-[18rem] w-[18rem] [animation-direction:reverse]" />
+      <div className="gradient-bg-animated absolute inset-0 opacity-15" />
+
+      <div className="hero-mesh relative hidden flex-1 flex-col justify-between overflow-hidden p-12 lg:flex">
+        <div className="animate-drift absolute top-14 right-12 h-80 w-80 rounded-full bg-cyan-400/20 blur-3xl" />
+        <div className="animate-float-slow absolute bottom-16 left-10 h-64 w-64 rounded-full bg-orange-400/15 blur-3xl" />
+        <div className="animate-float-delayed absolute top-1/2 left-1/3 h-48 w-48 rounded-full bg-emerald-300/15 blur-2xl" />
+
+        <div className="animate-fade-right relative z-10">
           <div className="flex items-center gap-3">
-            <SkillSwapLogo size={42} />
-            <span className="text-white font-bold text-xl tracking-tight">SkillBridge</span>
+            <SkillSwapLogo size={44} />
+            <span className="text-xl font-bold tracking-tight text-white">
+              SkillBridge
+            </span>
           </div>
         </div>
-        <div className="relative z-10 space-y-6">
-          <div className="space-y-3">
-            <h2 className="text-4xl font-bold text-white leading-tight">
-              Exchange skills,<br />grow together.
+
+        <div className="animate-fade-right relative z-10 space-y-8 [animation-delay:120ms]">
+          <div className="space-y-4">
+            <div className="glass mb-2 inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium text-cyan-200">
+              <Sparkles className="h-3 w-3" />
+              Peer-to-peer skill exchange
+            </div>
+            <h2 className="text-5xl leading-tight font-bold text-white">
+              Exchange skills,
+              <br />
+              <span className="gradient-text">grow together.</span>
             </h2>
-            <p className="text-white/60 text-lg leading-relaxed max-w-sm">
-              Connect with peers, teach what you know, and learn what you want — all in one place.
+            <p className="max-w-sm text-base leading-relaxed text-slate-300/[0.8]">
+              Connect with peers, teach what you know, and learn what you want -
+              all for free.
             </p>
           </div>
-          <div className="flex items-center gap-6 pt-4">
-            {[{ val: '2K+', label: 'Learners' }, { val: '500+', label: 'Skills' }, { val: '4.8★', label: 'Avg Rating' }].map(({ val, label }) => (
+
+          <div className="flex items-center gap-8">
+            {[
+              { val: "2K+", label: "Learners" },
+              { val: "500+", label: "Skills" },
+              { val: "4.8+", label: "Avg Rating" },
+            ].map(({ val, label }) => (
               <div key={label} className="text-center">
                 <p className="text-2xl font-bold text-white">{val}</p>
-                <p className="text-xs text-white/50 uppercase tracking-widest">{label}</p>
+                <p className="mt-0.5 text-xs tracking-widest text-white/40 uppercase">
+                  {label}
+                </p>
               </div>
             ))}
           </div>
+
+          <div className="flex flex-wrap gap-2">
+            {[
+              "Smart Matching",
+              "Real-time Chat",
+              "Session Scheduling",
+              "Peer Ratings",
+            ].map((feature) => (
+              <span
+                key={feature}
+                className="glass rounded-full px-3 py-1.5 text-xs text-slate-100/[0.75]"
+              >
+                {feature}
+              </span>
+            ))}
+          </div>
         </div>
-        {/* Decorative circles */}
-        <div className="absolute top-20 right-0 w-72 h-72 bg-primary/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-10 left-20 w-48 h-48 bg-accent/20 rounded-full blur-2xl" />
+
+        <div className="animate-scale-in relative z-10 [animation-delay:240ms]">
+          <div className="glow-sweep glass flex max-w-xs items-center gap-3 rounded-2xl p-4">
+            <div className="gradient-bg-animated flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold text-slate-950">
+              A
+            </div>
+            <div>
+              <p className="text-sm font-medium text-white">
+                Aarav just learned React
+              </p>
+              <p className="text-xs text-white/40">from Priya - 2 min ago</p>
+            </div>
+            <div className="ml-auto h-2 w-2 shrink-0 animate-pulse rounded-full bg-emerald-300" />
+          </div>
+        </div>
       </div>
 
-      {/* Right panel */}
-      <div className="flex-1 flex items-center justify-center p-6 bg-background">
-        <div className="w-full max-w-sm">
-          <div className="flex items-center gap-2 mb-8 lg:hidden">
+      <div className="relative flex flex-1 items-center justify-center p-6">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#08111d]/40 via-[#10233d]/30 to-[#09101b]/40" />
+        <div className="animate-drift absolute top-[20%] left-[10%] h-72 w-72 rounded-full bg-cyan-500/[0.12] blur-3xl" />
+        <div className="animate-float absolute right-[8%] bottom-[8%] h-80 w-80 rounded-full bg-orange-500/[0.08] blur-3xl" />
+        <div
+          className="animate-pan-grid absolute inset-0 opacity-[0.08]"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(255,255,255,0.35) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.35) 1px, transparent 1px)",
+            backgroundSize: "48px 48px",
+            maskImage:
+              "radial-gradient(circle at center, black, transparent 82%)",
+          }}
+        />
+
+        <div className="relative z-10 w-full max-w-sm">
+          <div className="animate-fade-up mb-8 flex items-center gap-2 lg:hidden">
             <SkillSwapLogo size={32} />
-            <span className="font-bold text-lg text-foreground">SkillBridge</span>
+            <span className="text-lg font-bold text-white">SkillBridge</span>
           </div>
 
-          <Card className="border border-border/60 shadow-sm">
-            <CardHeader className="space-y-1 pb-4">
-              <CardTitle className="text-xl font-bold">Sign In</CardTitle>
-              <CardDescription className="text-sm text-muted-foreground">
-                Enter your credentials to access your account
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-3">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setOauthModal('google')}
-                    disabled={oauthLoading}
-                    className="h-9 flex items-center justify-center gap-2"
-                  >
-                    <GoogleIcon className="h-4 w-4" />
-                    Google
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setOauthModal('github')}
-                    disabled={oauthLoading}
-                    className="h-9 flex items-center justify-center gap-2"
-                  >
-                    <Github className="h-4 w-4" />
-                    GitHub
-                  </Button>
-                </div>
-                <div className="relative">
-                  <div className="absolute inset-0 flex items-center">
-                    <Separator className="w-full" />
-                  </div>
-                  <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
-                  </div>
-                </div>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-1.5">
-                  <Label htmlFor="email" className="text-sm font-medium">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="you@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    autoComplete="email"
-                    className="h-9"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="password" className="text-sm font-medium">Password</Label>
-                  <div className="relative">
-                    <Input
-                      id="password"
-                      type={showPassword ? 'text' : 'password'}
-                      placeholder="••••••••"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                      autoComplete="current-password"
-                      className="h-9 pr-10"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                    </button>
-                  </div>
-                </div>
-                <Button type="submit" className="w-full h-9 font-medium" disabled={loading}>
-                  {loading ? 'Signing in...' : 'Sign In'}
-                </Button>
-              </form>
-              </div>
-            </CardContent>
-            <CardFooter className="flex justify-center pt-0">
-              <p className="text-sm text-muted-foreground">
-                Don't have an account?{' '}
-                <Link to="/register" className="text-primary font-medium hover:underline">
-                  Sign Up
-                </Link>
+          <div className="animate-scale-in animate-card-breath glass rounded-[28px] border-white/[0.12] p-8 shadow-2xl shadow-cyan-950/30">
+            <div className="mb-6">
+              <h1 className="animate-fade-up text-2xl font-bold text-white">
+                Welcome back
+              </h1>
+              <p className="mt-1 text-sm text-slate-300/[0.7]">
+                Sign in to continue your journey
               </p>
-            </CardFooter>
-          </Card>
+            </div>
 
-          <p className="text-center text-xs text-muted-foreground mt-4">
-            Demo: <span className="font-mono bg-muted px-1 rounded">aarav.patel@example.com</span> / password123
+            <div className="animate-fade-up-1 mb-5 grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => setOauthModal("google")}
+                disabled={oauthLoading}
+                className="touch-surface touch-feedback animate-border-glow flex h-10 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.06] text-sm font-medium text-white/80 transition-all duration-200 hover:-translate-y-1 hover:border-cyan-300/30 hover:bg-cyan-300/10 disabled:opacity-50"
+              >
+                <GoogleIcon className="h-4 w-4" />
+                Google
+              </button>
+              <button
+                type="button"
+                onClick={() => setOauthModal("github")}
+                disabled={oauthLoading}
+                className="touch-surface touch-feedback flex h-10 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.06] text-sm font-medium text-white/80 transition-all duration-200 hover:-translate-y-1 hover:border-orange-300/30 hover:bg-orange-300/10 disabled:opacity-50"
+              >
+                <Github className="h-4 w-4" />
+                GitHub
+              </button>
+            </div>
+
+            <div className="relative mb-5">
+              <div className="absolute inset-0 flex items-center">
+                <Separator className="w-full bg-white/10" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span
+                  className="px-2 text-white/30"
+                  style={{ background: "transparent" }}
+                >
+                  or continue with email
+                </span>
+              </div>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="animate-fade-up-2 space-y-1.5">
+                <Label
+                  htmlFor="email"
+                  className="text-xs font-medium tracking-wide text-white/60 uppercase"
+                >
+                  Email
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  autoComplete="email"
+                  className="animate-border-glow touch-feedback h-11 rounded-xl border-white/10 bg-white/5 text-white transition-all placeholder:text-white/25 focus:border-cyan-300/60 focus:bg-white/8"
+                />
+              </div>
+
+              <div className="animate-fade-up-3 space-y-1.5">
+                <Label
+                  htmlFor="password"
+                  className="text-xs font-medium tracking-wide text-white/60 uppercase"
+                >
+                  Password
+                </Label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="........"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    autoComplete="current-password"
+                    className="animate-border-glow touch-feedback h-11 rounded-xl border-white/10 bg-white/5 pr-10 text-white transition-all placeholder:text-white/25 focus:border-cyan-300/60"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute top-1/2 right-3 -translate-y-1/2 text-white/30 transition-colors hover:text-white/70"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="touch-surface touch-feedback gradient-bg-animated animate-pulse-glow animate-fade-up-4 mt-2 flex h-11 w-full items-center justify-center gap-2 rounded-xl text-sm font-semibold text-slate-950 transition-all duration-200 hover:scale-[1.02] hover:opacity-95 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {loading ? (
+                  <span className="flex items-center gap-2">
+                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-slate-900/20 border-t-slate-900" />
+                    Logging you in...
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-2">
+                    Sign In <ArrowRight className="animate-float-x h-4 w-4" />
+                  </span>
+                )}
+              </button>
+            </form>
+
+            <p className="mt-5 text-center text-sm text-white/40">
+              Don't have an account?{" "}
+              <Link
+                to="/register"
+                className="font-medium text-cyan-300 transition-colors hover:text-orange-200"
+              >
+                Sign Up
+              </Link>
+            </p>
+          </div>
+
+          <p className="mt-4 text-center text-xs text-white/25">
+            Demo:{" "}
+            <span className="font-mono text-white/40">
+              aarav.patel@example.com
+            </span>{" "}
+            / password123
           </p>
         </div>
       </div>
@@ -224,5 +352,5 @@ export default function Login() {
         />
       )}
     </div>
-  );
+  )
 }

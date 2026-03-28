@@ -1,10 +1,12 @@
-import { MessageSquare, UserPlus, TrendingUp, Sparkles } from 'lucide-react';
+import { useState } from 'react';
+import { MessageSquare, UserPlus, TrendingUp, Sparkles, Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
 import { UserAvatar } from '@/components/shared/UserAvatar';
 import { SkillBadge } from '@/components/shared/SkillBadge';
 import { StarRating } from '@/components/shared/StarRating';
@@ -25,10 +27,6 @@ function MatchCard({ match }: { match: Match }) {
     }
     updateMatchStatus(match.id, 'active');
     toast.success(`Connected with ${match.matchedUser.name}!`);
-  };
-
-  const handleMessage = () => {
-    navigate('/messages');
   };
 
   const scoreColor =
@@ -58,12 +56,10 @@ function MatchCard({ match }: { match: Match }) {
               <p className="text-xs text-muted-foreground mt-2 line-clamp-2">{match.matchedUser.bio}</p>
             )}
 
-            {/* Compatibility bar */}
             <div className="mt-3">
               <Progress value={match.compatibilityScore} className="h-1.5" />
             </div>
 
-            {/* Skills exchange */}
             <div className="mt-3 space-y-1.5">
               {match.matchedSkills.want.length === 0 && match.matchedSkills.offer.length === 0 ? (
                 <p className="text-xs text-muted-foreground italic">Add skills to your profile to see skill overlap.</p>
@@ -85,7 +81,6 @@ function MatchCard({ match }: { match: Match }) {
               )}
             </div>
 
-            {/* Actions */}
             <div className="flex gap-2 mt-4">
               {match.status !== 'active' ? (
                 <Button size="sm" className="h-7 text-xs" onClick={handleConnect}>
@@ -97,7 +92,7 @@ function MatchCard({ match }: { match: Match }) {
                   Connected
                 </Badge>
               )}
-              <Button variant="outline" size="sm" className="h-7 text-xs" onClick={handleMessage}>
+              <Button variant="outline" size="sm" className="h-7 text-xs" onClick={() => navigate('/messages')}>
                 <MessageSquare className="w-3.5 h-3.5 mr-1.5" />
                 Message
               </Button>
@@ -111,17 +106,33 @@ function MatchCard({ match }: { match: Match }) {
 
 export default function Matches() {
   const { matches, skills } = useAppStore();
-  const activeMatches = matches.filter((m) => m.status === 'active');
-  const pendingMatches = matches.filter((m) => m.status === 'pending');
+  const [search, setSearch] = useState('');
   const hasSkills = skills.length > 0;
 
-  // Matches with no skill overlap — show as suggestions
+  const activeMatches = matches.filter((m) => m.status === 'active');
+  const pendingMatches = matches.filter((m) => m.status === 'pending');
   const suggestedMatches = pendingMatches.filter(
     (m) => m.matchedSkills.offer.length === 0 && m.matchedSkills.want.length === 0
   );
   const realPendingMatches = pendingMatches.filter(
     (m) => m.matchedSkills.offer.length > 0 || m.matchedSkills.want.length > 0
   );
+
+  const filter = (list: Match[]) => {
+    if (!search.trim()) return list;
+    const q = search.toLowerCase();
+    return list.filter(
+      (m) =>
+        m.matchedUser.name.toLowerCase().includes(q) ||
+        m.matchedUser.location?.toLowerCase().includes(q) ||
+        m.matchedSkills.offer.some((s) => s.toLowerCase().includes(q)) ||
+        m.matchedSkills.want.some((s) => s.toLowerCase().includes(q))
+    );
+  };
+
+  const filteredActive = filter(activeMatches);
+  const filteredPending = filter(realPendingMatches);
+  const filteredSuggested = filter(suggestedMatches);
 
   return (
     <div className="space-y-6 max-w-4xl">
@@ -141,30 +152,40 @@ export default function Matches() {
         </div>
       )}
 
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/60" />
+        <Input
+          placeholder="Search by name, location, or skill..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="pl-9 h-9 text-sm"
+        />
+      </div>
+
       <Tabs defaultValue={activeMatches.length > 0 ? 'active' : suggestedMatches.length > 0 ? 'suggested' : 'pending'}>
         <TabsList className="h-8">
           <TabsTrigger value="active" className="text-xs">
-            Active <Badge variant="secondary" className="ml-1.5 text-xs h-4 px-1.5">{activeMatches.length}</Badge>
+            Active <Badge variant="secondary" className="ml-1.5 text-xs h-4 px-1.5">{filteredActive.length}</Badge>
           </TabsTrigger>
           <TabsTrigger value="pending" className="text-xs">
-            Pending <Badge variant="secondary" className="ml-1.5 text-xs h-4 px-1.5">{realPendingMatches.length}</Badge>
+            Pending <Badge variant="secondary" className="ml-1.5 text-xs h-4 px-1.5">{filteredPending.length}</Badge>
           </TabsTrigger>
           {suggestedMatches.length > 0 && (
             <TabsTrigger value="suggested" className="text-xs">
               <Sparkles className="w-3 h-3 mr-1" />
-              Suggested <Badge variant="secondary" className="ml-1.5 text-xs h-4 px-1.5">{suggestedMatches.length}</Badge>
+              Suggested <Badge variant="secondary" className="ml-1.5 text-xs h-4 px-1.5">{filteredSuggested.length}</Badge>
             </TabsTrigger>
           )}
         </TabsList>
 
         <TabsContent value="active" className="mt-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {activeMatches.map((match) => (
+            {filteredActive.map((match) => (
               <MatchCard key={match.id} match={match} />
             ))}
-            {activeMatches.length === 0 && (
+            {filteredActive.length === 0 && (
               <p className="text-sm text-muted-foreground col-span-2 py-8 text-center">
-                No active matches yet. Send a request to connect with someone.
+                {search ? 'No matches found for your search.' : 'No active matches yet. Send a request to connect with someone.'}
               </p>
             )}
           </div>
@@ -172,12 +193,12 @@ export default function Matches() {
 
         <TabsContent value="pending" className="mt-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {realPendingMatches.map((match) => (
+            {filteredPending.map((match) => (
               <MatchCard key={match.id} match={match} />
             ))}
-            {realPendingMatches.length === 0 && (
+            {filteredPending.length === 0 && (
               <p className="text-sm text-muted-foreground col-span-2 py-8 text-center">
-                No skill-based matches yet. Add skills to your profile to get matched.
+                {search ? 'No matches found for your search.' : 'No skill-based matches yet. Add skills to your profile to get matched.'}
               </p>
             )}
           </div>
@@ -185,12 +206,15 @@ export default function Matches() {
 
         <TabsContent value="suggested" className="mt-4">
           <p className="text-xs text-muted-foreground mb-4">
-            These users are on SkillSwap. Add skills to your profile to see how well you match — or send a request now!
+            These users are on SkillBridge. Add skills to your profile to see how well you match — or send a request now!
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {suggestedMatches.map((match) => (
+            {filteredSuggested.map((match) => (
               <MatchCard key={match.id} match={match} />
             ))}
+            {filteredSuggested.length === 0 && search && (
+              <p className="text-sm text-muted-foreground col-span-2 py-8 text-center">No matches found for your search.</p>
+            )}
           </div>
         </TabsContent>
       </Tabs>
