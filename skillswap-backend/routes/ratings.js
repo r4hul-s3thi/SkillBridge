@@ -2,21 +2,20 @@ const router = require('express').Router();
 const db = require('../db');
 const auth = require('../middleware/auth');
 
-// GET /api/ratings
 router.get('/', auth, async (req, res) => {
   try {
-    const [rows] = await db.query(
+    const result = await db.query(
       `SELECT r.*,
         u.id as fu_id, u.name as fu_name, u.email as fu_email, u.avatar as fu_avatar,
         u.rating as fu_rating, u.total_sessions as fu_total_sessions
        FROM ratings r
        JOIN users u ON u.id = r.from_user_id
-       WHERE r.to_user_id = ?
+       WHERE r.to_user_id = $1
        ORDER BY r.created_at DESC`,
       [req.user.id]
     );
 
-    const ratings = rows.map((r) => ({
+    res.json(result.rows.map((r) => ({
       id: r.id,
       fromUser: {
         id: r.fu_id,
@@ -30,15 +29,12 @@ router.get('/', auth, async (req, res) => {
       rating: r.rating,
       feedback: r.feedback,
       createdAt: r.created_at,
-    }));
-
-    res.json(ratings);
+    })));
   } catch (err) {
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
 
-// POST /api/ratings
 router.post('/', auth, async (req, res) => {
   const { toUserId, rating, feedback } = req.body;
   if (!toUserId || !rating)
@@ -47,23 +43,22 @@ router.post('/', auth, async (req, res) => {
     return res.status(400).json({ message: 'Rating must be between 1 and 5' });
 
   try {
-    const [result] = await db.query(
-      'INSERT INTO ratings (from_user_id, to_user_id, rating, feedback) VALUES (?, ?, ?, ?)',
+    const result = await db.query(
+      'INSERT INTO ratings (from_user_id, to_user_id, rating, feedback) VALUES ($1, $2, $3, $4) RETURNING id',
       [req.user.id, toUserId, rating, feedback || null]
     );
 
-    // Recalculate the recipient's average rating
-    const [avgRows] = await db.query(
-      'SELECT AVG(rating) as avg_rating FROM ratings WHERE to_user_id = ?',
+    const avgResult = await db.query(
+      'SELECT AVG(rating) as avg_rating FROM ratings WHERE to_user_id = $1',
       [toUserId]
     );
-    const newAvg = parseFloat(avgRows[0].avg_rating).toFixed(2);
-    await db.query('UPDATE users SET rating = ? WHERE id = ?', [newAvg, toUserId]);
+    const newAvg = parseFloat(avgResult.rows[0].avg_rating).toFixed(2);
+    await db.query('UPDATE users SET rating = $1 WHERE id = $2', [newAvg, toUserId]);
 
-    const [fromUser] = await db.query('SELECT * FROM users WHERE id = ?', [req.user.id]);
-    const u = fromUser[0];
+    const fromUser = await db.query('SELECT * FROM users WHERE id = $1', [req.user.id]);
+    const u = fromUser.rows[0];
     res.status(201).json({
-      id: result.insertId,
+      id: result.rows[0].id,
       fromUser: {
         id: u.id,
         name: u.name,
@@ -78,7 +73,7 @@ router.post('/', auth, async (req, res) => {
       createdAt: new Date().toISOString(),
     });
   } catch (err) {
-    if (err.code === 'ER_DUP_ENTRY')
+    if (err.code === '23505')
       return res.status(409).json({ message: 'You have already rated this user' });
     res.status(500).json({ message: 'Server error', error: err.message });
   }

@@ -1,8 +1,5 @@
-CREATE DATABASE IF NOT EXISTS skillswap;
-USE skillswap;
-
 CREATE TABLE IF NOT EXISTS users (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
   email VARCHAR(150) NOT NULL UNIQUE,
   password VARCHAR(255),
@@ -15,85 +12,72 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS skills (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  user_id INT NOT NULL,
+  id SERIAL PRIMARY KEY,
+  user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   skill_name VARCHAR(100) NOT NULL,
-  type ENUM('offer', 'want') NOT NULL,
-  level ENUM('Beginner', 'Intermediate', 'Advanced', 'Expert') DEFAULT 'Intermediate',
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+  type VARCHAR(10) NOT NULL CHECK (type IN ('offer', 'want')),
+  level VARCHAR(20) DEFAULT 'Intermediate' CHECK (level IN ('Beginner', 'Intermediate', 'Advanced', 'Expert')),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS matches (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  user1_id INT NOT NULL,
-  user2_id INT NOT NULL,
-  status ENUM('pending', 'active') DEFAULT 'pending',
+  id SERIAL PRIMARY KEY,
+  user1_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  user2_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  status VARCHAR(10) DEFAULT 'pending' CHECK (status IN ('pending', 'active')),
   compatibility_score INT DEFAULT 0,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (user1_id) REFERENCES users(id) ON DELETE CASCADE,
-  FOREIGN KEY (user2_id) REFERENCES users(id) ON DELETE CASCADE,
-  UNIQUE KEY unique_match (user1_id, user2_id)
+  UNIQUE (user1_id, user2_id)
 );
 
 CREATE TABLE IF NOT EXISTS sessions (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  match_id INT NOT NULL,
-  requester_id INT NOT NULL,
-  participant_id INT NOT NULL,
+  id SERIAL PRIMARY KEY,
+  match_id INT NOT NULL REFERENCES matches(id) ON DELETE CASCADE,
+  requester_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  participant_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   topic VARCHAR(200) NOT NULL,
-  date DATETIME NOT NULL,
+  date TIMESTAMP NOT NULL,
   duration INT NOT NULL DEFAULT 60,
-  status ENUM('pending', 'accepted', 'rejected', 'completed') DEFAULT 'pending',
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (match_id) REFERENCES matches(id) ON DELETE CASCADE,
-  FOREIGN KEY (requester_id) REFERENCES users(id) ON DELETE CASCADE,
-  FOREIGN KEY (participant_id) REFERENCES users(id) ON DELETE CASCADE
+  status VARCHAR(10) DEFAULT 'pending' CHECK (status IN ('pending', 'accepted', 'rejected', 'completed')),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS messages (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  sender_id INT NOT NULL,
-  receiver_id INT NOT NULL,
+  id SERIAL PRIMARY KEY,
+  sender_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  receiver_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   message TEXT NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
-  FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS ratings (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  from_user_id INT NOT NULL,
-  to_user_id INT NOT NULL,
-  rating TINYINT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+  id SERIAL PRIMARY KEY,
+  from_user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  to_user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  rating SMALLINT NOT NULL CHECK (rating BETWEEN 1 AND 5),
   feedback TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (from_user_id) REFERENCES users(id) ON DELETE CASCADE,
-  FOREIGN KEY (to_user_id) REFERENCES users(id) ON DELETE CASCADE,
-  UNIQUE KEY unique_rating (from_user_id, to_user_id)
+  UNIQUE (from_user_id, to_user_id)
 );
 
 CREATE TABLE IF NOT EXISTS collab_posts (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  user_id INT NOT NULL,
+  id SERIAL PRIMARY KEY,
+  user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   title VARCHAR(200) NOT NULL,
   description TEXT NOT NULL,
   skills_have TEXT NOT NULL,
   skills_needed TEXT NOT NULL,
   project_type VARCHAR(100),
-  status ENUM('open', 'closed') DEFAULT 'open',
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+  status VARCHAR(10) DEFAULT 'open' CHECK (status IN ('open', 'closed')),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS collab_requests (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  post_id INT NOT NULL,
-  requester_id INT NOT NULL,
+  id SERIAL PRIMARY KEY,
+  post_id INT NOT NULL REFERENCES collab_posts(id) ON DELETE CASCADE,
+  requester_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   message TEXT,
-  status ENUM('pending', 'accepted', 'rejected') DEFAULT 'pending',
+  status VARCHAR(10) DEFAULT 'pending' CHECK (status IN ('pending', 'accepted', 'rejected')),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (post_id) REFERENCES collab_posts(id) ON DELETE CASCADE,
-  FOREIGN KEY (requester_id) REFERENCES users(id) ON DELETE CASCADE,
-  UNIQUE KEY unique_request (post_id, requester_id)
+  UNIQUE (post_id, requester_id)
 );

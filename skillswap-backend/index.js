@@ -5,7 +5,11 @@ const db = require('./db');
 
 const app = express();
 
-app.use(cors({ origin: /^http:\/\/localhost(:\d+)?$/, credentials: true }));
+const allowedOrigins = [
+  /^http:\/\/localhost(:\d+)?$/,
+  process.env.FRONTEND_URL,
+].filter(Boolean);
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json());
 
 app.use('/api/auth', require('./routes/auth'));

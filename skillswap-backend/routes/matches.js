@@ -2,37 +2,29 @@ const router = require('express').Router();
 const db = require('../db');
 const auth = require('../middleware/auth');
 
-// GET /api/matches
 router.get('/', auth, async (req, res) => {
   try {
-    const [rows] = await db.query(
-      `SELECT m.*, 
+    const result = await db.query(
+      `SELECT m.*,
         u.id as mu_id, u.name as mu_name, u.email as mu_email,
         u.avatar as mu_avatar, u.bio as mu_bio, u.location as mu_location,
         u.rating as mu_rating, u.total_sessions as mu_total_sessions
        FROM matches m
-       JOIN users u ON u.id = IF(m.user1_id = ?, m.user2_id, m.user1_id)
-       WHERE m.user1_id = ? OR m.user2_id = ?
+       JOIN users u ON u.id = CASE WHEN m.user1_id = $1 THEN m.user2_id ELSE m.user1_id END
+       WHERE m.user1_id = $2 OR m.user2_id = $3
        ORDER BY m.created_at DESC`,
       [req.user.id, req.user.id, req.user.id]
     );
 
-    // For each match, fetch the overlapping skills
     const matches = await Promise.all(
-      rows.map(async (r) => {
-        const [mySkills] = await db.query(
-          'SELECT skill_name, type FROM skills WHERE user_id = ?',
-          [req.user.id]
-        );
-        const [theirSkills] = await db.query(
-          'SELECT skill_name, type FROM skills WHERE user_id = ?',
-          [r.mu_id]
-        );
+      result.rows.map(async (r) => {
+        const mySkills = await db.query('SELECT skill_name, type FROM skills WHERE user_id = $1', [req.user.id]);
+        const theirSkills = await db.query('SELECT skill_name, type FROM skills WHERE user_id = $1', [r.mu_id]);
 
-        const myOffer = mySkills.filter((s) => s.type === 'offer').map((s) => s.skill_name);
-        const myWant = mySkills.filter((s) => s.type === 'want').map((s) => s.skill_name);
-        const theirOffer = theirSkills.filter((s) => s.type === 'offer').map((s) => s.skill_name);
-        const theirWant = theirSkills.filter((s) => s.type === 'want').map((s) => s.skill_name);
+        const myOffer = mySkills.rows.filter((s) => s.type === 'offer').map((s) => s.skill_name);
+        const myWant = mySkills.rows.filter((s) => s.type === 'want').map((s) => s.skill_name);
+        const theirOffer = theirSkills.rows.filter((s) => s.type === 'offer').map((s) => s.skill_name);
+        const theirWant = theirSkills.rows.filter((s) => s.type === 'want').map((s) => s.skill_name);
 
         return {
           id: r.id,
@@ -64,18 +56,17 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
-// PATCH /api/matches/:id
 router.patch('/:id', auth, async (req, res) => {
   const { status } = req.body;
   if (!['pending', 'active'].includes(status))
     return res.status(400).json({ message: 'Invalid status' });
 
   try {
-    const [result] = await db.query(
-      'UPDATE matches SET status = ? WHERE id = ? AND (user1_id = ? OR user2_id = ?)',
+    const result = await db.query(
+      'UPDATE matches SET status = $1 WHERE id = $2 AND (user1_id = $3 OR user2_id = $4)',
       [status, req.params.id, req.user.id, req.user.id]
     );
-    if (result.affectedRows === 0)
+    if (result.rowCount === 0)
       return res.status(404).json({ message: 'Match not found' });
     res.json({ message: 'Match updated' });
   } catch (err) {

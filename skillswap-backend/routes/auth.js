@@ -24,24 +24,22 @@ function formatUser(row) {
   };
 }
 
-// POST /api/auth/register
 router.post('/register', async (req, res) => {
   const { name, email, password } = req.body;
   if (!name || !email || !password)
     return res.status(400).json({ message: 'Name, email and password are required' });
 
   try {
-    const [existing] = await db.query('SELECT id FROM users WHERE email = ?', [email]);
-    if (existing.length > 0)
+    const existing = await db.query('SELECT id FROM users WHERE email = $1', [email]);
+    if (existing.rows.length > 0)
       return res.status(409).json({ message: 'Email already registered' });
 
     const hashed = await bcrypt.hash(password, 10);
-    const [result] = await db.query(
-      'INSERT INTO users (name, email, password) VALUES (?, ?, ?)',
+    const result = await db.query(
+      'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *',
       [name, email, hashed]
     );
-    const [rows] = await db.query('SELECT * FROM users WHERE id = ?', [result.insertId]);
-    const user = formatUser(rows[0]);
+    const user = formatUser(result.rows[0]);
     const token = signToken(user);
     generateMatchesForUser(user.id).catch(() => {});
     res.status(201).json({ user, token });
@@ -50,18 +48,17 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// POST /api/auth/login
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password)
     return res.status(400).json({ message: 'Email and password are required' });
 
   try {
-    const [rows] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
-    if (rows.length === 0)
+    const result = await db.query('SELECT * FROM users WHERE email = $1', [email]);
+    if (result.rows.length === 0)
       return res.status(401).json({ message: 'Invalid email or password' });
 
-    const user = rows[0];
+    const user = result.rows[0];
     const valid = await bcrypt.compare(password, user.password);
     if (!valid)
       return res.status(401).json({ message: 'Invalid email or password' });
@@ -74,27 +71,26 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// POST /api/auth/oauth  (Google / GitHub — frontend sends profile after OAuth redirect)
 router.post('/oauth', async (req, res) => {
   const { name, email, avatar } = req.body;
   if (!name || !email)
     return res.status(400).json({ message: 'Name and email are required' });
 
   try {
-    const [rows] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
+    const existing = await db.query('SELECT * FROM users WHERE email = $1', [email]);
     let user;
-    if (rows.length > 0) {
-      // existing user — update avatar if changed
-      await db.query('UPDATE users SET avatar = COALESCE(?, avatar) WHERE id = ?', [avatar, rows[0].id]);
-      const [updated] = await db.query('SELECT * FROM users WHERE id = ?', [rows[0].id]);
-      user = formatUser(updated[0]);
+    if (existing.rows.length > 0) {
+      const updated = await db.query(
+        'UPDATE users SET avatar = COALESCE($1, avatar) WHERE id = $2 RETURNING *',
+        [avatar, existing.rows[0].id]
+      );
+      user = formatUser(updated.rows[0]);
     } else {
-      const [result] = await db.query(
-        'INSERT INTO users (name, email, avatar) VALUES (?, ?, ?)',
+      const created = await db.query(
+        'INSERT INTO users (name, email, avatar) VALUES ($1, $2, $3) RETURNING *',
         [name, email, avatar || null]
       );
-      const [created] = await db.query('SELECT * FROM users WHERE id = ?', [result.insertId]);
-      user = formatUser(created[0]);
+      user = formatUser(created.rows[0]);
       generateMatchesForUser(user.id).catch(() => {});
     }
     const token = signToken(user);
@@ -104,16 +100,14 @@ router.post('/oauth', async (req, res) => {
   }
 });
 
-// PATCH /api/auth/profile  — update name, bio, location, avatar
 router.patch('/profile', auth, async (req, res) => {
   const { name, bio, location, avatar } = req.body;
   try {
-    await db.query(
-      'UPDATE users SET name = COALESCE(?, name), bio = COALESCE(?, bio), location = COALESCE(?, location), avatar = COALESCE(?, avatar) WHERE id = ?',
+    const result = await db.query(
+      'UPDATE users SET name = COALESCE($1, name), bio = COALESCE($2, bio), location = COALESCE($3, location), avatar = COALESCE($4, avatar) WHERE id = $5 RETURNING *',
       [name, bio, location, avatar, req.user.id]
     );
-    const [rows] = await db.query('SELECT * FROM users WHERE id = ?', [req.user.id]);
-    res.json(formatUser(rows[0]));
+    res.json(formatUser(result.rows[0]));
   } catch (err) {
     res.status(500).json({ message: 'Server error', error: err.message });
   }
