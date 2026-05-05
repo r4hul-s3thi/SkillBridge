@@ -115,7 +115,7 @@ export default function Dashboard() {
           <div className="space-y-3">
             <div className="inline-flex items-center gap-2 rounded-full border border-cyan-200/70 bg-white/70 px-3 py-1.5 text-xs font-medium text-cyan-700 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-white/8 dark:text-cyan-100">
               <Sparkles className="h-3.5 w-3.5" />
-              Activity is picking up
+              {activeMatches.length > 0 ? `${activeMatches.length} active matches` : "Welcome to SkillBridge"}
             </div>
             <div>
               <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
@@ -123,13 +123,14 @@ export default function Dashboard() {
                 <span className="gradient-text">{user?.name ?? "there"}</span>
               </h1>
               <p className="mt-2 max-w-2xl text-sm text-slate-700 sm:text-base dark:text-slate-200/[0.75]">
-                Your dashboard now highlights momentum, upcoming sessions, and
-                profile progress in one place.
+                {completionPct < 100
+                  ? "Complete your profile and add skills to start matching with peers."
+                  : "Your dashboard highlights momentum, upcoming sessions, and profile progress."}
               </p>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          <div className="grid grid-cols-3 gap-2 sm:gap-3">
             <div className="dashboard-panel animate-scale-in rounded-2xl border border-white/60 bg-white/72 px-4 py-3 shadow-[0_18px_35px_rgba(150,185,210,0.18)] backdrop-blur-xl [animation-delay:80ms] dark:border-white/10 dark:bg-white/8">
               <p className="text-xs tracking-[0.22em] text-slate-500 uppercase dark:text-white/[0.45]">
                 Matches

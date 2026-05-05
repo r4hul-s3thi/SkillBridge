@@ -67,8 +67,10 @@ export function AppLayout() {
           <ThemeToggle className="border-border/60 bg-background/70 text-foreground shadow-sm transition-all hover:-translate-y-0.5 hover:bg-muted dark:bg-card/70" />
           <div className="gradient-bg-animated h-1.5 w-24 rounded-full opacity-60" />
         </header>
-        <main className="animate-fade-up flex-1 p-4 md:p-6">
-          <Outlet />
+        <main className="animate-fade-up flex-1 p-3 sm:p-4 md:p-6 min-w-0">
+          <div className="max-w-7xl mx-auto">
+            <Outlet />
+          </div>
         </main>
       </SidebarInset>
       <ChatBot />

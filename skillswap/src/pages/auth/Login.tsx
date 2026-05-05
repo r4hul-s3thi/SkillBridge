@@ -50,8 +50,8 @@ function wait(ms: number) {
 export default function Login() {
   const navigate = useNavigate()
   const { setAuth } = useAuthStore()
-  const [email, setEmail] = useState("aarav.patel@example.com")
-  const [password, setPassword] = useState("password123")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [oauthModal, setOauthModal] = useState<"google" | "github" | null>(null)
@@ -333,13 +333,7 @@ export default function Login() {
             </p>
           </div>
 
-          <p className="mt-4 text-center text-xs text-white/25">
-            Demo:{" "}
-            <span className="font-mono text-white/40">
-              aarav.patel@example.com
-            </span>{" "}
-            / password123
-          </p>
+
         </div>
       </div>
 
