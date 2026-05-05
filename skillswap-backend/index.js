@@ -24,6 +24,15 @@ app.use('/api/leaderboard', require('./routes/leaderboard'));
 
 app.get('/', (req, res) => res.send('SkillBridge API is running!'));
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
+app.get('/api/reseed', async (req, res) => {
+  try {
+    await db.query('TRUNCATE TABLE ratings, messages, sessions, matches, skills, users RESTART IDENTITY CASCADE');
+    await autoSeed();
+    res.json({ status: 'seeded' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 const PORT = process.env.PORT || 8080;
 
