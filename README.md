@@ -21,7 +21,7 @@
 
 <br/>
 
-### 🌐 [Live Demo →](https://skill-bridge-zjbb.vercel.app)
+### 🌐 [Live Demo →]([https://skill-bridge-zjbb.vercel.app])
 
 > 💡 *"I'll teach you React if you teach me UI/UX Design"* — that's **SkillBridge**.
 
