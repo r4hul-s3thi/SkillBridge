@@ -1,20 +1,10 @@
 import {
-  Users2,
-  CalendarClock,
-  Star,
-  BookOpen,
-  ArrowRight,
-  CheckCircle2,
-  Clock,
-  Zap,
-  Sparkles,
-  TrendingUp,
-  Rocket,
-  Waves,
-  Activity,
+  Users2, CalendarClock, Star, BookOpen,
+  ArrowRight, CheckCircle2, Clock, Zap,
+  TrendingUp, Activity, Plus, MessageSquare,
+  Handshake, ChevronRight, Flame,
 } from "lucide-react"
-import { Link } from "react-router-dom"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Link, useNavigate } from "react-router-dom"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { StatCard } from "@/components/shared/StatCard"
@@ -26,529 +16,355 @@ import { useAppStore } from "@/store/appStore"
 import { format } from "date-fns"
 
 const statusConfig = {
-  pending: {
-    label: "Pending",
-    icon: Clock,
-    color:
-      "text-amber-700 bg-amber-100 border-amber-200 dark:text-amber-200 dark:bg-amber-400/[0.15] dark:border-amber-300/20",
-  },
-  accepted: {
-    label: "Confirmed",
-    icon: CheckCircle2,
-    color:
-      "text-emerald-700 bg-emerald-100 border-emerald-200 dark:text-emerald-200 dark:bg-emerald-400/[0.15] dark:border-emerald-300/20",
-  },
-  completed: {
-    label: "Completed",
-    icon: CheckCircle2,
-    color:
-      "text-cyan-700 bg-cyan-100 border-cyan-200 dark:text-cyan-100 dark:bg-cyan-400/[0.15] dark:border-cyan-300/20",
-  },
-  rejected: {
-    label: "Rejected",
-    icon: Clock,
-    color:
-      "text-rose-700 bg-rose-100 border-rose-200 dark:text-rose-200 dark:bg-rose-400/[0.15] dark:border-rose-300/20",
-  },
+  pending:   { label: "Pending",   icon: Clock,         color: "text-amber-600 bg-amber-50 border-amber-200 dark:bg-amber-950/50 dark:border-amber-800/50" },
+  accepted:  { label: "Confirmed", icon: CheckCircle2,  color: "text-emerald-600 bg-emerald-50 border-emerald-200 dark:bg-emerald-950/50 dark:border-emerald-800/50" },
+  completed: { label: "Done",      icon: CheckCircle2,  color: "text-sky-600 bg-sky-50 border-sky-200 dark:bg-sky-950/50 dark:border-sky-800/50" },
+  rejected:  { label: "Rejected",  icon: Clock,         color: "text-rose-600 bg-rose-50 border-rose-200 dark:bg-rose-950/50 dark:border-rose-800/50" },
 }
 
 export default function Dashboard() {
   const { user } = useAuthStore()
   const { matches, sessions, skills, ratings } = useAppStore()
+  const navigate = useNavigate()
 
   const activeMatches = matches.filter((m) => m.status === "active").slice(0, 4)
-  const upcomingSessions = sessions
-    .filter((s) => s.status === "pending" || s.status === "accepted")
-    .slice(0, 4)
+  const upcomingSessions = sessions.filter((s) => s.status === "pending" || s.status === "accepted").slice(0, 3)
   const offeredSkills = skills.filter((s) => s.type === "offer")
   const wantedSkills = skills.filter((s) => s.type === "want")
   const completedSessions = sessions.filter((s) => s.status === "completed")
 
   const hour = new Date().getHours()
-  const greeting =
-    hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening"
+  const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening"
+  const greetingEmoji = hour < 12 ? "☀️" : hour < 18 ? "👋" : "🌙"
 
-  // Build a simple activity feed from sessions + ratings
   const recentActivity = [
     ...sessions.slice(0, 3).map((s) => ({
-      id: `s-${s.id}`,
-      text: `Session "${s.topic}" with ${s.participant.name}`,
-      sub: s.status,
-      time: s.date,
-      icon: CalendarClock,
-      color: s.status === 'completed' ? 'text-emerald-500' : s.status === 'accepted' ? 'text-primary' : 'text-amber-500',
+      id: `s-${s.id}`, text: `${s.topic}`, sub: `with ${s.participant.name}`,
+      time: s.date, icon: CalendarClock,
+      color: s.status === "completed" ? "bg-emerald-500" : s.status === "accepted" ? "bg-primary" : "bg-amber-500",
     })),
     ...ratings.slice(0, 2).map((r) => ({
-      id: `r-${r.id}`,
-      text: `${r.fromUser.name} rated you ${r.rating}★`,
-      sub: r.feedback ? `"${r.feedback.slice(0, 40)}..."` : '',
-      time: r.createdAt,
-      icon: Star,
-      color: 'text-amber-400',
+      id: `r-${r.id}`, text: `${r.fromUser.name} rated you ${r.rating}★`,
+      sub: r.feedback ? `"${r.feedback.slice(0, 35)}..."` : "No feedback",
+      time: r.createdAt, icon: Star, color: "bg-amber-400",
     })),
-  ]
-    .sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
-    .slice(0, 5);
+  ].sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime()).slice(0, 4)
 
   const completionItems = [
-    { label: "Profile info", done: !!(user?.name && user?.email) },
-    { label: "Skills I have", done: offeredSkills.length > 0 },
-    { label: "Skills I need", done: wantedSkills.length > 0 },
-    { label: "First collab session", done: completedSessions.length > 0 },
+    { label: "Profile info", done: !!(user?.name && user?.email), link: "/profile" },
+    { label: "Skills I have", done: offeredSkills.length > 0, link: "/profile" },
+    { label: "Skills I need", done: wantedSkills.length > 0, link: "/profile" },
+    { label: "First collab session", done: completedSessions.length > 0, link: "/sessions" },
   ]
-  const completionPct = Math.round(
-    (completionItems.filter((i) => i.done).length / completionItems.length) *
-      100
-  )
+  const completionPct = Math.round((completionItems.filter((i) => i.done).length / completionItems.length) * 100)
+
+  const quickActions = [
+    { label: "Find Co-builders", icon: Users2, to: "/matches", color: "from-cyan-500 to-blue-600", desc: "Browse matches" },
+    { label: "Post a Project", icon: Handshake, to: "/collabs", color: "from-violet-500 to-purple-600", desc: "Collab board" },
+    { label: "Schedule Session", icon: CalendarClock, to: "/sessions", color: "from-emerald-500 to-teal-600", desc: "Book time" },
+    { label: "Send Message", icon: MessageSquare, to: "/messages", color: "from-orange-500 to-rose-600", desc: "Chat now" },
+  ]
 
   return (
-    <div className="dashboard-shell max-w-7xl space-y-6 rounded-[32px]">
-      <section className="dashboard-hero-shell animate-fade-up relative overflow-hidden rounded-[30px] border border-cyan-200/60 bg-[linear-gradient(135deg,rgba(239,252,250,0.98),rgba(245,250,255,0.96),rgba(238,246,255,0.96))] px-6 py-7 text-slate-900 shadow-[0_30px_80px_rgba(145,182,210,0.24)] lg:px-8 dark:border-white/10 dark:bg-[#081524] dark:text-white dark:shadow-[0_30px_80px_rgba(8,14,28,0.35)]">
-        <div className="gradient-bg-animated absolute inset-0 opacity-10 dark:opacity-20" />
-        <div className="dashboard-hero-grid" />
-        <div className="absolute top-0 -right-16 h-56 w-56 rounded-full bg-cyan-400/20 blur-3xl" />
-        <div className="animate-float-slow absolute bottom-0 left-0 h-44 w-44 rounded-full bg-sky-400/[0.12] blur-3xl" />
-        <div className="animate-ambient-pulse absolute top-[22%] right-[28%] h-24 w-24 rounded-full bg-cyan-300/[0.14] blur-2xl" />
-        <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.22),rgba(255,255,255,0.04),rgba(255,255,255,0.08))] dark:bg-[linear-gradient(135deg,rgba(8,21,36,0.96),rgba(10,33,54,0.92),rgba(16,32,55,0.95))]" />
+    <div className="space-y-5 max-w-7xl">
 
-        <div className="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-          <div className="space-y-3">
-            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-200/70 bg-white/70 px-3 py-1.5 text-xs font-medium text-cyan-700 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-white/8 dark:text-cyan-100">
-              <Sparkles className="h-3.5 w-3.5" />
-              {activeMatches.length > 0 ? `${activeMatches.length} active matches` : "Welcome to SkillBridge"}
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-                <span>{greeting}, </span>
-                <span className="gradient-text">{user?.name ?? "there"}</span>
-              </h1>
-              <p className="mt-2 max-w-2xl text-sm text-slate-700 sm:text-base dark:text-slate-200/[0.75]">
-                {completionPct < 100
-                  ? "Add your skills and post a project to start finding co-builders."
-                  : "Find collaborators, schedule build sessions, and ship projects together."}
-              </p>
-            </div>
+      {/* Hero */}
+      <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6 text-white shadow-2xl">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(42,199,182,0.2),transparent_60%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(99,102,241,0.15),transparent_60%)]" />
+        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")" }} />
+
+        <div className="relative z-10 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-sm text-white/50 mb-1">{greetingEmoji} {greeting}</p>
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
+              {user?.name ?? "there"}
+            </h1>
+            <p className="mt-1.5 text-sm text-white/60 max-w-md">
+              {completionPct < 75
+                ? "Complete your profile to unlock better co-builder matches."
+                : activeMatches.length > 0
+                ? `You have ${activeMatches.length} co-builder match${activeMatches.length > 1 ? "es" : ""} waiting.`
+                : "Post a project or add skills to find your co-builder."}
+            </p>
           </div>
 
-          <div className="grid grid-cols-3 gap-2 sm:gap-3">
-            <div className="dashboard-panel animate-scale-in rounded-2xl border border-white/60 bg-white/72 px-4 py-3 shadow-[0_18px_35px_rgba(150,185,210,0.18)] backdrop-blur-xl [animation-delay:80ms] dark:border-white/10 dark:bg-white/8">
-              <p className="text-xs tracking-[0.22em] text-slate-500 uppercase dark:text-white/[0.45]">
-                Matches
-              </p>
-              <p className="mt-1 text-2xl font-semibold">
-                {activeMatches.length}
-              </p>
-            </div>
-            <div className="dashboard-panel animate-scale-in rounded-2xl border border-white/60 bg-white/72 px-4 py-3 shadow-[0_18px_35px_rgba(150,185,210,0.18)] backdrop-blur-xl [animation-delay:160ms] dark:border-white/10 dark:bg-white/8">
-              <p className="text-xs tracking-[0.22em] text-slate-500 uppercase dark:text-white/[0.45]">
-                Sessions
-              </p>
-              <p className="mt-1 text-2xl font-semibold">
-                {user?.totalSessions ?? completedSessions.length}
-              </p>
-            </div>
-            <div className="dashboard-panel animate-scale-in rounded-2xl border border-white/60 bg-white/72 px-4 py-3 shadow-[0_18px_35px_rgba(150,185,210,0.18)] backdrop-blur-xl [animation-delay:240ms] dark:border-white/10 dark:bg-white/8">
-              <p className="text-xs tracking-[0.22em] text-slate-500 uppercase dark:text-white/[0.45]">
-                Progress
-              </p>
-              <p className="mt-1 text-2xl font-semibold">{completionPct}%</p>
-            </div>
+          {/* Mini stats */}
+          <div className="flex gap-3 shrink-0">
+            {[
+              { val: activeMatches.length, label: "Matches", color: "text-cyan-400" },
+              { val: user?.totalSessions ?? completedSessions.length, label: "Sessions", color: "text-violet-400" },
+              { val: `${completionPct}%`, label: "Profile", color: "text-emerald-400" },
+            ].map(({ val, label, color }) => (
+              <div key={label} className="text-center rounded-xl bg-white/8 border border-white/10 px-4 py-2.5 backdrop-blur-sm">
+                <p className={`text-xl font-bold ${color}`}>{val}</p>
+                <p className="text-[11px] text-white/40 uppercase tracking-wider mt-0.5">{label}</p>
+              </div>
+            ))}
           </div>
         </div>
+
+        {/* Profile completion bar */}
+        {completionPct < 100 && (
+          <div className="relative z-10 mt-4 pt-4 border-t border-white/10">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs text-white/50">Profile completion</span>
+              <span className="text-xs font-semibold text-white/70">{completionPct}%</span>
+            </div>
+            <div className="h-1.5 rounded-full bg-white/10 overflow-hidden">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-violet-500 transition-all duration-1000"
+                style={{ width: `${completionPct}%` }}
+              />
+            </div>
+          </div>
+        )}
       </section>
 
-      <section className="animate-fade-up-1 grid grid-cols-1 gap-4 lg:grid-cols-[1.3fr_0.7fr]">
-        <div className="dashboard-card dashboard-card-hover dashboard-panel relative overflow-hidden rounded-[28px] border-0 p-5">
-          <div className="animate-float absolute top-1/2 -right-8 h-28 w-28 -translate-y-1/2 rounded-full bg-cyan-400/[0.12] blur-3xl" />
-          <div className="relative z-10 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div className="space-y-2">
-              <div className="inline-flex items-center gap-2 rounded-full bg-primary/[0.12] px-3 py-1 text-xs font-semibold text-primary">
-                <Rocket className="h-3.5 w-3.5" />
-                Build momentum
-              </div>
-              <h2 className="text-xl font-semibold text-foreground">
-                You have active matches — reach out and start building.
-              </h2>
-              <p className="max-w-2xl text-sm text-muted-foreground">
-                Your skill profile is attracting matches. Message a collaborator, schedule a build session, or post a new project on the Collab Board.
-              </p>
+      {/* Quick Actions */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {quickActions.map(({ label, icon: Icon, to, color, desc }) => (
+          <button
+            key={to}
+            onClick={() => navigate(to)}
+            className="group relative overflow-hidden rounded-2xl border border-border/60 bg-card p-4 text-left transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:border-primary/30 active:scale-95"
+          >
+            <div className={`mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${color} text-white shadow-lg transition-transform duration-200 group-hover:scale-110 group-hover:rotate-3`}>
+              <Icon className="h-5 w-5" />
             </div>
-            <div className="grid grid-cols-2 gap-3 text-sm md:min-w-[250px]">
-              <div className="rounded-2xl bg-background/[0.58] p-4 shadow-sm">
-                <p className="text-muted-foreground">Completed</p>
-                <p className="mt-1 text-2xl font-bold text-foreground">
-                  {completedSessions.length}
-                </p>
-              </div>
-              <div className="rounded-2xl bg-background/[0.58] p-4 shadow-sm">
-                <p className="text-muted-foreground">Skills needed</p>
-                <p className="mt-1 text-2xl font-bold text-primary">
-                  {wantedSkills.length}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="dashboard-card dashboard-card-hover dashboard-panel relative overflow-hidden rounded-[28px] border-0 p-5">
-          <div className="animate-drift absolute -top-10 -left-8 h-24 w-24 rounded-full bg-sky-400/[0.14] blur-3xl" />
-          <div className="relative z-10">
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-cyan-100 px-3 py-1 text-xs font-semibold text-cyan-800 dark:bg-accent/[0.14] dark:text-accent-foreground">
-              <Waves className="h-3.5 w-3.5" />
-              Skill coverage
-            </div>
-            <div className="space-y-3">
-              <div>
-                <div className="mb-1 flex items-center justify-between text-xs tracking-wide text-muted-foreground uppercase">
-                  <span>I Have</span>
-                  <span>{offeredSkills.length}</span>
-                </div>
-                <Progress
-                  value={
-                    skills.length === 0
-                      ? 0
-                      : (offeredSkills.length / skills.length) * 100
-                  }
-                  className="h-2"
-                />
-              </div>
-              <div>
-                <div className="mb-1 flex items-center justify-between text-xs tracking-wide text-muted-foreground uppercase">
-                  <span>I Need</span>
-                  <span>{wantedSkills.length}</span>
-                </div>
-                <Progress
-                  value={
-                    skills.length === 0
-                      ? 0
-                      : (wantedSkills.length / skills.length) * 100
-                  }
-                  className="h-2"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <div className="animate-fade-up-2 grid grid-cols-2 gap-4 lg:grid-cols-4 stagger">
-        <StatCard
-          label="Co-builders Matched"
-          value={activeMatches.length}
-          icon={Users2}
-          trend="2 new"
-          trendUp
-          color="blue"
-        />
-        <StatCard
-          label="Build Sessions"
-          value={user?.totalSessions ?? completedSessions.length}
-          icon={CalendarClock}
-          trend="this month"
-          trendUp
-          color="teal"
-        />
-        <StatCard
-          label="Average Rating"
-          value={user?.rating ? `${user.rating}` : "-"}
-          icon={Star}
-          trend="steady"
-          trendUp
-          color="amber"
-        />
-        <StatCard
-          label="Skills Listed"
-          value={skills.length}
-          icon={BookOpen}
-          trend={`${offeredSkills.length} offer - ${wantedSkills.length} want`}
-          color="green"
-        />
+            <p className="text-sm font-semibold text-foreground">{label}</p>
+            <p className="text-xs text-muted-foreground mt-0.5">{desc}</p>
+            <ChevronRight className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/30 transition-all duration-200 group-hover:right-2 group-hover:text-primary" />
+          </button>
+        ))}
       </div>
 
-      <div className="animate-fade-up-3 grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <div className="space-y-4 lg:col-span-2">
-          <Card className="dashboard-card dashboard-card-hover dashboard-panel border-0">
-            <CardHeader className="flex flex-row items-center justify-between pb-3">
+      {/* Stat Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 stagger">
+        <StatCard label="Co-builders" value={activeMatches.length} icon={Users2} trend="matched" trendUp color="blue" />
+        <StatCard label="Sessions" value={user?.totalSessions ?? completedSessions.length} icon={CalendarClock} trend="completed" trendUp color="teal" />
+        <StatCard label="Rating" value={user?.rating ? Number(user.rating).toFixed(1) : "—"} icon={Star} trend="avg score" trendUp color="amber" />
+        <StatCard label="Skills" value={skills.length} icon={BookOpen} trend={`${offeredSkills.length} have · ${wantedSkills.length} need`} color="green" />
+      </div>
+
+      {/* Main content grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+        {/* Left col */}
+        <div className="lg:col-span-2 space-y-5">
+
+          {/* Matches */}
+          <div className="rounded-2xl border border-border/60 bg-card overflow-hidden">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-border/40">
               <div>
-                <CardTitle className="text-base font-semibold">
-                  Your Co-builder Matches
-                </CardTitle>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  People whose skills complement yours — potential collaborators.
-                </p>
+                <h2 className="font-semibold text-sm">Co-builder Matches</h2>
+                <p className="text-xs text-muted-foreground mt-0.5">People with complementary skills</p>
               </div>
-              <Link
-                to="/matches"
-                className="flex h-8 items-center gap-1 rounded-full border border-primary/20 px-3 text-xs font-medium text-primary transition-colors hover:bg-primary/10"
-              >
+              <Link to="/matches" className="flex items-center gap-1 text-xs font-medium text-primary hover:underline">
                 View all <ArrowRight className="h-3 w-3" />
               </Link>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {activeMatches.slice(0, 3).map((match, index) => (
-                <div
-                  key={match.id}
-                  className="dashboard-card-hover dashboard-panel rounded-2xl border border-border/60 bg-background/[0.55] p-4 backdrop-blur-sm"
-                  style={{
-                    animation: `fadeUp 0.55s ease-out ${index * 80}ms both`,
-                  }}
-                >
-                  <div className="flex items-center gap-3">
-                    <UserAvatar
-                      name={match.matchedUser.name}
-                      avatar={match.matchedUser.avatar}
-                      size="md"
-                    />
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center justify-between gap-2">
-                        <p className="truncate text-sm font-medium">
-                          {match.matchedUser.name}
-                        </p>
-                        <span className="rounded-full bg-primary/10 px-2 py-1 text-xs font-semibold text-primary">
-                          {match.compatibilityScore}% match
-                        </span>
-                      </div>
-                      <div className="mt-1.5 flex flex-wrap gap-1">
-                        {match.matchedSkills.offer.slice(0, 2).map((skill) => (
-                          <SkillBadge
-                            key={skill}
-                            skill={skill}
-                            type="offer"
-                            size="sm"
-                          />
-                        ))}
-                        {match.matchedSkills.want.slice(0, 1).map((skill) => (
-                          <SkillBadge
-                            key={skill}
-                            skill={skill}
-                            type="want"
-                            size="sm"
-                          />
-                        ))}
-                      </div>
+            </div>
+            <div className="divide-y divide-border/40">
+              {activeMatches.slice(0, 3).map((match) => (
+                <div key={match.id} className="flex items-center gap-3 px-5 py-3.5 hover:bg-muted/30 transition-colors group">
+                  <UserAvatar name={match.matchedUser.name} avatar={match.matchedUser.avatar} size="md" />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-medium truncate">{match.matchedUser.name}</p>
+                      <span className="shrink-0 text-[11px] font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded-full">
+                        {match.compatibilityScore}%
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {[...match.matchedSkills.offer.slice(0, 2), ...match.matchedSkills.want.slice(0, 1)].map((s, i) => (
+                        <SkillBadge key={s} skill={s} type={i < match.matchedSkills.offer.length ? "offer" : "want"} size="sm" />
+                      ))}
                     </div>
                   </div>
-                  <Progress
-                    value={match.compatibilityScore}
-                    className="mt-3 h-1.5"
-                  />
+                  <button
+                    onClick={() => navigate("/messages")}
+                    className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity p-2 rounded-xl hover:bg-primary/10 text-primary"
+                  >
+                    <MessageSquare className="h-4 w-4" />
+                  </button>
                 </div>
               ))}
               {activeMatches.length === 0 && (
-                <p className="py-6 text-center text-sm text-muted-foreground">
-                  No active matches yet. Complete your profile to find matches.
-                </p>
+                <div className="px-5 py-10 text-center">
+                  <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-muted">
+                    <Users2 className="h-6 w-6 text-muted-foreground/50" />
+                  </div>
+                  <p className="text-sm font-medium text-muted-foreground">No matches yet</p>
+                  <p className="text-xs text-muted-foreground/70 mt-1">Add skills to your profile to get matched</p>
+                  <Link to="/profile" className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline">
+                    Add skills <ArrowRight className="h-3 w-3" />
+                  </Link>
+                </div>
               )}
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          <Card className="dashboard-card dashboard-card-hover dashboard-panel border-0">
-            <CardHeader className="flex flex-row items-center justify-between pb-3">
+          {/* Sessions */}
+          <div className="rounded-2xl border border-border/60 bg-card overflow-hidden">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-border/40">
               <div>
-                <CardTitle className="text-base font-semibold">
-                  Upcoming Build Sessions
-                </CardTitle>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  Scheduled collaboration sessions with your co-builders.
-                </p>
+                <h2 className="font-semibold text-sm">Upcoming Sessions</h2>
+                <p className="text-xs text-muted-foreground mt-0.5">Your scheduled build sessions</p>
               </div>
-              <Link
-                to="/sessions"
-                className="flex h-8 items-center gap-1 rounded-full border border-primary/20 px-3 text-xs font-medium text-primary transition-colors hover:bg-primary/10"
-              >
+              <Link to="/sessions" className="flex items-center gap-1 text-xs font-medium text-primary hover:underline">
                 View all <ArrowRight className="h-3 w-3" />
               </Link>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {upcomingSessions.map((session, index) => {
+            </div>
+            <div className="divide-y divide-border/40">
+              {upcomingSessions.map((session) => {
                 const cfg = statusConfig[session.status]
                 const StatusIcon = cfg.icon
-
                 return (
-                  <div
-                    key={session.id}
-                    className="dashboard-card-hover dashboard-panel rounded-2xl border border-border/60 bg-background/[0.6] p-4 backdrop-blur-sm"
-                    style={{
-                      animation: `fadeUp 0.55s ease-out ${index * 90}ms both`,
-                    }}
-                  >
-                    <div className="flex items-center gap-3">
-                      <UserAvatar
-                        name={session.participant.name}
-                        avatar={session.participant.avatar}
-                        size="sm"
-                      />
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center justify-between gap-2">
-                          <p className="truncate text-sm font-medium">
-                            {session.topic}
-                          </p>
-                          <Badge
-                            variant="outline"
-                            className={`shrink-0 border text-xs ${cfg.color}`}
-                          >
-                            <StatusIcon className="mr-1 h-3 w-3" />
-                            {cfg.label}
-                          </Badge>
-                        </div>
-                        <p className="mt-1 text-xs text-muted-foreground">
-                          with {session.participant.name} -{" "}
-                          {format(new Date(session.date), "MMM d, h:mm a")} -{" "}
-                          {session.duration}min
-                        </p>
-                      </div>
+                  <div key={session.id} className="flex items-center gap-3 px-5 py-3.5 hover:bg-muted/30 transition-colors">
+                    <UserAvatar name={session.participant.name} avatar={session.participant.avatar} size="sm" />
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium truncate">{session.topic}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        {session.participant.name} · {format(new Date(session.date), "MMM d, h:mm a")} · {session.duration}min
+                      </p>
                     </div>
+                    <Badge variant="outline" className={`shrink-0 text-xs border ${cfg.color}`}>
+                      <StatusIcon className="mr-1 h-3 w-3" />{cfg.label}
+                    </Badge>
                   </div>
                 )
               })}
               {upcomingSessions.length === 0 && (
-                <p className="py-6 text-center text-sm text-muted-foreground">
-                  No sessions scheduled.
-                </p>
+                <div className="px-5 py-10 text-center">
+                  <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-muted">
+                    <CalendarClock className="h-6 w-6 text-muted-foreground/50" />
+                  </div>
+                  <p className="text-sm font-medium text-muted-foreground">No sessions yet</p>
+                  <button onClick={() => navigate("/sessions")} className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline">
+                    <Plus className="h-3 w-3" /> Schedule one
+                  </button>
+                </div>
               )}
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
 
-        <div className="space-y-4">
-          <Card className="dashboard-card dashboard-card-hover dashboard-panel glow-sweep border-0">
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2 text-base font-semibold">
-                <Zap className="h-4 w-4 text-accent" />
+        {/* Right col */}
+        <div className="space-y-5">
+
+          {/* Profile strength */}
+          <div className="rounded-2xl border border-border/60 bg-card p-5">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-semibold text-sm flex items-center gap-2">
+                <Flame className="h-4 w-4 text-orange-500" />
                 Profile Strength
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between rounded-2xl bg-primary/[0.08] px-3 py-3">
-                <div>
-                  <p className="text-xs tracking-[0.22em] text-muted-foreground uppercase">
-                    Completion
-                  </p>
-                  <p className="mt-1 text-2xl font-semibold text-primary">
-                    {completionPct}%
-                  </p>
-                </div>
-                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/[0.15] text-primary">
-                  <TrendingUp className="h-5 w-5" />
-                </div>
-              </div>
-              <Progress value={completionPct} className="h-2" />
-              <div className="space-y-2 pt-1">
-                {completionItems.map(({ label, done }) => (
-                  <div key={label} className="flex items-center gap-2 text-xs">
-                    <CheckCircle2
-                      className={`h-3.5 w-3.5 ${done ? "text-emerald-500" : "text-muted-foreground/40"}`}
-                    />
-                    <span
-                      className={
-                        done ? "text-foreground" : "text-muted-foreground"
-                      }
-                    >
-                      {label}
-                    </span>
+              </h2>
+              <span className="text-lg font-bold text-primary">{completionPct}%</span>
+            </div>
+            <div className="h-2 rounded-full bg-muted overflow-hidden mb-4">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 transition-all duration-1000"
+                style={{ width: `${completionPct}%` }}
+              />
+            </div>
+            <div className="space-y-2.5">
+              {completionItems.map(({ label, done, link }) => (
+                <Link key={label} to={done ? "#" : link} className={`flex items-center gap-2.5 group ${done ? "pointer-events-none" : ""}`}>
+                  <div className={`h-5 w-5 rounded-full flex items-center justify-center shrink-0 transition-all ${done ? "bg-emerald-500" : "bg-muted border-2 border-border group-hover:border-primary"}`}>
+                    {done && <CheckCircle2 className="h-3 w-3 text-white" />}
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                  <span className={`text-xs ${done ? "text-muted-foreground line-through" : "text-foreground group-hover:text-primary transition-colors"}`}>
+                    {label}
+                  </span>
+                  {!done && <ChevronRight className="h-3 w-3 text-muted-foreground/40 ml-auto group-hover:text-primary transition-colors" />}
+                </Link>
+              ))}
+            </div>
+          </div>
 
-          <Card className="dashboard-card dashboard-card-hover dashboard-panel border-0">
-            <CardHeader className="flex flex-row items-center justify-between pb-3">
-              <CardTitle className="text-base font-semibold">
+          {/* My Skills */}
+          <div className="rounded-2xl border border-border/60 bg-card p-5">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-semibold text-sm flex items-center gap-2">
+                <Zap className="h-4 w-4 text-amber-500" />
                 My Skills
-              </CardTitle>
-              <Link
-                to="/profile"
-                className="flex h-8 items-center gap-1 rounded-full border border-primary/20 px-3 text-xs font-medium text-primary transition-colors hover:bg-primary/10"
-              >
-                Manage <ArrowRight className="h-3 w-3" />
+              </h2>
+              <Link to="/profile" className="text-xs text-primary hover:underline flex items-center gap-1">
+                Edit <ArrowRight className="h-3 w-3" />
               </Link>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="rounded-2xl bg-background/[0.5] p-3">
-                <p className="mb-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">
-                  I Have
-                </p>
-                <div className="flex flex-wrap gap-1.5">
-                  {offeredSkills.map((skill) => (
-                    <SkillBadge
-                      key={skill.id}
-                      skill={skill.skillName}
-                      type="offer"
-                      level={skill.level}
-                      size="sm"
-                    />
-                  ))}
-                </div>
+            </div>
+            {skills.length === 0 ? (
+              <div className="text-center py-4">
+                <p className="text-xs text-muted-foreground">No skills added yet</p>
+                <Link to="/profile" className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline">
+                  <Plus className="h-3 w-3" /> Add skills
+                </Link>
               </div>
-              <div className="rounded-2xl bg-background/[0.5] p-3">
-                <p className="mb-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">
-                  I Need
-                </p>
-                <div className="flex flex-wrap gap-1.5">
-                  {wantedSkills.map((skill) => (
-                    <SkillBadge
-                      key={skill.id}
-                      skill={skill.skillName}
-                      type="want"
-                      level={skill.level}
-                      size="sm"
-                    />
-                  ))}
-                </div>
+            ) : (
+              <div className="space-y-3">
+                {offeredSkills.length > 0 && (
+                  <div>
+                    <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">I Have</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {offeredSkills.slice(0, 5).map((s) => <SkillBadge key={s.id} skill={s.skillName} type="offer" level={s.level} size="sm" />)}
+                    </div>
+                  </div>
+                )}
+                {wantedSkills.length > 0 && (
+                  <div>
+                    <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">I Need</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {wantedSkills.slice(0, 5).map((s) => <SkillBadge key={s.id} skill={s.skillName} type="want" level={s.level} size="sm" />)}
+                    </div>
+                  </div>
+                )}
               </div>
-            </CardContent>
-          </Card>
+            )}
+          </div>
 
-          <Card className="dashboard-card dashboard-card-hover dashboard-panel border-0">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base font-semibold">
-                My Collaborator Rating
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="flex items-center gap-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-accent/[0.15] text-3xl font-bold text-accent-foreground">
-                {user?.rating ?? "-"}
+          {/* Rating */}
+          <div className="rounded-2xl border border-border/60 bg-card p-5">
+            <h2 className="font-semibold text-sm flex items-center gap-2 mb-4">
+              <Star className="h-4 w-4 text-amber-400 fill-amber-400" />
+              My Rating
+            </h2>
+            <div className="flex items-center gap-4">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 text-white text-2xl font-bold shadow-lg">
+                {user?.rating ? Number(user.rating).toFixed(1) : "—"}
               </div>
               <div>
-                <StarRating
-                  value={Math.round(user?.rating ?? 0)}
-                  readonly
-                  size="sm"
-                />
-                <p className="mt-1 text-xs text-muted-foreground">
-                  Based on {user?.totalSessions ?? completedSessions.length}{" "}
-                  build sessions
+                <StarRating value={Math.round(user?.rating ?? 0)} readonly size="sm" />
+                <p className="text-xs text-muted-foreground mt-1">
+                  {user?.totalSessions ?? completedSessions.length} sessions completed
                 </p>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
+          {/* Activity */}
           {recentActivity.length > 0 && (
-            <Card className="dashboard-card dashboard-card-hover dashboard-panel border-0">
-              <CardHeader className="pb-3">
-                <CardTitle className="flex items-center gap-2 text-base font-semibold">
-                  <Activity className="h-4 w-4 text-primary" />
-                  Recent Activity
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
+            <div className="rounded-2xl border border-border/60 bg-card p-5">
+              <h2 className="font-semibold text-sm flex items-center gap-2 mb-4">
+                <Activity className="h-4 w-4 text-primary" />
+                Recent Activity
+              </h2>
+              <div className="space-y-3">
                 {recentActivity.map((item) => {
-                  const Icon = item.icon;
+                  const Icon = item.icon
                   return (
-                    <div key={item.id} className="flex items-start gap-2.5">
-                      <div className={`mt-0.5 shrink-0 ${item.color}`}>
-                        <Icon className="h-3.5 w-3.5" />
+                    <div key={item.id} className="flex items-start gap-3">
+                      <div className={`mt-0.5 h-6 w-6 rounded-lg ${item.color} flex items-center justify-center shrink-0`}>
+                        <Icon className="h-3 w-3 text-white" />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="text-xs font-medium leading-snug">{item.text}</p>
-                        {item.sub && <p className="text-[11px] text-muted-foreground mt-0.5 truncate">{item.sub}</p>}
+                        <p className="text-xs font-medium leading-snug truncate">{item.text}</p>
+                        <p className="text-[11px] text-muted-foreground mt-0.5 truncate">{item.sub}</p>
                       </div>
                     </div>
-                  );
+                  )
                 })}
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           )}
         </div>
       </div>
