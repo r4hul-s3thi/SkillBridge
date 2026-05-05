@@ -21,6 +21,12 @@ function SocketManager() {
   const { setOnlineUsers } = usePresenceStore()
 
   useEffect(() => {
+    // Ping backend to wake up Render free tier
+    const apiUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:8080'
+    fetch(`${apiUrl}/api/health`).catch(() => {})
+  }, [])
+
+  useEffect(() => {
     if (!user) return
     socketService.connect(user.id)
     socketService.onPresenceUpdate((ids) => setOnlineUsers(ids))

@@ -24,8 +24,8 @@ router.get('/conversations', auth, async (req, res) => {
       [req.user.id, req.user.id, req.user.id, req.user.id, req.user.id]
     );
 
-    res.json(result.rows.map((r, i) => ({
-      id: i + 1,
+    res.json(result.rows.map((r) => ({
+      id: r.id,
       participant: {
         id: r.id,
         name: r.name,

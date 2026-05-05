@@ -280,7 +280,7 @@ export default function Collabs() {
 
   return (
     <div className="space-y-6 max-w-4xl">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <Handshake className="w-6 h-6 text-primary" />
@@ -290,7 +290,7 @@ export default function Collabs() {
             Post your project, find collaborators, build together.
           </p>
         </div>
-        <Button size="sm" className="h-8 text-xs" onClick={() => setCreateOpen(true)}>
+        <Button size="sm" className="h-8 text-xs w-fit" onClick={() => setCreateOpen(true)}>
           <Plus className="w-4 h-4 mr-1.5" />
           Post a Project
         </Button>

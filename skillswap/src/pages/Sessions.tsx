@@ -126,7 +126,7 @@ export default function Sessions() {
     <div className="space-y-6 max-w-5xl">
       {/* Header */}
       <div className="dashboard-card dashboard-panel rounded-[24px] border-0 px-6 py-5">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-bold flex items-center gap-2">
               <div className="w-9 h-9 rounded-xl bg-primary/15 flex items-center justify-center">
@@ -137,15 +137,15 @@ export default function Sessions() {
             <p className="text-sm text-muted-foreground mt-1">Schedule and manage your learning sessions.</p>
           </div>
           <div className="flex items-center gap-3">
-            <div className="text-center px-4 py-2 rounded-xl bg-amber-500/10">
+            <div className="text-center px-3 py-2 rounded-xl bg-amber-500/10">
               <p className="text-xl font-bold text-amber-600 dark:text-amber-400">{upcoming.length}</p>
               <p className="text-xs text-muted-foreground">Upcoming</p>
             </div>
-            <div className="text-center px-4 py-2 rounded-xl bg-emerald-500/10">
+            <div className="text-center px-3 py-2 rounded-xl bg-emerald-500/10">
               <p className="text-xl font-bold text-emerald-600 dark:text-emerald-400">{completed.filter(s => s.status === 'completed').length}</p>
               <p className="text-xs text-muted-foreground">Done</p>
             </div>
-            <Button size="sm" className="h-9 text-xs" onClick={() => setDialogOpen(true)}>
+            <Button size="sm" className="h-9 text-xs shrink-0" onClick={() => setDialogOpen(true)}>
               <Plus className="w-4 h-4 mr-1.5" />Schedule
             </Button>
           </div>
