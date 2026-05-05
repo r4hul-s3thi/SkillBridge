@@ -75,7 +75,7 @@ export function AppLayout() {
         {loading ? (
           <AppSkeleton />
         ) : (
-          <main className="animate-fade-up flex-1 p-3 sm:p-4 md:p-6 min-w-0">
+          <main className="animate-fade-up flex-1 p-3 sm:p-4 md:p-6 min-w-0 page-enter">
             <div className="max-w-7xl mx-auto">
               <Outlet />
             </div>

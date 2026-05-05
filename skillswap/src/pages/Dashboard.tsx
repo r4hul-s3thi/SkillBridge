@@ -231,7 +231,7 @@ export default function Dashboard() {
         </div>
       </section>
 
-      <div className="animate-fade-up-2 grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="animate-fade-up-2 grid grid-cols-2 gap-4 lg:grid-cols-4 stagger">
         <StatCard
           label="Co-builders Matched"
           value={activeMatches.length}
