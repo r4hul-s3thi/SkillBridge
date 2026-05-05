@@ -210,13 +210,14 @@ async function autoSeed() {
   const password = await bcrypt.hash('password123', 10);
 
   const users = [
-    [1, 'Aarav Patel',  'aarav.patel@example.com',  password, 'https://randomuser.me/api/portraits/men/32.jpg',   'Full-stack developer passionate about teaching.',      'Bengaluru, India', 4.8, 24],
-    [2, 'Priya Sharma', 'priya.sharma@example.com', password, 'https://randomuser.me/api/portraits/women/44.jpg',  'UI/UX Designer with 5 years of experience.',          'Mumbai, India',    4.9, 31],
-    [3, 'Rahul Singh',  'rahul.singh@example.com',  password, 'https://randomuser.me/api/portraits/men/46.jpg',   'Backend engineer specializing in Java.',               'Delhi, India',     4.7, 18],
-    [4, 'Ananya Bose',  'ananya.bose@example.com',  password, 'https://randomuser.me/api/portraits/women/65.jpg', 'Data Scientist. Python, ML, TensorFlow expert.',      'Kolkata, India',   4.6, 22],
-    [5, 'Vikram Desai', 'vikram.desai@example.com', password, 'https://randomuser.me/api/portraits/men/55.jpg',   'DevOps engineer. Docker, Kubernetes, AWS.',           'Pune, India',      4.5, 15],
-    [6, 'Neha Reddy',   'neha.reddy@example.com',   password, 'https://randomuser.me/api/portraits/women/26.jpg', 'Frontend engineer with React and Vue expertise.',     'Hyderabad, India', 4.8, 20],
-    [7, 'Arjun Mehta',  'arjun.mehta@example.com',  password, 'https://randomuser.me/api/portraits/men/77.jpg',   'Cloud architect with AWS and Azure skills.',          'Chennai, India',   4.7, 17],
+    [1, 'Aarav Patel',   'aarav.patel@example.com',   password, 'https://randomuser.me/api/portraits/men/32.jpg',   'Full-stack developer passionate about building products.',  'Bengaluru, India', 4.8, 24],
+    [2, 'Priya Sharma',  'priya.sharma@example.com',  password, 'https://randomuser.me/api/portraits/women/44.jpg',  'UI/UX Designer with 5 years of experience.',               'Mumbai, India',    4.9, 31],
+    [3, 'Rahul Singh',   'rahul.singh@example.com',   password, 'https://randomuser.me/api/portraits/men/46.jpg',   'Backend engineer specializing in Java.',                    'Delhi, India',     4.7, 18],
+    [4, 'Ananya Bose',   'ananya.bose@example.com',   password, 'https://randomuser.me/api/portraits/women/65.jpg', 'Data Scientist. Python, ML, TensorFlow expert.',           'Kolkata, India',   4.6, 22],
+    [5, 'Vikram Desai',  'vikram.desai@example.com',  password, 'https://randomuser.me/api/portraits/men/55.jpg',   'DevOps engineer. Docker, Kubernetes, AWS.',                'Pune, India',      4.5, 15],
+    [6, 'Neha Reddy',    'neha.reddy@example.com',    password, 'https://randomuser.me/api/portraits/women/26.jpg', 'Frontend engineer with React and Vue expertise.',          'Hyderabad, India', 4.8, 20],
+    [7, 'Arjun Mehta',   'arjun.mehta@example.com',   password, 'https://randomuser.me/api/portraits/men/77.jpg',   'Cloud architect with AWS and Azure skills.',               'Chennai, India',   4.7, 17],
+    [8, 'Rahul Sethi',   'rahul.sethi@example.com',   password, 'https://randomuser.me/api/portraits/men/91.jpg',   'Full-stack developer. Built SkillBridge. React + Node.js.','Jaipur, India',    5.0, 10],
   ];
   for (const u of users)
     await db.query('INSERT INTO users (id,name,email,password,avatar,bio,location,rating,total_sessions) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)', u);
@@ -229,7 +230,8 @@ async function autoSeed() {
     [14,'Python','offer','Expert',4],[15,'Machine Learning','offer','Expert',4],[16,'TensorFlow','offer','Advanced',4],[17,'JavaScript','want','Beginner',4],
     [18,'Docker','offer','Expert',5],[19,'Kubernetes','offer','Expert',5],[20,'AWS','offer','Advanced',5],[21,'React','want','Beginner',5],
     [22,'Vue','offer','Expert',6],[23,'TypeScript','offer','Advanced',6],[24,'JavaScript','want','Intermediate',6],
-    [25,'AWS','offer','Expert',7],[26,'Cloud Architecture','offer','Expert',7],[27,'React','want','Intermediate',7],
+    [28,'React','offer','Expert',8],[29,'Node.js','offer','Expert',8],[30,'TypeScript','offer','Advanced',8],
+    [31,'UI/UX Design','want','Beginner',8],[32,'DevOps','want','Intermediate',8],
   ];
   for (const s of skills)
     await db.query('INSERT INTO skills (id,skill_name,type,level,user_id) VALUES ($1,$2,$3,$4,$5)', s);
@@ -237,6 +239,7 @@ async function autoSeed() {
   const matches = [
     [1,1,2,'active',94],[2,1,3,'active',87],[3,1,4,'active',88],
     [4,1,5,'active',85],[5,1,6,'pending',79],[6,1,7,'pending',72],
+    [7,1,8,'active',96],[8,2,8,'pending',88],[9,3,8,'pending',82],
   ];
   for (const m of matches)
     await db.query('INSERT INTO matches (id,user1_id,user2_id,status,compatibility_score) VALUES ($1,$2,$3,$4,$5)', m);

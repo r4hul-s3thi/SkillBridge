@@ -266,6 +266,7 @@ The `vercel.json` handles SPA routing automatically.
 | Vikram Desai | vikram.desai@example.com | Docker, Kubernetes, AWS |
 | Neha Reddy | neha.reddy@example.com | Vue, TypeScript |
 | Arjun Mehta | arjun.mehta@example.com | AWS, Cloud Architecture |
+| Rahul Sethi | rahul.sethi@example.com | React, Node.js, TypeScript |
 
 ---
 
