@@ -26,13 +26,12 @@ app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 
 const PORT = process.env.PORT || 8080;
 
-db.getConnection()
-  .then((conn) => {
-    conn.release();
-    console.log('✅ MySQL connected');
+db.query('SELECT 1')
+  .then(() => {
+    console.log('✅ PostgreSQL connected');
     app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
   })
   .catch((err) => {
-    console.error('❌ MySQL connection failed:', err.message);
+    console.error('❌ PostgreSQL connection failed:', err.message);
     process.exit(1);
   });
