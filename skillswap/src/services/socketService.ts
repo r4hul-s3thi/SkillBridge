@@ -6,9 +6,23 @@ let socket: Socket | null = null;
 
 export const socketService = {
   connect(userId: number) {
-    if (socket?.connected) return socket;
-    socket = io(SOCKET_URL, { transports: ['websocket', 'polling'] });
-    socket.on('connect', () => socket!.emit('user:online', userId));
+    if (socket?.connected) {
+      // Already connected — just re-register user as online
+      socket.emit('user:online', userId);
+      return socket;
+    }
+    socket = io(SOCKET_URL, {
+      transports: ['websocket', 'polling'],
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+    });
+    socket.on('connect', () => {
+      socket!.emit('user:online', userId);
+    });
+    socket.on('reconnect', () => {
+      socket!.emit('user:online', userId);
+    });
     return socket;
   },
 
@@ -33,19 +47,24 @@ export const socketService = {
     socket?.emit('typing:stop', { senderId, receiverId });
   },
 
+  // Always remove old listener before adding new one to prevent stacking
   onMessage(cb: (msg: { id: number; senderId: number; receiverId: number; message: string; createdAt: string }) => void) {
+    socket?.off('message:receive');
     socket?.on('message:receive', cb);
   },
 
   onPresenceUpdate(cb: (onlineIds: number[]) => void) {
+    socket?.off('presence:update');
     socket?.on('presence:update', cb);
   },
 
   onTypingStart(cb: (data: { senderId: number }) => void) {
+    socket?.off('typing:start');
     socket?.on('typing:start', cb);
   },
 
   onTypingStop(cb: (data: { senderId: number }) => void) {
+    socket?.off('typing:stop');
     socket?.on('typing:stop', cb);
   },
 

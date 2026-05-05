@@ -23,15 +23,22 @@ const onlineUsers = new Map();
 
 io.on('connection', (socket) => {
   socket.on('user:online', (userId) => {
-    onlineUsers.set(userId, socket.id);
-    io.emit('presence:update', Array.from(onlineUsers.keys()));
+    // Always store as number
+    const uid = parseInt(userId);
+    if (!isNaN(uid)) {
+      onlineUsers.set(uid, socket.id);
+      io.emit('presence:update', Array.from(onlineUsers.keys()));
+    }
   });
 
   socket.on('message:send', async ({ senderId, receiverId, message }) => {
+    const sid = parseInt(senderId);
+    const rid = parseInt(receiverId);
+    if (!message || isNaN(sid) || isNaN(rid)) return;
     try {
       const res = await db.query(
         'INSERT INTO messages (sender_id, receiver_id, message) VALUES ($1, $2, $3) RETURNING *',
-        [senderId, receiverId, message]
+        [sid, rid, message]
       );
       const msg = res.rows[0];
       const payload = {
@@ -42,9 +49,9 @@ io.on('connection', (socket) => {
         createdAt: msg.created_at,
       };
       // Send to receiver if online
-      const receiverSocket = onlineUsers.get(receiverId);
+      const receiverSocket = onlineUsers.get(rid);
       if (receiverSocket) io.to(receiverSocket).emit('message:receive', payload);
-      // Confirm to sender
+      // Confirm back to sender
       socket.emit('message:receive', payload);
     } catch (err) {
       socket.emit('message:error', err.message);
@@ -52,13 +59,13 @@ io.on('connection', (socket) => {
   });
 
   socket.on('typing:start', ({ senderId, receiverId }) => {
-    const receiverSocket = onlineUsers.get(receiverId);
-    if (receiverSocket) io.to(receiverSocket).emit('typing:start', { senderId });
+    const receiverSocket = onlineUsers.get(parseInt(receiverId));
+    if (receiverSocket) io.to(receiverSocket).emit('typing:start', { senderId: parseInt(senderId) });
   });
 
   socket.on('typing:stop', ({ senderId, receiverId }) => {
-    const receiverSocket = onlineUsers.get(receiverId);
-    if (receiverSocket) io.to(receiverSocket).emit('typing:stop', { senderId });
+    const receiverSocket = onlineUsers.get(parseInt(receiverId));
+    if (receiverSocket) io.to(receiverSocket).emit('typing:stop', { senderId: parseInt(senderId) });
   });
 
   socket.on('disconnect', () => {

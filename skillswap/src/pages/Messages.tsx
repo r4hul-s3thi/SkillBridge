@@ -18,16 +18,7 @@ export default function Messages() {
   const { user } = useAuthStore()
   const { isOnline } = usePresenceStore()
 
-  const effectiveConversations =
-    conversations.length > 0
-      ? conversations
-      : matches.map((m, i) => ({
-          id: m.id,
-          participant: m.matchedUser,
-          lastMessage: "Say hello! 👋",
-          lastMessageAt: new Date(Date.now() - i * 60000).toISOString(),
-          unreadCount: 0,
-        }))
+  const effectiveConversations = conversations
 
   const [selectedId, setSelectedId] = useState<number | null>(null)
   const [showChat, setShowChat] = useState(false) // mobile: show chat panel
@@ -45,37 +36,41 @@ export default function Messages() {
     setShowChat(true)
   }
 
+  const selectedRef = useRef<typeof selected>(undefined)
+  selectedRef.current = selected
+
   // Load messages when conversation changes
   useEffect(() => {
     if (!selected) return
+    setMessages([])
     messageService
       .getMessages(selected.participant.id)
       .then((res) => setMessages(res.data))
       .catch(() => setMessages([]))
   }, [selected?.participant.id])
 
-  // Socket: receive messages + typing
+  // Single persistent socket listener — uses ref to avoid stale closure
   useEffect(() => {
     if (!user) return
 
     socketService.onMessage((msg) => {
-      if (
-        (msg.senderId === selected?.participant.id && msg.receiverId === user.id) ||
-        (msg.senderId === user.id && msg.receiverId === selected?.participant.id)
-      ) {
-        setMessages((prev) => {
-          if (prev.find((m) => m.id === msg.id)) return prev
-          return [...prev, msg]
-        })
-      }
+      const sel = selectedRef.current
+      if (!sel) return
+      const relevant =
+        (msg.senderId === sel.participant.id && msg.receiverId === user.id) ||
+        (msg.senderId === user.id && msg.receiverId === sel.participant.id)
+      if (!relevant) return
+      setMessages((prev) =>
+        prev.find((m) => m.id === msg.id) ? prev : [...prev, msg]
+      )
     })
 
     socketService.onTypingStart(({ senderId }) => {
-      if (senderId === selected?.participant.id) setIsTyping(true)
+      if (senderId === selectedRef.current?.participant.id) setIsTyping(true)
     })
 
     socketService.onTypingStop(({ senderId }) => {
-      if (senderId === selected?.participant.id) setIsTyping(false)
+      if (senderId === selectedRef.current?.participant.id) setIsTyping(false)
     })
 
     return () => {
@@ -83,7 +78,7 @@ export default function Messages() {
       socketService.off("typing:start")
       socketService.off("typing:stop")
     }
-  }, [user?.id, selected?.participant.id])
+  }, [user?.id])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -166,7 +161,8 @@ export default function Messages() {
                 className="h-9 rounded-2xl border-border/60 bg-background/70 pl-9 text-sm shadow-sm"
               />
             </div>
-            {/* Online now */}
+            {/* Online now - only show if there are conversations */}
+            {effectiveConversations.length > 0 && (
             <div className="rounded-2xl border border-white/60 bg-white/68 p-3 shadow-sm dark:border-white/10 dark:bg-white/[0.04]">
               <div className="mb-2 flex items-center justify-between">
                 <p className="text-[11px] font-semibold tracking-[0.22em] text-muted-foreground uppercase">Online now</p>
@@ -188,10 +184,18 @@ export default function Messages() {
                 ))}
               </div>
             </div>
+            )}
           </div>
 
           <ScrollArea className="flex-1 p-2">
             <div className="space-y-1.5">
+              {effectiveConversations.length === 0 && (
+                <div className="px-3 py-8 text-center">
+                  <MessageSquare className="mx-auto h-8 w-8 opacity-20 mb-2" />
+                  <p className="text-xs text-muted-foreground">No conversations yet.</p>
+                  <p className="text-xs text-muted-foreground mt-1">Connect with someone on <a href="/matches" className="text-primary underline">Matches</a> and send a message.</p>
+                </div>
+              )}
               {effectiveConversations.map((conv, index) => {
                 const active = selectedId === conv.id
                 const online = isOnline(conv.participant.id)

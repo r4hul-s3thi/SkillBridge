@@ -47,6 +47,7 @@ export function AppSidebar() {
   const navigate = useNavigate();
 
   const unreadCount = conversations.reduce((acc, c) => acc + c.unreadCount, 0);
+  const onlineCount = onlineUserIds.size;
   const pendingSessions = sessions.filter((s) => s.status === 'pending').length;
 
   const handleLogout = () => {
@@ -67,12 +68,14 @@ export function AppSidebar() {
               <SkillSwapLogo size={34} />
               <div className="flex flex-col leading-tight min-w-0">
                 <span className="font-bold text-sidebar-foreground text-sm">SkillBridge</span>
-                <span className="flex items-center gap-1.5 text-xs text-sidebar-foreground/50 font-normal">
+                  <span className="flex items-center gap-1.5 text-xs text-sidebar-foreground/50 font-normal">
                   Peer Learning
-                  <span className="flex items-center gap-1 rounded-full bg-emerald-500/20 px-1.5 py-0.5 text-[10px] font-bold text-emerald-500">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                    {onlineUserIds.size}
-                  </span>
+                  {onlineCount > 0 && (
+                    <span className="flex items-center gap-1 rounded-full bg-emerald-500/20 px-1.5 py-0.5 text-[10px] font-bold text-emerald-500">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                      {onlineCount} online
+                    </span>
+                  )}
                 </span>
               </div>
             </SidebarMenuButton>
@@ -158,7 +161,7 @@ export function AppSidebar() {
             <SidebarMenuButton size="lg" className="gap-3 text-sidebar-foreground/80 hover:text-sidebar-foreground">
               <div className="relative shrink-0">
                 <UserAvatar name={user?.name ?? 'User'} avatar={user?.avatar} size="sm" />
-                <span className="absolute right-0 bottom-0 h-2 w-2 rounded-full border-2 border-sidebar bg-emerald-500" />
+                <span className="absolute right-0 bottom-0 h-2 w-2 rounded-full border-2 border-sidebar bg-emerald-500" title="You are online" />
               </div>
               <div className="flex flex-col leading-tight min-w-0">
                 <span className="text-sm font-medium truncate">{user?.name}</span>
