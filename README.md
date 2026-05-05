@@ -2,7 +2,7 @@
 
 <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=200&section=header&text=SkillBridge&fontSize=80&fontColor=fff&animation=twinkling&fontAlignY=35&desc=Exchange%20Skills.%20Grow%20Together.%20For%20Free.&descAlignY=60&descSize=20" width="100%"/>
 
-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=26&pause=1000&color=6366F1&center=true&vCenter=true&width=650&lines=🤝+Teach+what+you+know...;📚+Learn+what+you+want...;⚡+Real-time+messaging+%26+presence...;🚀+SkillBridge+connects+you!" alt="Typing SVG" />
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=24&pause=1000&color=6366F1&center=true&vCenter=true&width=650&lines=Teach+what+you+know...;Learn+what+you+want...;Real-time+messaging+%26+live+presence...;SkillBridge+connects+you!" alt="Typing SVG" />
 
 <br/>
 
@@ -25,7 +25,7 @@
 
 <br/>
 
-### 🌐 [Live Demo →]([https://skill-bridge-zjbb.vercel.app])
+### [Live Demo](https://skill-bridge-5g45.vercel.app)
 
 > *"I'll teach you React if you teach me UI/UX Design"* — that's **SkillBridge**.
 
@@ -33,40 +33,40 @@
 
 ---
 
-## 📖 What is SkillBridge?
+## What is SkillBridge?
 
 **SkillBridge** is a full-stack, real-time peer-to-peer skill exchange platform. People teach what they know and learn what they want — completely free, no tutors, no fees.
 
-- 🎯 Get **smart-matched** with compatible learners based on skill overlap
-- ⚡ **Real-time messaging** powered by Socket.io — messages appear instantly
-- 🟢 See who's **online right now** with live presence indicators
-- 📅 **Schedule sessions** and track your learning progress
-- 🚀 **Collaborate** on real projects with the Collab Board
-- 🏆 Climb the **leaderboard** as you complete sessions
-- 🤖 Get guided by a built-in **AI chatbot** assistant
+- Get **smart-matched** with compatible learners based on skill overlap
+- **Real-time messaging** powered by Socket.io — messages appear instantly
+- See who is **online right now** with live presence indicators
+- **Schedule sessions** and track your learning progress
+- **Collaborate** on real projects with the Collab Board
+- Climb the **leaderboard** as you complete sessions
+- Get guided by a built-in **AI chatbot** assistant
 
 ---
 
-## ✨ Features
+## Features
 
-| | Feature | Description |
-|:---:|---|---|
-| 🔐 | **Authentication** | Register & login with JWT + OAuth (Google & GitHub) |
-| 👤 | **Profile** | Edit bio, location, upload/remove profile picture |
-| 🤝 | **Smart Matching** | Auto-matched based on skill overlap & compatibility score |
-| ⚡ | **Real-time Chat** | Instant messaging via Socket.io with typing indicators |
-| 🟢 | **Live Presence** | See who's online in real-time across all users |
-| 📅 | **Sessions** | Schedule, accept, reject and complete learning sessions |
-| 🚀 | **Collab Board** | Post projects, find collaborators, manage join requests |
-| ⭐ | **Ratings** | Rate peers after sessions with star ratings & feedback |
-| 🏆 | **Leaderboard** | Top users ranked by sessions completed + rating score |
-| 🤖 | **AI Chatbot** | Built-in Hindi/English assistant to guide users |
-| 🌙 | **Dark / Light Mode** | Full theme support across all pages |
-| 📊 | **Activity Feed** | Recent activity feed on your personal dashboard |
+| Feature | Description |
+|---|---|
+| **Authentication** | Register & login with JWT + OAuth (Google & GitHub) |
+| **Profile** | Edit bio, location, upload/remove profile picture |
+| **Smart Matching** | Auto-matched based on skill overlap & compatibility score |
+| **Real-time Chat** | Instant messaging via Socket.io with typing indicators |
+| **Live Presence** | See who is online in real-time across all users |
+| **Sessions** | Schedule, accept, reject and complete learning sessions |
+| **Collab Board** | Post projects, find collaborators, manage join requests |
+| **Ratings** | Rate peers after sessions with star ratings & feedback |
+| **Leaderboard** | Top users ranked by sessions completed + rating score |
+| **AI Chatbot** | Built-in Hindi/English assistant to guide users |
+| **Dark / Light Mode** | Full theme support across all pages |
+| **Activity Feed** | Recent activity feed on your personal dashboard |
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend
 
@@ -100,20 +100,18 @@
 
 ---
 
-## ⚡ Real-time Architecture
+## Real-time Architecture
 
 ```
-User A (Browser)                    Server (Socket.io)                User B (Browser)
-      │                                     │                               │
-      │──── socket.emit('message:send') ───▶│                               │
-      │                                     │──── db.INSERT message ───────▶│
-      │                                     │                               │
-      │◀─── socket.emit('message:receive') ─│                               │
-      │                                     │──── socket.to(B).emit() ─────▶│
-      │                                     │                               │
-      │──── socket.emit('typing:start') ───▶│──── socket.to(B).emit() ─────▶│
-      │                                     │                               │
-      │──── socket.emit('user:online') ────▶│──── io.emit('presence:update')▶│
+User A (Browser)              Server (Socket.io)              User B (Browser)
+      |                               |                               |
+      |--- message:send ------------->|                               |
+      |                               |--- db.INSERT --------------->|
+      |<-- message:receive -----------|                               |
+      |                               |--- socket.to(B).emit() ----->|
+      |                               |                               |
+      |--- typing:start ------------->|--- socket.to(B).emit() ----->|
+      |--- user:online -------------->|--- io.emit(presence:update)->|
 ```
 
 - Messages are saved to PostgreSQL and emitted to both sender and receiver simultaneously
@@ -122,34 +120,34 @@ User A (Browser)                    Server (Socket.io)                User B (Br
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 SkillBridge/
-├── skillswap/                    # Frontend (React + TypeScript)
-│   └── src/
-│       ├── pages/                # Dashboard, Profile, Matches, Messages,
-│       │                         # Sessions, Ratings, Collabs, Leaderboard
-│       ├── components/
-│       │   ├── layout/           # AppLayout, AppSidebar
-│       │   └── shared/           # UserAvatar, ChatBot, StarRating, etc.
-│       ├── services/             # API + Socket service files
-│       ├── store/                # Zustand stores (auth, app, presence)
-│       └── types/                # TypeScript interfaces
-│
-└── skillswap-backend/            # Backend (Node.js + Express + Socket.io)
-    ├── routes/                   # auth, skills, matches, sessions,
-    │                             # messages, ratings, collabs, leaderboard
-    ├── middleware/               # JWT auth middleware
-    ├── utils/                    # generateMatches helper
-    ├── schema.sql                # Full database schema
-    ├── seed.js                   # Demo data seeder
-    └── index.js                  # Entry point with Socket.io server
+|-- skillswap/                    # Frontend (React + TypeScript)
+|   `-- src/
+|       |-- pages/                # Dashboard, Profile, Matches, Messages,
+|       |                         # Sessions, Ratings, Collabs, Leaderboard
+|       |-- components/
+|       |   |-- layout/           # AppLayout, AppSidebar
+|       |   `-- shared/           # UserAvatar, ChatBot, StarRating, etc.
+|       |-- services/             # API + Socket service files
+|       |-- store/                # Zustand stores (auth, app, presence)
+|       `-- types/                # TypeScript interfaces
+|
+`-- skillswap-backend/            # Backend (Node.js + Express + Socket.io)
+    |-- routes/                   # auth, skills, matches, sessions,
+    |                             # messages, ratings, collabs, leaderboard
+    |-- middleware/               # JWT auth middleware
+    |-- utils/                    # generateMatches helper
+    |-- schema.sql                # Full database schema
+    |-- seed.js                   # Demo data seeder
+    `-- index.js                  # Entry point with Socket.io server
 ```
 
 ---
 
-## 🚀 Getting Started (Local)
+## Getting Started (Local)
 
 ### Prerequisites
 
@@ -185,10 +183,10 @@ Start the backend (auto-creates tables and seeds demo data):
 
 ```bash
 node index.js
-# ✅ PostgreSQL connected
-# ✅ Database tables ready
-# 🌱 Auto-seeding demo data...
-# 🚀 Server running on http://localhost:8080
+# PostgreSQL connected
+# Database tables ready
+# Auto-seeding demo data...
+# Server running on http://localhost:8080
 ```
 
 ### 3. Setup the Frontend
@@ -211,7 +209,7 @@ npm run dev
 
 ---
 
-## ☁️ Deployment
+## Deployment
 
 ### Backend → Render
 
@@ -242,7 +240,7 @@ The `vercel.json` handles SPA routing automatically.
 
 ---
 
-## 👥 Demo Accounts
+## Demo Accounts
 
 > All accounts use password: **`password123`**
 
@@ -258,10 +256,10 @@ The `vercel.json` handles SPA routing automatically.
 
 ---
 
-## 🔌 API Reference
+## API Reference
 
 <details>
-<summary><b>🔐 Auth</b></summary>
+<summary><b>Auth</b></summary>
 
 | Method | Endpoint | Description |
 |---|---|---|
@@ -273,7 +271,7 @@ The `vercel.json` handles SPA routing automatically.
 </details>
 
 <details>
-<summary><b>🎯 Core</b></summary>
+<summary><b>Core</b></summary>
 
 | Method | Endpoint | Description |
 |---|---|---|
@@ -290,7 +288,7 @@ The `vercel.json` handles SPA routing automatically.
 </details>
 
 <details>
-<summary><b>🚀 Extended</b></summary>
+<summary><b>Extended Features</b></summary>
 
 | Method | Endpoint | Description |
 |---|---|---|
@@ -306,7 +304,7 @@ The `vercel.json` handles SPA routing automatically.
 </details>
 
 <details>
-<summary><b>⚡ Socket.io Events</b></summary>
+<summary><b>Socket.io Events</b></summary>
 
 | Event | Direction | Payload | Description |
 |---|---|---|---|
@@ -321,17 +319,17 @@ The `vercel.json` handles SPA routing automatically.
 
 ---
 
-## 🏆 Leaderboard Scoring
+## Leaderboard Scoring
 
 ```
-Score = (Average Rating × 20) + Total Sessions Completed
+Score = (Average Rating x 20) + Total Sessions Completed
 ```
 
 Complete more sessions and maintain a high rating to climb the leaderboard!
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome!
 
@@ -339,12 +337,12 @@ Contributions are welcome!
 git checkout -b feature/your-feature
 git commit -m "feat: add your feature"
 git push origin feature/your-feature
-# Open a Pull Request 🎉
+# Open a Pull Request
 ```
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the **MIT License** — see [LICENSE](LICENSE) for details.
 
@@ -354,9 +352,9 @@ This project is licensed under the **MIT License** — see [LICENSE](LICENSE) fo
 
 <div align="center">
 
-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=15&pause=1000&color=6366F1&center=true&vCenter=true&width=500&lines=Built+with+%E2%9D%A4%EF%B8%8F+using+React+%2B+Node.js+%2B+Socket.io;Thanks+for+visiting+SkillBridge!+🚀" alt="Footer" />
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=15&pause=1000&color=6366F1&center=true&vCenter=true&width=500&lines=Built+with+React+%2B+Node.js+%2B+Socket.io;Thanks+for+visiting+SkillBridge!" alt="Footer" />
 
-**[⭐ Star this repo](https://github.com/r4hul-s3thi/SkillBridge)** if you found it useful!
+**[Star this repo](https://github.com/r4hul-s3thi/SkillBridge)** if you found it useful!
 
 [![GitHub followers](https://img.shields.io/github/followers/r4hul-s3thi?style=social)](https://github.com/r4hul-s3thi)
 [![GitHub stars](https://img.shields.io/github/stars/r4hul-s3thi/SkillBridge?style=social)](https://github.com/r4hul-s3thi/SkillBridge)
