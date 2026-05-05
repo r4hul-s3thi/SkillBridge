@@ -2,7 +2,7 @@
 
 <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=200&section=header&text=SkillBridge&fontSize=80&fontColor=fff&animation=twinkling&fontAlignY=35&desc=Exchange%20Skills.%20Grow%20Together.%20For%20Free.&descAlignY=60&descSize=20" width="100%"/>
 
-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=28&pause=1000&color=6366F1&center=true&vCenter=true&width=600&lines=%F0%9F%A4%9D+Teach+what+you+know...;%F0%9F%93%9A+Learn+what+you+want...;%F0%9F%9A%80+SkillBridge+connects+you!" alt="Typing SVG" />
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=26&pause=1000&color=6366F1&center=true&vCenter=true&width=650&lines=🤝+Teach+what+you+know...;📚+Learn+what+you+want...;⚡+Real-time+messaging+%26+presence...;🚀+SkillBridge+connects+you!" alt="Typing SVG" />
 
 <br/>
 
@@ -10,36 +10,40 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://typescriptlang.org)
 [![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://postgresql.org)
+[![Socket.io](https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=socket.io&logoColor=white)](https://socket.io)
 [![TailwindCSS](https://img.shields.io/badge/Tailwind_v4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
 [![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev)
+
+<br/>
 
 ![License](https://img.shields.io/badge/license-MIT-2ac7b6?style=flat-square&logo=opensourceinitiative&logoColor=white)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square&logo=github)
 ![Made with Love](https://img.shields.io/badge/Made%20with-%E2%9D%A4%EF%B8%8F-red?style=flat-square)
-![Hackathon](https://img.shields.io/badge/Built%20for-Hackathon-ff7a59?style=flat-square&logo=devpost)
 [![Stars](https://img.shields.io/github/stars/r4hul-s3thi/SkillBridge?style=flat-square&color=yellow&logo=github)](https://github.com/r4hul-s3thi/SkillBridge/stargazers)
+[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=flat-square&logo=vercel)](https://skill-bridge-5g45.vercel.app)
+[![Backend on Render](https://img.shields.io/badge/Backend%20on-Render-46E3B7?style=flat-square&logo=render&logoColor=white)](https://skillswap-backend-r27s.onrender.com)
 
 <br/>
 
-### 🌐 [Live Demo →](https://skill-bridge-zjbb.vercel.app)
+### 🌐 [Live Demo →](https://skill-bridge-5g45.vercel.app)
 
-> 💡 *"I'll teach you React if you teach me UI/UX Design"* — that's **SkillBridge**.
+> *"I'll teach you React if you teach me UI/UX Design"* — that's **SkillBridge**.
 
 </div>
 
 ---
 
-## 🌟 What is SkillBridge?
+## 📖 What is SkillBridge?
 
-**SkillBridge** is a full-stack peer-to-peer skill exchange platform where people teach what they know and learn what they want — completely free.
+**SkillBridge** is a full-stack, real-time peer-to-peer skill exchange platform. People teach what they know and learn what they want — completely free, no tutors, no fees.
 
-No money. No tutors. Just people helping people grow.
-
-- 🎯 Get **smart-matched** with compatible learners
-- 💬 **Chat** and schedule learning sessions
-- 🚀 **Collaborate** on real projects together
-- 🏆 Climb the **leaderboard** as you grow
-- 🤖 Get guided by an **AI chatbot** assistant
+- 🎯 Get **smart-matched** with compatible learners based on skill overlap
+- ⚡ **Real-time messaging** powered by Socket.io — messages appear instantly
+- 🟢 See who's **online right now** with live presence indicators
+- 📅 **Schedule sessions** and track your learning progress
+- 🚀 **Collaborate** on real projects with the Collab Board
+- 🏆 Climb the **leaderboard** as you complete sessions
+- 🤖 Get guided by a built-in **AI chatbot** assistant
 
 ---
 
@@ -47,18 +51,18 @@ No money. No tutors. Just people helping people grow.
 
 | | Feature | Description |
 |:---:|---|---|
-| 🔐 | **Authentication** | Register, Login with JWT + OAuth (Google & GitHub) |
+| 🔐 | **Authentication** | Register & login with JWT + OAuth (Google & GitHub) |
 | 👤 | **Profile** | Edit bio, location, upload/remove profile picture |
 | 🤝 | **Smart Matching** | Auto-matched based on skill overlap & compatibility score |
-| 💬 | **Real-time Chat** | Messaging with unique auto-reply personalities per user |
+| ⚡ | **Real-time Chat** | Instant messaging via Socket.io with typing indicators |
+| 🟢 | **Live Presence** | See who's online in real-time across all users |
 | 📅 | **Sessions** | Schedule, accept, reject and complete learning sessions |
 | 🚀 | **Collab Board** | Post projects, find collaborators, manage join requests |
 | ⭐ | **Ratings** | Rate peers after sessions with star ratings & feedback |
-| 🏆 | **Leaderboard** | Top users ranked by sessions + rating score |
+| 🏆 | **Leaderboard** | Top users ranked by sessions completed + rating score |
 | 🤖 | **AI Chatbot** | Built-in Hindi/English assistant to guide users |
 | 🌙 | **Dark / Light Mode** | Full theme support across all pages |
-| 🔍 | **Skill Search** | Filter matches by name, location or skill |
-| 📊 | **Activity Feed** | Real-time recent activity on your dashboard |
+| 📊 | **Activity Feed** | Recent activity feed on your personal dashboard |
 
 ---
 
@@ -68,23 +72,53 @@ No money. No tutors. Just people helping people grow.
 
 | Tech | Purpose |
 |---|---|
-| React 19 + TypeScript | Component-based UI |
-| Vite | Lightning-fast dev server & build |
-| Tailwind CSS v4 | Utility-first styling |
-| Zustand | Lightweight state management |
+| React 19 + TypeScript | Component-based UI with full type safety |
+| Vite 7 | Lightning-fast dev server & optimized builds |
+| Tailwind CSS v4 | Utility-first styling with custom animations |
+| Zustand | Lightweight global state management |
 | React Router v7 | Client-side routing |
-| Shadcn/ui | Accessible UI components |
-| Axios | HTTP client |
+| Socket.io Client | Real-time bidirectional communication |
+| Shadcn/ui | Accessible, composable UI components |
+| Axios | HTTP client for REST API calls |
 
 ### Backend
 
 | Tech | Purpose |
 |---|---|
 | Node.js + Express | REST API server |
+| Socket.io | WebSocket server for real-time events |
 | PostgreSQL (via `pg`) | Relational database |
-| JWT | Stateless authentication |
-| Bcrypt | Password hashing |
-| CORS | Cross-origin resource sharing |
+| JWT | Stateless authentication tokens |
+| Bcrypt | Secure password hashing |
+
+### Infrastructure
+
+| Service | Purpose |
+|---|---|
+| Vercel | Frontend hosting with automatic CI/CD |
+| Render | Backend hosting with PostgreSQL |
+
+---
+
+## ⚡ Real-time Architecture
+
+```
+User A (Browser)                    Server (Socket.io)                User B (Browser)
+      │                                     │                               │
+      │──── socket.emit('message:send') ───▶│                               │
+      │                                     │──── db.INSERT message ───────▶│
+      │                                     │                               │
+      │◀─── socket.emit('message:receive') ─│                               │
+      │                                     │──── socket.to(B).emit() ─────▶│
+      │                                     │                               │
+      │──── socket.emit('typing:start') ───▶│──── socket.to(B).emit() ─────▶│
+      │                                     │                               │
+      │──── socket.emit('user:online') ────▶│──── io.emit('presence:update')▶│
+```
+
+- Messages are saved to PostgreSQL and emitted to both sender and receiver simultaneously
+- Typing indicators are forwarded to the recipient in real-time
+- Online presence is broadcast to all connected clients on connect/disconnect
 
 ---
 
@@ -99,23 +133,23 @@ SkillBridge/
 │       ├── components/
 │       │   ├── layout/           # AppLayout, AppSidebar
 │       │   └── shared/           # UserAvatar, ChatBot, StarRating, etc.
-│       ├── services/             # API service files (axios)
-│       ├── store/                # Zustand stores (auth + app)
+│       ├── services/             # API + Socket service files
+│       ├── store/                # Zustand stores (auth, app, presence)
 │       └── types/                # TypeScript interfaces
 │
-└── skillswap-backend/            # Backend (Node.js + Express)
+└── skillswap-backend/            # Backend (Node.js + Express + Socket.io)
     ├── routes/                   # auth, skills, matches, sessions,
     │                             # messages, ratings, collabs, leaderboard
     ├── middleware/               # JWT auth middleware
     ├── utils/                    # generateMatches helper
     ├── schema.sql                # Full database schema
     ├── seed.js                   # Demo data seeder
-    └── index.js                  # Entry point
+    └── index.js                  # Entry point with Socket.io server
 ```
 
 ---
 
-## ⚡ Getting Started (Local)
+## 🚀 Getting Started (Local)
 
 ### Prerequisites
 
@@ -136,29 +170,24 @@ cd skillswap-backend
 npm install
 ```
 
-Create a `.env` file inside `skillswap-backend/`:
+Create `.env` inside `skillswap-backend/`:
 
 ```env
 PORT=8080
-DATABASE_URL=postgresql://root:your_password@localhost:5432/skillbridge
-JWT_SECRET=your_secret_key
+DATABASE_URL=postgresql://postgres:your_password@localhost:5432/skillbridge
+JWT_SECRET=your_super_secret_key
 JWT_EXPIRES_IN=7d
 FRONTEND_URL=http://localhost:5173
 NODE_ENV=development
 ```
 
-Run the schema and seed demo data:
-
-```bash
-psql -U postgres -f schema.sql
-npm run seed
-```
-
-Start the backend:
+Start the backend (auto-creates tables and seeds demo data):
 
 ```bash
 node index.js
 # ✅ PostgreSQL connected
+# ✅ Database tables ready
+# 🌱 Auto-seeding demo data...
 # 🚀 Server running on http://localhost:8080
 ```
 
@@ -169,7 +198,7 @@ cd skillswap
 npm install
 ```
 
-Create a `.env` file inside `skillswap/`:
+Create `.env` inside `skillswap/`:
 
 ```env
 VITE_API_URL=http://localhost:8080/api
@@ -182,42 +211,40 @@ npm run dev
 
 ---
 
-## 🚀 Deployment
+## ☁️ Deployment
 
 ### Backend → Render
 
 1. Go to [render.com](https://render.com) → **New Web Service** → connect your GitHub repo
 2. Set **Root Directory** to `skillswap-backend`
 3. Build command: `npm install` | Start command: `npm start`
-4. Add these environment variables in Render dashboard:
+4. Add environment variables:
 
 | Key | Value |
 |---|---|
-| `DATABASE_URL` | Your Render PostgreSQL connection string |
+| `DATABASE_URL` | Render PostgreSQL connection string |
 | `JWT_SECRET` | A long random secret string |
 | `JWT_EXPIRES_IN` | `7d` |
-| `FRONTEND_URL` | Your Vercel frontend URL (e.g. `https://skill-bridge-r4hul.vercel.app`) |
+| `FRONTEND_URL` | Your Vercel frontend URL |
 | `NODE_ENV` | `production` |
-
-> The `render.yaml` in `skillswap-backend/` is pre-configured for one-click deploy.
 
 ### Frontend → Vercel
 
 1. Go to [vercel.com](https://vercel.com) → **New Project** → import your GitHub repo
 2. Set **Root Directory** to `skillswap`
-3. Add this environment variable in Vercel dashboard:
+3. Add environment variable:
 
 | Key | Value |
 |---|---|
-| `VITE_API_URL` | Your Render backend URL + `/api` (e.g. `https://skillswap-backend.onrender.com/api`) |
+| `VITE_API_URL` | `https://your-backend.onrender.com/api` |
 
-4. Deploy — Vercel auto-detects Vite. The `vercel.json` handles SPA routing.
+The `vercel.json` handles SPA routing automatically.
 
 ---
 
 ## 👥 Demo Accounts
 
-> All demo accounts use the password: **`password123`**
+> All accounts use password: **`password123`**
 
 | Name | Email | Offers | Wants |
 |---|---|---|---|
@@ -231,22 +258,22 @@ npm run dev
 
 ---
 
-## 🔌 API Endpoints
+## 🔌 API Reference
 
 <details>
-<summary><b>🔐 Auth Routes</b></summary>
+<summary><b>🔐 Auth</b></summary>
 
 | Method | Endpoint | Description |
 |---|---|---|
 | `POST` | `/api/auth/register` | Register new user |
-| `POST` | `/api/auth/login` | Login |
+| `POST` | `/api/auth/login` | Login with email & password |
 | `POST` | `/api/auth/oauth` | OAuth login (Google/GitHub) |
-| `PATCH` | `/api/auth/profile` | Update profile |
+| `PATCH` | `/api/auth/profile` | Update profile info |
 
 </details>
 
 <details>
-<summary><b>🎯 Core Routes</b></summary>
+<summary><b>🎯 Core</b></summary>
 
 | Method | Endpoint | Description |
 |---|---|---|
@@ -256,25 +283,39 @@ npm run dev
 | `PATCH` | `/api/matches/:id` | Update match status |
 | `GET/POST` | `/api/sessions` | Get or create sessions |
 | `PATCH` | `/api/sessions/:id` | Update session status |
-| `GET` | `/api/messages/conversations` | Get conversations |
+| `GET` | `/api/messages/conversations` | Get all conversations |
 | `GET/POST` | `/api/messages/:userId` | Get thread / send message |
 | `GET/POST` | `/api/ratings` | Get or submit ratings |
 
 </details>
 
 <details>
-<summary><b>🚀 Extended Features</b></summary>
+<summary><b>🚀 Extended</b></summary>
 
 | Method | Endpoint | Description |
 |---|---|---|
-| `GET` | `/api/collabs` | Get all collab posts |
-| `GET` | `/api/collabs/mine` | Get my posts |
-| `POST` | `/api/collabs` | Create a post |
-| `PATCH` | `/api/collabs/:id/status` | Open/close post |
-| `DELETE` | `/api/collabs/:id` | Delete post |
+| `GET/POST` | `/api/collabs` | Get all or create collab posts |
+| `GET` | `/api/collabs/mine` | Get my collab posts |
+| `PATCH` | `/api/collabs/:id/status` | Open/close a post |
+| `DELETE` | `/api/collabs/:id` | Delete a post |
 | `GET/POST` | `/api/collabs/:id/requests` | Get or send join requests |
-| `PATCH` | `/api/collabs/requests/:id` | Accept/reject request |
+| `PATCH` | `/api/collabs/requests/:id` | Accept/reject a request |
 | `GET` | `/api/leaderboard` | Get top users by score |
+| `GET` | `/api/online-users` | Get currently online user IDs |
+
+</details>
+
+<details>
+<summary><b>⚡ Socket.io Events</b></summary>
+
+| Event | Direction | Payload | Description |
+|---|---|---|---|
+| `user:online` | Client → Server | `userId` | Register user as online |
+| `message:send` | Client → Server | `{ senderId, receiverId, message }` | Send a message |
+| `message:receive` | Server → Client | `{ id, senderId, receiverId, message, createdAt }` | Receive a message |
+| `typing:start` | Client → Server | `{ senderId, receiverId }` | User started typing |
+| `typing:stop` | Client → Server | `{ senderId, receiverId }` | User stopped typing |
+| `presence:update` | Server → All | `number[]` | Updated list of online user IDs |
 
 </details>
 
@@ -283,16 +324,16 @@ npm run dev
 ## 🏆 Leaderboard Scoring
 
 ```
-Score = (Rating × 20) + Sessions Done
+Score = (Average Rating × 20) + Total Sessions Completed
 ```
 
-Complete more sessions and maintain a high rating to climb the leaderboard! 🚀
+Complete more sessions and maintain a high rating to climb the leaderboard!
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Feel free to open issues or submit pull requests.
+Contributions are welcome!
 
 ```bash
 git checkout -b feature/your-feature
@@ -305,7 +346,7 @@ git push origin feature/your-feature
 
 ## 📄 License
 
-This project is licensed under the **MIT License**.
+This project is licensed under the **MIT License** — see [LICENSE](LICENSE) for details.
 
 ---
 
@@ -313,7 +354,7 @@ This project is licensed under the **MIT License**.
 
 <div align="center">
 
-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=16&pause=1000&color=6366F1&center=true&vCenter=true&width=500&lines=Made+with+%E2%9D%A4%EF%B8%8F+for+the+Hackathon;Thanks+for+visiting+SkillBridge!+%F0%9F%9A%80" alt="Footer Typing" />
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=15&pause=1000&color=6366F1&center=true&vCenter=true&width=500&lines=Built+with+%E2%9D%A4%EF%B8%8F+using+React+%2B+Node.js+%2B+Socket.io;Thanks+for+visiting+SkillBridge!+🚀" alt="Footer" />
 
 **[⭐ Star this repo](https://github.com/r4hul-s3thi/SkillBridge)** if you found it useful!
 

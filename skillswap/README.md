@@ -1,21 +1,45 @@
-# React + TypeScript + Vite + shadcn/ui
+# SkillBridge — Frontend
 
-This is a template for a new Vite project with React, TypeScript, and shadcn/ui.
+React 19 + TypeScript + Vite + Tailwind CSS v4 + Socket.io frontend for the SkillBridge platform.
 
-## Adding components
+## Stack
 
-To add components to your app, run the following command:
+- React 19 + TypeScript
+- Vite 7
+- Tailwind CSS v4
+- Zustand (state management)
+- Socket.io Client (real-time)
+- Shadcn/ui components
+- React Router v7
+
+## Setup
 
 ```bash
-npx shadcn@latest add button
+npm install
 ```
 
-This will place the ui components in the `src/components` directory.
+Create `.env`:
 
-## Using components
-
-To use the components in your app, import them as follows:
-
-```tsx
-import { Button } from "@/components/ui/button"
+```env
+VITE_API_URL=http://localhost:8080/api
 ```
+
+```bash
+npm run dev
+```
+
+## Scripts
+
+| Command | Description |
+|---|---|
+| `npm run dev` | Start dev server |
+| `npm run build` | Production build |
+| `npm run typecheck` | TypeScript check |
+| `npm run lint` | ESLint |
+| `npm run format` | Prettier format |
+
+## Deployment
+
+Set `VITE_API_URL` to your Render backend URL in Vercel environment variables.
+
+See the [root README](../README.md) for full documentation.
