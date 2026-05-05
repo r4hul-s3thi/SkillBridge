@@ -90,6 +90,17 @@ app.use('/api/leaderboard', require('./routes/leaderboard'));
 
 app.get('/', (req, res) => res.send('SkillBridge API is running!'));
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
+app.get('/api/update-avatar/:email', async (req, res) => {
+  const { email } = req.params;
+  const { avatar } = req.query;
+  if (!avatar) return res.status(400).json({ error: 'avatar query param required' });
+  try {
+    await db.query('UPDATE users SET avatar = $1 WHERE email = $2', [avatar, email]);
+    res.json({ status: 'updated' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 app.get('/api/reseed', async (req, res) => {
   try {
     await db.query('TRUNCATE TABLE collab_requests, collab_posts, ratings, messages, sessions, matches, skills, users RESTART IDENTITY CASCADE');
@@ -217,7 +228,7 @@ async function autoSeed() {
     [5, 'Vikram Desai',  'vikram.desai@example.com',  password, 'https://randomuser.me/api/portraits/men/55.jpg',   'DevOps engineer. Docker, Kubernetes, AWS.',                'Pune, India',      4.5, 15],
     [6, 'Neha Reddy',    'neha.reddy@example.com',    password, 'https://randomuser.me/api/portraits/women/26.jpg', 'Frontend engineer with React and Vue expertise.',          'Hyderabad, India', 4.8, 20],
     [7, 'Arjun Mehta',   'arjun.mehta@example.com',   password, 'https://randomuser.me/api/portraits/men/77.jpg',   'Cloud architect with AWS and Azure skills.',               'Chennai, India',   4.7, 17],
-    [8, 'Rahul Sethi',   'rahul.sethi@example.com',   password, 'https://static.wikia.nocookie.net/the-boys-franchise/images/4/4a/Billy_Butcher_S3.png',   'Full-stack developer. Built SkillBridge. React + Node.js.','Jaipur, India',    5.0, 10],
+    [8, 'Rahul Sethi',   'rahul.sethi@example.com',   password, 'https://i.imgur.com/8Km9tLL.jpeg',   'Full-stack developer. Built SkillBridge. React + Node.js.','Jaipur, India',    5.0, 10],
   ];
   for (const u of users)
     await db.query('INSERT INTO users (id,name,email,password,avatar,bio,location,rating,total_sessions) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)', u);
