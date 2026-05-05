@@ -26,7 +26,7 @@ app.get('/', (req, res) => res.send('SkillBridge API is running!'));
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 app.get('/api/reseed', async (req, res) => {
   try {
-    await db.query('TRUNCATE TABLE ratings, messages, sessions, matches, skills, users RESTART IDENTITY CASCADE');
+    await db.query('TRUNCATE TABLE collab_requests, collab_posts, ratings, messages, sessions, matches, skills, users RESTART IDENTITY CASCADE');
     await autoSeed();
     res.json({ status: 'seeded' });
   } catch (err) {
@@ -206,6 +206,17 @@ async function autoSeed() {
   await db.query(`SELECT setval('sessions_id_seq', (SELECT MAX(id) FROM sessions))`);
   await db.query(`SELECT setval('messages_id_seq', (SELECT MAX(id) FROM messages))`);
   await db.query(`SELECT setval('ratings_id_seq', (SELECT MAX(id) FROM ratings))`);
+
+  const collabs = [
+    [1, 1, 'Building a Full-Stack E-Commerce App', 'Looking for a UI/UX designer to collaborate on a React + Node.js e-commerce platform. I have the backend ready, need help with design and frontend polish.', JSON.stringify(['React','Node.js','PostgreSQL']), JSON.stringify(['Figma','UI/UX Design']), 'Full Stack', 'open'],
+    [2, 4, 'ML-Powered Resume Analyzer', 'Building an AI tool that analyzes resumes and gives feedback. Need a frontend developer to build the dashboard UI.', JSON.stringify(['Python','Machine Learning','TensorFlow']), JSON.stringify(['React','TypeScript','Dashboard Design']), 'AI/ML', 'open'],
+    [3, 5, 'DevOps Pipeline for Open Source Project', 'Setting up a full CI/CD pipeline with Docker and Kubernetes for an open source project. Need a backend developer to help with the app side.', JSON.stringify(['Docker','Kubernetes','AWS','CI/CD']), JSON.stringify(['Node.js','Express','REST APIs']), 'DevOps', 'open'],
+    [4, 2, 'Design System for SaaS Product', 'Creating a comprehensive design system in Figma for a SaaS startup. Need a React developer to implement the components.', JSON.stringify(['Figma','UI/UX Design','Design Systems']), JSON.stringify(['React','TypeScript','Tailwind CSS']), 'Design', 'open'],
+    [5, 7, 'Cloud-Native Microservices Architecture', 'Designing a scalable microservices system on AWS. Looking for a backend developer experienced with Node.js or Java.', JSON.stringify(['AWS','Cloud Architecture','System Design']), JSON.stringify(['Node.js','Java','Spring Boot']), 'Full Stack', 'open'],
+  ];
+  for (const c of collabs)
+    await db.query('INSERT INTO collab_posts (id,user_id,title,description,skills_have,skills_needed,project_type,status) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)', c);
+  await db.query(`SELECT setval('collab_posts_id_seq', (SELECT MAX(id) FROM collab_posts))`);
 
   console.log('✅ Demo data seeded — login: aarav.patel@example.com / password123');
 }

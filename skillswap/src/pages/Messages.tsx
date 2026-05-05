@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react"
-import { Send, MessageSquare, Search, Sparkles } from "lucide-react"
+import { Send, MessageSquare, Search, Sparkles, Circle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator"
 import { UserAvatar } from "@/components/shared/UserAvatar"
 import { useAppStore } from "@/store/appStore"
 import { useAuthStore } from "@/store/authStore"
+import { usePresenceStore } from "@/store/presenceStore"
 import { messageService } from "@/services/messageService"
 import { getAutoReply, getReplyDelay } from "@/lib/autoReply"
 import { format } from "date-fns"
@@ -15,6 +16,7 @@ import type { Message } from "@/types"
 export default function Messages() {
   const { conversations, matches } = useAppStore()
   const { user } = useAuthStore()
+  const { isOnline } = usePresenceStore()
 
   const effectiveConversations =
     conversations.length > 0
@@ -64,10 +66,7 @@ export default function Messages() {
     }
 
     try {
-      const res = await messageService.sendMessage(
-        selected.participant.id,
-        text
-      )
+      const res = await messageService.sendMessage(selected.participant.id, text)
       setMessages((prev) => [...prev, res.data])
     } catch {
       setMessages((prev) => [...prev, myMsg])
@@ -102,6 +101,8 @@ export default function Messages() {
       (m.receiverId === user?.id && m.senderId === selected?.participant.id)
   )
 
+  const onlineCount = activeUsers.filter((c) => isOnline(c.participant.id)).length
+
   return (
     <div className="max-w-6xl space-y-4">
       <div className="animate-fade-up flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
@@ -122,6 +123,7 @@ export default function Messages() {
       </div>
 
       <div className="inbox-shell animate-fade-up-1 flex h-[calc(100vh-220px)] min-h-[540px] overflow-hidden">
+        {/* Sidebar */}
         <div className="flex w-80 shrink-0 flex-col border-r border-border/50 bg-white/38 backdrop-blur-xl dark:bg-white/[0.03]">
           <div className="space-y-3 border-b border-border/50 p-4">
             <div className="flex items-center justify-between">
@@ -144,10 +146,10 @@ export default function Messages() {
             <div className="rounded-3xl border border-white/60 bg-white/68 p-3 shadow-sm dark:border-white/10 dark:bg-white/[0.04]">
               <div className="mb-3 flex items-center justify-between">
                 <p className="text-[11px] font-semibold tracking-[0.22em] text-muted-foreground uppercase">
-                  Active now
+                  Online now
                 </p>
                 <span className="rounded-full bg-emerald-500/10 px-2 py-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
-                  {activeUsers.length}
+                  {onlineCount}
                 </span>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -163,7 +165,7 @@ export default function Messages() {
                         avatar={conv.participant.avatar}
                         size="sm"
                       />
-                      <span className="absolute right-0 bottom-0 h-2.5 w-2.5 rounded-full border-2 border-background bg-emerald-500" />
+                      <span className={`absolute right-0 bottom-0 h-2.5 w-2.5 rounded-full border-2 border-background ${isOnline(conv.participant.id) ? "bg-emerald-500" : "bg-muted-foreground/30"}`} />
                     </div>
                     <span className="max-w-[84px] truncate text-xs font-medium">
                       {conv.participant.name}
@@ -178,13 +180,12 @@ export default function Messages() {
             <div className="space-y-2">
               {effectiveConversations.map((conv, index) => {
                 const active = selectedId === conv.id
+                const online = isOnline(conv.participant.id)
                 return (
                   <button
                     key={conv.id}
                     onClick={() => setSelectedId(conv.id)}
-                    className={`conversation-card animate-fade-up flex w-full items-center gap-3 rounded-2xl p-3 text-left ${
-                      active ? "active" : ""
-                    }`}
+                    className={`conversation-card animate-fade-up flex w-full items-center gap-3 rounded-2xl p-3 text-left ${active ? "active" : ""}`}
                     style={{ animationDelay: `${index * 70}ms` }}
                   >
                     <div className="relative shrink-0">
@@ -193,7 +194,7 @@ export default function Messages() {
                         avatar={conv.participant.avatar}
                         size="md"
                       />
-                      <span className="absolute right-0 bottom-0 h-2.5 w-2.5 rounded-full border-2 border-background bg-emerald-500" />
+                      <span className={`absolute right-0 bottom-0 h-2.5 w-2.5 rounded-full border-2 border-background ${online ? "bg-emerald-500" : "bg-muted-foreground/30"}`} />
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center justify-between gap-2">
@@ -220,6 +221,7 @@ export default function Messages() {
           </ScrollArea>
         </div>
 
+        {/* Chat thread */}
         {selected ? (
           <div className="chat-thread flex min-w-0 flex-1 flex-col">
             <div className="flex items-center gap-3 border-b border-border/50 bg-background/40 px-4 py-4 backdrop-blur-xl">
@@ -229,14 +231,15 @@ export default function Messages() {
                   avatar={selected.participant.avatar}
                   size="md"
                 />
-                <span className="absolute right-0 bottom-0 h-2.5 w-2.5 rounded-full border-2 border-background bg-emerald-500" />
+                <span className={`absolute right-0 bottom-0 h-2.5 w-2.5 rounded-full border-2 border-background ${isOnline(selected.participant.id) ? "bg-emerald-500" : "bg-muted-foreground/30"}`} />
               </div>
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-semibold">
                   {selected.participant.name}
                 </p>
-                <p className="text-xs font-medium text-primary">
-                  {isTyping ? "typing..." : "Online now"}
+                <p className="flex items-center gap-1 text-xs font-medium text-muted-foreground">
+                  <Circle className={`h-2 w-2 fill-current ${isTyping ? "text-amber-400" : isOnline(selected.participant.id) ? "text-emerald-500" : "text-muted-foreground/40"}`} />
+                  {isTyping ? "typing..." : isOnline(selected.participant.id) ? "Online" : "Offline"}
                 </p>
               </div>
               <div className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
@@ -263,11 +266,7 @@ export default function Messages() {
                       new Date(threadMessages[i - 1].createdAt).toDateString()
 
                   return (
-                    <div
-                      key={msg.id}
-                      className="animate-fade-up"
-                      style={{ animationDelay: `${i * 45}ms` }}
-                    >
+                    <div key={msg.id} className="animate-fade-up" style={{ animationDelay: `${i * 45}ms` }}>
                       {showDate && (
                         <div className="my-4 flex items-center gap-3">
                           <Separator className="flex-1 bg-border/70" />
@@ -277,12 +276,7 @@ export default function Messages() {
                           <Separator className="flex-1 bg-border/70" />
                         </div>
                       )}
-
-                      <div
-                        className={`flex items-end gap-2 ${
-                          isMe ? "justify-end" : "justify-start"
-                        }`}
-                      >
+                      <div className={`flex items-end gap-2 ${isMe ? "justify-end" : "justify-start"}`}>
                         {!isMe && (
                           <UserAvatar
                             name={selected.participant.name}
@@ -290,21 +284,9 @@ export default function Messages() {
                             size="sm"
                           />
                         )}
-                        <div
-                          className={`max-w-[72%] rounded-3xl px-4 py-3 text-sm leading-relaxed ${
-                            isMe
-                              ? "chat-bubble-me rounded-br-md"
-                              : "chat-bubble-other rounded-bl-md"
-                          }`}
-                        >
+                        <div className={`max-w-[72%] rounded-3xl px-4 py-3 text-sm leading-relaxed ${isMe ? "chat-bubble-me rounded-br-md" : "chat-bubble-other rounded-bl-md"}`}>
                           <p>{msg.message}</p>
-                          <p
-                            className={`mt-1 text-[11px] ${
-                              isMe
-                                ? "text-white/70"
-                                : "text-slate-500 dark:text-slate-400"
-                            }`}
-                          >
+                          <p className={`mt-1 text-[11px] ${isMe ? "text-white/70" : "text-slate-500 dark:text-slate-400"}`}>
                             {format(new Date(msg.createdAt), "h:mm a")}
                           </p>
                         </div>
@@ -356,9 +338,7 @@ export default function Messages() {
           <div className="flex flex-1 items-center justify-center text-muted-foreground">
             <div className="space-y-3 text-center">
               <MessageSquare className="mx-auto h-10 w-10 opacity-30" />
-              <p className="text-sm">
-                Connect with someone on Matches to start chatting
-              </p>
+              <p className="text-sm">Connect with someone on Matches to start chatting</p>
             </div>
           </div>
         )}

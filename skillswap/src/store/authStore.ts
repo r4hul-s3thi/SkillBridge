@@ -32,6 +32,6 @@ export const useAuthStore = create<AuthState>()(
           user: state.user ? { ...state.user, ...data } : null,
         })),
     }),
-    { name: 'skillswap-auth' }
+    { name: 'skillbridge-auth' }
   )
 );

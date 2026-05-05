@@ -39,6 +39,6 @@ export const useAppStore = create<AppState>()(
       setSessions: (sessions) => set({ sessions }),
       setRatings: (ratings) => set({ ratings }),
     }),
-    { name: 'skillswap-app' }
+    { name: 'skillbridge-app' }
   )
 );
