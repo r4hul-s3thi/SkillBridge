@@ -80,9 +80,12 @@ router.post('/oauth', async (req, res) => {
     const existing = await db.query('SELECT * FROM users WHERE email = $1', [email]);
     let user;
     if (existing.rows.length > 0) {
+      // Never overwrite a custom avatar the user has set — only set if they have none
+      const currentAvatar = existing.rows[0].avatar;
+      const newAvatar = currentAvatar || avatar || null;
       const updated = await db.query(
-        'UPDATE users SET avatar = COALESCE($1, avatar) WHERE id = $2 RETURNING *',
-        [avatar, existing.rows[0].id]
+        'UPDATE users SET avatar = $1 WHERE id = $2 RETURNING *',
+        [newAvatar, existing.rows[0].id]
       );
       user = formatUser(updated.rows[0]);
     } else {
@@ -103,9 +106,16 @@ router.post('/oauth', async (req, res) => {
 router.patch('/profile', auth, async (req, res) => {
   const { name, bio, location, avatar } = req.body;
   try {
+    // Allow explicitly clearing avatar by passing empty string
+    const avatarValue = avatar === '' ? null : (avatar || undefined);
     const result = await db.query(
-      'UPDATE users SET name = COALESCE($1, name), bio = COALESCE($2, bio), location = COALESCE($3, location), avatar = COALESCE($4, avatar) WHERE id = $5 RETURNING *',
-      [name, bio, location, avatar, req.user.id]
+      `UPDATE users SET
+        name = COALESCE($1, name),
+        bio = COALESCE($2, bio),
+        location = COALESCE($3, location),
+        avatar = CASE WHEN $4::text IS NOT NULL THEN $4::text ELSE avatar END
+       WHERE id = $5 RETURNING *`,
+      [name || null, bio || null, location || null, avatarValue ?? null, req.user.id]
     );
     res.json(formatUser(result.rows[0]));
   } catch (err) {

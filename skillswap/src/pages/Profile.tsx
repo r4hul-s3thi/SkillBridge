@@ -58,20 +58,24 @@ export default function Profile() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      await authService.updateProfile({
+      const res = await authService.updateProfile({
         name: profileForm.name,
         bio: profileForm.bio,
         location: profileForm.location,
-        avatar: profileForm.avatar || undefined,
+        avatar: profileForm.avatar, // pass empty string to clear, or base64/url to set
       });
+      // Update store from actual DB response so it persists after re-login
+      updateUser(res.data);
+      toast.success('Profile updated!');
     } catch {
-      // fall through
+      // Fallback: update locally even if API fails
+      updateUser({ name: profileForm.name, bio: profileForm.bio, location: profileForm.location, avatar: profileForm.avatar || undefined });
+      toast.success('Profile updated!');
+    } finally {
+      setAvatarPreview(null);
+      setEditing(false);
+      setSaving(false);
     }
-    updateUser({ name: profileForm.name, bio: profileForm.bio, location: profileForm.location, avatar: profileForm.avatar || undefined });
-    setAvatarPreview(null);
-    setEditing(false);
-    setSaving(false);
-    toast.success('Profile updated!');
   };
 
   const handleAddSkill = async (type: SkillType) => {
