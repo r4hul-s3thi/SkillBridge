@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import { AppLayout } from "@/components/layout/AppLayout"
 import Login from "@/pages/auth/Login"
@@ -11,11 +12,32 @@ import Ratings from "@/pages/Ratings"
 import Collabs from "@/pages/Collabs"
 import Leaderboard from "@/pages/Leaderboard"
 import { Toaster } from "@/components/ui/sonner"
+import { useAuthStore } from "@/store/authStore"
+import { usePresenceStore } from "@/store/presenceStore"
+import { socketService } from "@/services/socketService"
+
+function SocketManager() {
+  const { user } = useAuthStore()
+  const { setOnlineUsers } = usePresenceStore()
+
+  useEffect(() => {
+    if (!user) return
+    socketService.connect(user.id)
+    socketService.onPresenceUpdate((ids) => setOnlineUsers(ids))
+    return () => {
+      socketService.off('presence:update')
+      socketService.disconnect()
+    }
+  }, [user?.id])
+
+  return null
+}
 
 export default function App() {
   return (
     <BrowserRouter>
       <>
+        <SocketManager />
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

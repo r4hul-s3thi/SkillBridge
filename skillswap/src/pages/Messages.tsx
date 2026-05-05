@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, useCallback } from "react"
 import { Send, MessageSquare, Search, Sparkles, Circle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,7 +9,7 @@ import { useAppStore } from "@/store/appStore"
 import { useAuthStore } from "@/store/authStore"
 import { usePresenceStore } from "@/store/presenceStore"
 import { messageService } from "@/services/messageService"
-import { getAutoReply, getReplyDelay } from "@/lib/autoReply"
+import { socketService } from "@/services/socketService"
 import { format } from "date-fns"
 import type { Message } from "@/types"
 
@@ -36,10 +36,12 @@ export default function Messages() {
   const [input, setInput] = useState("")
   const [isTyping, setIsTyping] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
+  const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const activeUsers = effectiveConversations.slice(0, 5)
 
   const selected = effectiveConversations.find((c) => c.id === selectedId)
 
+  // Load messages when conversation changes
   useEffect(() => {
     if (!selected) return
     messageService
@@ -48,45 +50,64 @@ export default function Messages() {
       .catch(() => setMessages([]))
   }, [selected?.participant.id])
 
+  // Socket: receive messages + typing
+  useEffect(() => {
+    if (!user) return
+
+    socketService.onMessage((msg) => {
+      if (
+        (msg.senderId === selected?.participant.id && msg.receiverId === user.id) ||
+        (msg.senderId === user.id && msg.receiverId === selected?.participant.id)
+      ) {
+        setMessages((prev) => {
+          // avoid duplicates
+          if (prev.find((m) => m.id === msg.id)) return prev
+          return [...prev, msg]
+        })
+      }
+    })
+
+    socketService.onTypingStart(({ senderId }) => {
+      if (senderId === selected?.participant.id) setIsTyping(true)
+    })
+
+    socketService.onTypingStop(({ senderId }) => {
+      if (senderId === selected?.participant.id) setIsTyping(false)
+    })
+
+    return () => {
+      socketService.off("message:receive")
+      socketService.off("typing:start")
+      socketService.off("typing:stop")
+    }
+  }, [user?.id, selected?.participant.id])
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages, isTyping])
 
-  const handleSend = async () => {
-    if (!input.trim() || !selected) return
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setInput(e.target.value)
+      if (!selected || !user) return
+      socketService.sendTypingStart(user.id, selected.participant.id)
+      if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current)
+      typingTimeoutRef.current = setTimeout(() => {
+        socketService.sendTypingStop(user.id, selected.participant.id)
+      }, 1500)
+    },
+    [selected?.participant.id, user?.id]
+  )
+
+  const handleSend = useCallback(async () => {
+    if (!input.trim() || !selected || !user) return
     const text = input.trim()
     setInput("")
-
-    const myMsg: Message = {
-      id: Date.now(),
-      senderId: user?.id ?? 1,
-      receiverId: selected.participant.id,
-      message: text,
-      createdAt: new Date().toISOString(),
-    }
-
-    try {
-      const res = await messageService.sendMessage(selected.participant.id, text)
-      setMessages((prev) => [...prev, res.data])
-    } catch {
-      setMessages((prev) => [...prev, myMsg])
-    }
-
-    const delay = getReplyDelay()
-    setTimeout(() => setIsTyping(true), 300)
-    setTimeout(() => {
-      setIsTyping(false)
-      const replyText = getAutoReply(selected.participant.id, text)
-      const replyMsg: Message = {
-        id: Date.now() + 1,
-        senderId: selected.participant.id,
-        receiverId: user?.id ?? 1,
-        message: replyText,
-        createdAt: new Date().toISOString(),
-      }
-      setMessages((prev) => [...prev, replyMsg])
-    }, delay)
-  }
+    if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current)
+    socketService.sendTypingStop(user.id, selected.participant.id)
+    // Send via socket (backend saves + emits back)
+    socketService.sendMessage(user.id, selected.participant.id, text)
+  }, [input, selected?.participant.id, user?.id])
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -318,7 +339,7 @@ export default function Messages() {
               <div className="dashboard-card flex items-center gap-3 rounded-[24px] border-0 p-2">
                 <Input
                   value={input}
-                  onChange={(e) => setInput(e.target.value)}
+                  onChange={handleInputChange}
                   onKeyDown={handleKeyDown}
                   placeholder={`Message ${selected.participant.name}...`}
                   className="h-11 rounded-2xl border-border/50 bg-background/70 text-sm shadow-none"

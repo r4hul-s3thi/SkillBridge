@@ -2,14 +2,73 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
+const http = require('http');
+const { Server } = require('socket.io');
 const db = require('./db');
 
 const app = express();
+const server = http.createServer(app);
 
 const allowedOrigins = [
   /^http:\/\/localhost(:\d+)?$/,
   process.env.FRONTEND_URL,
 ].filter(Boolean);
+
+const io = new Server(server, {
+  cors: { origin: allowedOrigins, credentials: true },
+});
+
+// Track online users: userId -> socketId
+const onlineUsers = new Map();
+
+io.on('connection', (socket) => {
+  socket.on('user:online', (userId) => {
+    onlineUsers.set(userId, socket.id);
+    io.emit('presence:update', Array.from(onlineUsers.keys()));
+  });
+
+  socket.on('message:send', async ({ senderId, receiverId, message }) => {
+    try {
+      const res = await db.query(
+        'INSERT INTO messages (sender_id, receiver_id, message) VALUES ($1, $2, $3) RETURNING *',
+        [senderId, receiverId, message]
+      );
+      const msg = res.rows[0];
+      const payload = {
+        id: msg.id,
+        senderId: msg.sender_id,
+        receiverId: msg.receiver_id,
+        message: msg.message,
+        createdAt: msg.created_at,
+      };
+      // Send to receiver if online
+      const receiverSocket = onlineUsers.get(receiverId);
+      if (receiverSocket) io.to(receiverSocket).emit('message:receive', payload);
+      // Confirm to sender
+      socket.emit('message:receive', payload);
+    } catch (err) {
+      socket.emit('message:error', err.message);
+    }
+  });
+
+  socket.on('typing:start', ({ senderId, receiverId }) => {
+    const receiverSocket = onlineUsers.get(receiverId);
+    if (receiverSocket) io.to(receiverSocket).emit('typing:start', { senderId });
+  });
+
+  socket.on('typing:stop', ({ senderId, receiverId }) => {
+    const receiverSocket = onlineUsers.get(receiverId);
+    if (receiverSocket) io.to(receiverSocket).emit('typing:stop', { senderId });
+  });
+
+  socket.on('disconnect', () => {
+    for (const [userId, sid] of onlineUsers.entries()) {
+      if (sid === socket.id) { onlineUsers.delete(userId); break; }
+    }
+    io.emit('presence:update', Array.from(onlineUsers.keys()));
+  });
+});
+
 app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json());
 
@@ -32,6 +91,10 @@ app.get('/api/reseed', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+});
+
+app.get('/api/online-users', (req, res) => {
+  res.json({ onlineUserIds: Array.from(onlineUsers.keys()) });
 });
 
 const PORT = process.env.PORT || 8080;
@@ -226,7 +289,7 @@ db.query('SELECT 1')
     console.log('✅ PostgreSQL connected');
     await initDB();
     await autoSeed();
-    app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
+    server.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
   })
   .catch((err) => {
     console.error('❌ PostgreSQL connection failed:', err.message);
