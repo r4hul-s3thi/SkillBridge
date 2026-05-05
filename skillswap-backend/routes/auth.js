@@ -80,14 +80,8 @@ router.post('/oauth', async (req, res) => {
     const existing = await db.query('SELECT * FROM users WHERE email = $1', [email]);
     let user;
     if (existing.rows.length > 0) {
-      // Never overwrite a custom avatar the user has set — only set if they have none
-      const currentAvatar = existing.rows[0].avatar;
-      const newAvatar = currentAvatar || avatar || null;
-      const updated = await db.query(
-        'UPDATE users SET avatar = $1 WHERE id = $2 RETURNING *',
-        [newAvatar, existing.rows[0].id]
-      );
-      user = formatUser(updated.rows[0]);
+      // Never overwrite existing user data — just return current DB state
+      user = formatUser(existing.rows[0]);
     } else {
       const created = await db.query(
         'INSERT INTO users (name, email, avatar) VALUES ($1, $2, $3) RETURNING *',

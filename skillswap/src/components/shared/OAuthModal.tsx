@@ -9,17 +9,17 @@ interface OAuthAccount {
 }
 
 const GOOGLE_ACCOUNTS: OAuthAccount[] = [
-  { name: 'Aarav Patel',  email: 'aarav.patel@example.com',  avatar: 'https://randomuser.me/api/portraits/men/32.jpg' },
-  { name: 'Priya Sharma', email: 'priya.sharma@example.com', avatar: 'https://randomuser.me/api/portraits/women/44.jpg' },
-  { name: 'Ananya Bose',  email: 'ananya.bose@example.com',  avatar: 'https://randomuser.me/api/portraits/women/65.jpg' },
-  { name: 'Rahul Sethi',  email: 'rahul.sethi@example.com',  avatar: 'https://i.imgur.com/8Km9tLL.jpeg' },
+  { name: 'Aarav Patel',  email: 'aarav.patel@example.com',  avatar: '' },
+  { name: 'Priya Sharma', email: 'priya.sharma@example.com', avatar: '' },
+  { name: 'Ananya Bose',  email: 'ananya.bose@example.com',  avatar: '' },
+  { name: 'Rahul Sethi',  email: 'rahul.sethi@example.com',  avatar: '' },
 ];
 
 const GITHUB_ACCOUNTS: OAuthAccount[] = [
-  { name: 'Rahul Singh',  email: 'rahul.singh@example.com',  avatar: 'https://randomuser.me/api/portraits/men/46.jpg' },
-  { name: 'Vikram Desai', email: 'vikram.desai@example.com', avatar: 'https://randomuser.me/api/portraits/men/55.jpg' },
-  { name: 'Arjun Mehta',  email: 'arjun.mehta@example.com',  avatar: 'https://randomuser.me/api/portraits/men/77.jpg' },
-  { name: 'Rahul Sethi',  email: 'rahul.sethi@example.com',  avatar: 'https://i.imgur.com/8Km9tLL.jpeg' },
+  { name: 'Rahul Singh',  email: 'rahul.singh@example.com',  avatar: '' },
+  { name: 'Vikram Desai', email: 'vikram.desai@example.com', avatar: '' },
+  { name: 'Arjun Mehta',  email: 'arjun.mehta@example.com',  avatar: '' },
+  { name: 'Rahul Sethi',  email: 'rahul.sethi@example.com',  avatar: '' },
 ];
 
 function GoogleIcon({ className }: { className?: string }) {
@@ -95,11 +95,13 @@ export function OAuthModal({ provider, onSelect, onClose, loading }: OAuthModalP
                   : 'hover:bg-white/5 text-white'
               } ${loading && selected === acc.email ? 'opacity-70' : ''}`}
             >
-              <img
-                src={acc.avatar}
-                alt={acc.name}
-                className="w-9 h-9 rounded-full shrink-0 object-cover"
-              />
+              {acc.avatar ? (
+                <img src={acc.avatar} alt={acc.name} className="w-9 h-9 rounded-full shrink-0 object-cover" />
+              ) : (
+                <div className={`w-9 h-9 rounded-full shrink-0 flex items-center justify-center text-sm font-bold ${isGoogle ? 'bg-gray-100 text-gray-600' : 'bg-white/10 text-white'}`}>
+                  {acc.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                </div>
+              )}
               <div className="flex-1 min-w-0">
                 <p className={`text-sm font-medium truncate ${isGoogle ? 'text-gray-800' : 'text-white'}`}>
                   {acc.name}
