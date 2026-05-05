@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=200&section=header&text=SkillBridge&fontSize=80&fontColor=fff&animation=twinkling&fontAlignY=35&desc=Exchange%20Skills.%20Grow%20Together.%20For%20Free.&descAlignY=60&descSize=20" width="100%"/>
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=200&section=header&text=SkillBridge&fontSize=80&fontColor=fff&animation=twinkling&fontAlignY=35&desc=Find%20Your%20Missing%20Piece.%20Build%20Together.&descAlignY=60&descSize=20" width="100%"/>
 
-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=24&pause=1000&color=6366F1&center=true&vCenter=true&width=650&lines=Teach+what+you+know...;Learn+what+you+want...;Real-time+messaging+%26+live+presence...;SkillBridge+connects+you!" alt="Typing SVG" />
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=24&pause=1000&color=6366F1&center=true&vCenter=true&width=700&lines=You+know+Frontend%2C+need+a+Backend+dev%3F;You+know+ML%2C+need+a+React+dev%3F;Post+your+project.+Find+your+co-builder.;SkillBridge+connects+you!" alt="Typing SVG" />
 
 <br/>
 
@@ -27,7 +27,7 @@
 
 ### [Live Demo](https://skill-bridge-5g45.vercel.app)
 
-> *"I'll teach you React if you teach me UI/UX Design"* — that's **SkillBridge**.
+> *"I know Frontend. You know Backend. Let's build something together."* — that's **SkillBridge**.
 
 </div>
 
@@ -35,15 +35,30 @@
 
 ## What is SkillBridge?
 
-**SkillBridge** is a full-stack, real-time peer-to-peer skill exchange platform. People teach what they know and learn what they want — completely free, no tutors, no fees.
+**SkillBridge** is a real-time skill-based collaboration platform. It connects developers, designers, and builders who have complementary skills so they can team up and build real projects together — for free.
 
-- Get **smart-matched** with compatible learners based on skill overlap
-- **Real-time messaging** powered by Socket.io — messages appear instantly
-- See who is **online right now** with live presence indicators
-- **Schedule sessions** and track your learning progress
-- **Collaborate** on real projects with the Collab Board
-- Climb the **leaderboard** as you complete sessions
-- Get guided by a built-in **AI chatbot** assistant
+The idea is simple:
+
+- You are building a project but only know **Frontend** — find someone who knows **Backend**
+- You know **Machine Learning** but need a **React developer** for the UI
+- You have **DevOps** skills and want a **Node.js** developer to build the app side
+- You are a **UI/UX designer** and need a **developer** to implement your designs
+
+Post what you have, post what you need, get matched, chat in real-time, and build together.
+
+---
+
+## How It Works
+
+```
+1. Sign up and add your skills (what you know)
+2. Browse or get matched with people who have complementary skills
+3. Post a project on the Collab Board — describe what you're building,
+   what skills you have, and what skills you need
+4. Other users send join requests to collaborate
+5. Accept requests, chat in real-time, schedule sessions, and build
+6. Rate your collaborators after working together
+```
 
 ---
 
@@ -51,18 +66,17 @@
 
 | Feature | Description |
 |---|---|
-| **Authentication** | Register & login with JWT + OAuth (Google & GitHub) |
-| **Profile** | Edit bio, location, upload/remove profile picture |
-| **Smart Matching** | Auto-matched based on skill overlap & compatibility score |
-| **Real-time Chat** | Instant messaging via Socket.io with typing indicators |
-| **Live Presence** | See who is online in real-time across all users |
-| **Sessions** | Schedule, accept, reject and complete learning sessions |
-| **Collab Board** | Post projects, find collaborators, manage join requests |
-| **Ratings** | Rate peers after sessions with star ratings & feedback |
-| **Leaderboard** | Top users ranked by sessions completed + rating score |
-| **AI Chatbot** | Built-in Hindi/English assistant to guide users |
+| **Smart Matching** | Auto-matched with users who have the skills you need and need the skills you have |
+| **Collab Board** | Post your project idea, list your skills and what you need, find co-builders |
+| **Real-time Chat** | Instant messaging via Socket.io with typing indicators and live presence |
+| **Live Presence** | See who is online right now across all users |
+| **Sessions** | Schedule collaboration sessions, accept/reject, mark complete |
+| **Ratings** | Rate collaborators after working together to build credibility |
+| **Leaderboard** | Top collaborators ranked by sessions completed and rating |
+| **Profile** | Showcase your skills, bio, location and collaboration history |
+| **AI Chatbot** | Built-in assistant to help you navigate the platform |
 | **Dark / Light Mode** | Full theme support across all pages |
-| **Activity Feed** | Recent activity feed on your personal dashboard |
+| **Authentication** | Register and login with JWT + OAuth (Google & GitHub) |
 
 ---
 
@@ -73,7 +87,7 @@
 | Tech | Purpose |
 |---|---|
 | React 19 + TypeScript | Component-based UI with full type safety |
-| Vite 7 | Lightning-fast dev server & optimized builds |
+| Vite 7 | Lightning-fast dev server and optimized builds |
 | Tailwind CSS v4 | Utility-first styling with custom animations |
 | Zustand | Lightweight global state management |
 | React Router v7 | Client-side routing |
@@ -114,7 +128,7 @@ User A (Browser)              Server (Socket.io)              User B (Browser)
       |--- user:online -------------->|--- io.emit(presence:update)->|
 ```
 
-- Messages are saved to PostgreSQL and emitted to both sender and receiver simultaneously
+- Messages are saved to PostgreSQL and emitted to both users simultaneously
 - Typing indicators are forwarded to the recipient in real-time
 - Online presence is broadcast to all connected clients on connect/disconnect
 
@@ -185,7 +199,6 @@ Start the backend (auto-creates tables and seeds demo data):
 node index.js
 # PostgreSQL connected
 # Database tables ready
-# Auto-seeding demo data...
 # Server running on http://localhost:8080
 ```
 
@@ -244,15 +257,15 @@ The `vercel.json` handles SPA routing automatically.
 
 > All accounts use password: **`password123`**
 
-| Name | Email | Offers | Wants |
-|---|---|---|---|
-| Aarav Patel | aarav.patel@example.com | React, JS, Node.js | Python, ML |
-| Priya Sharma | priya.sharma@example.com | Figma, UI/UX | React |
-| Rahul Singh | rahul.singh@example.com | Java, Spring Boot | Node.js |
-| Ananya Bose | ananya.bose@example.com | Python, ML, TensorFlow | JavaScript |
-| Vikram Desai | vikram.desai@example.com | Docker, Kubernetes, AWS | React |
-| Neha Reddy | neha.reddy@example.com | Vue, TypeScript | JavaScript |
-| Arjun Mehta | arjun.mehta@example.com | AWS, Cloud Architecture | React |
+| Name | Email | Skills |
+|---|---|---|
+| Aarav Patel | aarav.patel@example.com | React, JavaScript, Node.js |
+| Priya Sharma | priya.sharma@example.com | Figma, UI/UX Design |
+| Rahul Singh | rahul.singh@example.com | Java, Spring Boot |
+| Ananya Bose | ananya.bose@example.com | Python, Machine Learning, TensorFlow |
+| Vikram Desai | vikram.desai@example.com | Docker, Kubernetes, AWS |
+| Neha Reddy | neha.reddy@example.com | Vue, TypeScript |
+| Arjun Mehta | arjun.mehta@example.com | AWS, Cloud Architecture |
 
 ---
 
@@ -277,7 +290,7 @@ The `vercel.json` handles SPA routing automatically.
 |---|---|---|
 | `GET/POST` | `/api/skills` | Get or add skills |
 | `DELETE` | `/api/skills/:id` | Remove a skill |
-| `GET` | `/api/matches` | Get smart matches |
+| `GET` | `/api/matches` | Get skill-based matches |
 | `PATCH` | `/api/matches/:id` | Update match status |
 | `GET/POST` | `/api/sessions` | Get or create sessions |
 | `PATCH` | `/api/sessions/:id` | Update session status |
@@ -288,7 +301,7 @@ The `vercel.json` handles SPA routing automatically.
 </details>
 
 <details>
-<summary><b>Extended Features</b></summary>
+<summary><b>Collab Board</b></summary>
 
 | Method | Endpoint | Description |
 |---|---|---|
@@ -298,7 +311,7 @@ The `vercel.json` handles SPA routing automatically.
 | `DELETE` | `/api/collabs/:id` | Delete a post |
 | `GET/POST` | `/api/collabs/:id/requests` | Get or send join requests |
 | `PATCH` | `/api/collabs/requests/:id` | Accept/reject a request |
-| `GET` | `/api/leaderboard` | Get top users by score |
+| `GET` | `/api/leaderboard` | Get top collaborators by score |
 | `GET` | `/api/online-users` | Get currently online user IDs |
 
 </details>
@@ -325,7 +338,7 @@ The `vercel.json` handles SPA routing automatically.
 Score = (Average Rating x 20) + Total Sessions Completed
 ```
 
-Complete more sessions and maintain a high rating to climb the leaderboard!
+Complete more collaboration sessions and maintain a high rating to climb the leaderboard!
 
 ---
 
@@ -352,7 +365,7 @@ This project is licensed under the **MIT License** — see [LICENSE](LICENSE) fo
 
 <div align="center">
 
-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=15&pause=1000&color=6366F1&center=true&vCenter=true&width=500&lines=Built+with+React+%2B+Node.js+%2B+Socket.io;Thanks+for+visiting+SkillBridge!" alt="Footer" />
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=15&pause=1000&color=6366F1&center=true&vCenter=true&width=500&lines=Built+with+React+%2B+Node.js+%2B+Socket.io;Stop+building+alone.+Find+your+co-builder!" alt="Footer" />
 
 **[Star this repo](https://github.com/r4hul-s3thi/SkillBridge)** if you found it useful!
 
