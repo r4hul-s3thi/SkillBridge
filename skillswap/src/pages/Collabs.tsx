@@ -271,8 +271,9 @@ export default function Collabs() {
       toast.success(`Request sent to ${requestPost.author.name}!`);
       setRequestPost(null);
       setRequestMsg('');
-    } catch (err: any) {
-      toast.error(err?.response?.data?.message === 'Already requested' ? 'You already sent a request for this post.' : 'Failed to send request.');
+    } catch (err: unknown) {
+      const apiErr = err as { response?: { data?: { message?: string } } };
+      toast.error(apiErr?.response?.data?.message === 'Already requested' ? 'You already sent a request for this post.' : 'Failed to send request.');
     }
   };
 
@@ -283,15 +284,17 @@ export default function Collabs() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
-            <Handshake className="w-6 h-6 text-primary" />
+            <div className="w-8 h-8 rounded-xl bg-primary/15 flex items-center justify-center shrink-0">
+              <Handshake className="w-4 h-4 text-primary" />
+            </div>
             Collab Board
           </h1>
           <p className="text-sm text-muted-foreground mt-0.5">
             Post your project, find collaborators, build together.
           </p>
         </div>
-        <Button size="sm" className="h-8 text-xs w-fit" onClick={() => setCreateOpen(true)}>
-          <Plus className="w-4 h-4 mr-1.5" />
+        <Button size="sm" className="h-9 text-xs w-fit" onClick={() => setCreateOpen(true)}>
+          <Plus className="w-3.5 h-3.5 mr-1.5" />
           Post a Project
         </Button>
       </div>
@@ -307,7 +310,12 @@ export default function Collabs() {
         </TabsList>
 
         <TabsContent value="all" className="mt-4">
-          {loading && <p className="text-sm text-muted-foreground py-8 text-center">Loading posts...</p>}
+          {loading && otherPosts.length === 0 && (
+            <div className="py-12 text-center">
+              <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+              <p className="text-sm text-muted-foreground">Loading posts...</p>
+            </div>
+          )}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {otherPosts.map((post) => (
               <PostCard key={post.id} post={post} currentUserId={user?.id ?? 0}

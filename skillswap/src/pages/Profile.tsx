@@ -223,7 +223,7 @@ export default function Profile() {
               {[
                 { val: skills.length, label: 'Skills' },
                 { val: user?.totalSessions ?? 0, label: 'Collabs' },
-                { val: `${user?.rating ?? 4.8}★`, label: 'Rating' },
+                { val: `${user?.rating ? Number(user.rating).toFixed(1) : '—'}★`, label: 'Rating' },
               ].map(({ val, label }) => (
                 <div key={label}>
                   <p className="font-bold text-foreground">{val}</p>

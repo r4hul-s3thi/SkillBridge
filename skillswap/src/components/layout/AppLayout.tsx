@@ -65,12 +65,11 @@ export function AppLayout() {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <header className="sticky top-0 z-10 flex h-13 items-center gap-2 border-b border-border/40 bg-background/70 px-4 backdrop-blur-xl">
+        <header className="sticky top-0 z-10 flex h-12 items-center gap-2 border-b border-border/40 bg-background/80 px-4 backdrop-blur-xl">
           <SidebarTrigger className="-ml-1 text-muted-foreground transition-colors hover:text-foreground" />
           <Separator orientation="vertical" className="h-4" />
           <div className="flex-1" />
           <ThemeToggle className="border-border/60 bg-background/70 text-foreground shadow-sm transition-all hover:-translate-y-0.5 hover:bg-muted dark:bg-card/70" />
-          <div className="gradient-bg-animated h-1.5 w-24 rounded-full opacity-60" />
         </header>
         {loading ? (
           <AppSkeleton />

@@ -125,49 +125,47 @@ export default function Sessions() {
   return (
     <div className="space-y-6 max-w-5xl">
       {/* Header */}
-      <div className="dashboard-card dashboard-panel rounded-[24px] border-0 px-6 py-5">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h1 className="text-2xl font-bold flex items-center gap-2">
-              <div className="w-9 h-9 rounded-xl bg-primary/15 flex items-center justify-center">
-                <CalendarClock className="w-5 h-5 text-primary" />
-              </div>
-              Sessions
-            </h1>
-            <p className="text-sm text-muted-foreground mt-1">Schedule and manage your collaboration sessions.</p>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="text-center px-3 py-2 rounded-xl bg-amber-500/10">
-              <p className="text-xl font-bold text-amber-600 dark:text-amber-400">{upcoming.length}</p>
-              <p className="text-xs text-muted-foreground">Upcoming</p>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold flex items-center gap-2">
+            <div className="w-8 h-8 rounded-xl bg-primary/15 flex items-center justify-center shrink-0">
+              <CalendarClock className="w-4 h-4 text-primary" />
             </div>
-            <div className="text-center px-3 py-2 rounded-xl bg-emerald-500/10">
-              <p className="text-xl font-bold text-emerald-600 dark:text-emerald-400">{completed.filter(s => s.status === 'completed').length}</p>
-              <p className="text-xs text-muted-foreground">Done</p>
-            </div>
-            <Button size="sm" className="h-9 text-xs shrink-0" onClick={() => setDialogOpen(true)}>
-              <Plus className="w-4 h-4 mr-1.5" />Schedule
-            </Button>
+            Sessions
+          </h1>
+          <p className="text-sm text-muted-foreground mt-1">Schedule and manage your collaboration sessions.</p>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <div className="text-center px-3 py-2 rounded-xl bg-amber-500/10 border border-amber-200/50 dark:border-amber-800/30">
+            <p className="text-lg font-bold text-amber-600 dark:text-amber-400">{upcoming.length}</p>
+            <p className="text-[11px] text-muted-foreground">Upcoming</p>
           </div>
+          <div className="text-center px-3 py-2 rounded-xl bg-emerald-500/10 border border-emerald-200/50 dark:border-emerald-800/30">
+            <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">{completed.filter(s => s.status === 'completed').length}</p>
+            <p className="text-[11px] text-muted-foreground">Done</p>
+          </div>
+          <Button size="sm" className="h-9 text-xs" onClick={() => setDialogOpen(true)}>
+            <Plus className="w-3.5 h-3.5 mr-1.5" />Schedule
+          </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-5">
         {/* Calendar */}
-        <Card className="dashboard-card border-0 shadow-none">
-          <CardHeader className="pb-2">
+        <Card className="dashboard-card border-0 shadow-none h-fit">
+          <CardHeader className="pb-2 px-4 pt-4">
             <CardTitle className="text-sm font-semibold flex items-center gap-2">
               <CalendarClock className="w-4 h-4 text-primary" />Calendar
             </CardTitle>
           </CardHeader>
-          <CardContent className="flex justify-center p-3">
+          <CardContent className="flex justify-center p-2">
             <Calendar
               mode="single"
               selected={selectedDate}
               onSelect={setSelectedDate}
               modifiers={{ session: sessionDates }}
               modifiersClassNames={{ session: 'bg-primary/15 text-primary font-bold rounded-lg' }}
-              className="rounded-xl"
+              className="rounded-xl w-full"
             />
           </CardContent>
         </Card>
