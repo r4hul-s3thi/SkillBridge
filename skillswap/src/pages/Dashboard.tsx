@@ -92,9 +92,9 @@ export default function Dashboard() {
 
   const completionItems = [
     { label: "Profile info", done: !!(user?.name && user?.email) },
-    { label: "Skills offered", done: offeredSkills.length > 0 },
-    { label: "Skills wanted", done: wantedSkills.length > 0 },
-    { label: "First session", done: completedSessions.length > 0 },
+    { label: "Skills I have", done: offeredSkills.length > 0 },
+    { label: "Skills I need", done: wantedSkills.length > 0 },
+    { label: "First collab session", done: completedSessions.length > 0 },
   ]
   const completionPct = Math.round(
     (completionItems.filter((i) => i.done).length / completionItems.length) *
@@ -124,8 +124,8 @@ export default function Dashboard() {
               </h1>
               <p className="mt-2 max-w-2xl text-sm text-slate-700 sm:text-base dark:text-slate-200/[0.75]">
                 {completionPct < 100
-                  ? "Complete your profile and add skills to start matching with peers."
-                  : "Your dashboard highlights momentum, upcoming sessions, and profile progress."}
+                  ? "Add your skills and post a project to start finding co-builders."
+                  : "Find collaborators, schedule build sessions, and ship projects together."}
               </p>
             </div>
           </div>
@@ -164,14 +164,13 @@ export default function Dashboard() {
             <div className="space-y-2">
               <div className="inline-flex items-center gap-2 rounded-full bg-primary/[0.12] px-3 py-1 text-xs font-semibold text-primary">
                 <Rocket className="h-3.5 w-3.5" />
-                Weekly momentum
+                Build momentum
               </div>
               <h2 className="text-xl font-semibold text-foreground">
-                Keep the streak alive with one more session this week.
+                You have active matches — reach out and start building.
               </h2>
               <p className="max-w-2xl text-sm text-muted-foreground">
-                Your profile strength and active matches are trending up. A new
-                session or message will push your activity even further.
+                Your skill profile is attracting matches. Message a collaborator, schedule a build session, or post a new project on the Collab Board.
               </p>
             </div>
             <div className="grid grid-cols-2 gap-3 text-sm md:min-w-[250px]">
@@ -182,7 +181,7 @@ export default function Dashboard() {
                 </p>
               </div>
               <div className="rounded-2xl bg-background/[0.58] p-4 shadow-sm">
-                <p className="text-muted-foreground">Wanted skills</p>
+                <p className="text-muted-foreground">Skills needed</p>
                 <p className="mt-1 text-2xl font-bold text-primary">
                   {wantedSkills.length}
                 </p>
@@ -196,12 +195,12 @@ export default function Dashboard() {
           <div className="relative z-10">
             <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-cyan-100 px-3 py-1 text-xs font-semibold text-cyan-800 dark:bg-accent/[0.14] dark:text-accent-foreground">
               <Waves className="h-3.5 w-3.5" />
-              Skill balance
+              Skill coverage
             </div>
             <div className="space-y-3">
               <div>
                 <div className="mb-1 flex items-center justify-between text-xs tracking-wide text-muted-foreground uppercase">
-                  <span>Offer</span>
+                  <span>I Have</span>
                   <span>{offeredSkills.length}</span>
                 </div>
                 <Progress
@@ -215,7 +214,7 @@ export default function Dashboard() {
               </div>
               <div>
                 <div className="mb-1 flex items-center justify-between text-xs tracking-wide text-muted-foreground uppercase">
-                  <span>Want</span>
+                  <span>I Need</span>
                   <span>{wantedSkills.length}</span>
                 </div>
                 <Progress
@@ -234,7 +233,7 @@ export default function Dashboard() {
 
       <div className="animate-fade-up-2 grid grid-cols-2 gap-4 lg:grid-cols-4">
         <StatCard
-          label="Active Matches"
+          label="Co-builders Matched"
           value={activeMatches.length}
           icon={Users2}
           trend="2 new"
@@ -242,7 +241,7 @@ export default function Dashboard() {
           color="blue"
         />
         <StatCard
-          label="Total Sessions"
+          label="Build Sessions"
           value={user?.totalSessions ?? completedSessions.length}
           icon={CalendarClock}
           trend="this month"
@@ -272,10 +271,10 @@ export default function Dashboard() {
             <CardHeader className="flex flex-row items-center justify-between pb-3">
               <div>
                 <CardTitle className="text-base font-semibold">
-                  Your Matches
+                  Your Co-builder Matches
                 </CardTitle>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  People aligned with what you teach and want to learn.
+                  People whose skills complement yours — potential collaborators.
                 </p>
               </div>
               <Link
@@ -347,11 +346,10 @@ export default function Dashboard() {
             <CardHeader className="flex flex-row items-center justify-between pb-3">
               <div>
                 <CardTitle className="text-base font-semibold">
-                  Upcoming Sessions
+                  Upcoming Build Sessions
                 </CardTitle>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  Stay on top of the next conversations in your learning
-                  calendar.
+                  Scheduled collaboration sessions with your co-builders.
                 </p>
               </div>
               <Link
@@ -469,7 +467,7 @@ export default function Dashboard() {
             <CardContent className="space-y-4">
               <div className="rounded-2xl bg-background/[0.5] p-3">
                 <p className="mb-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">
-                  I Offer
+                  I Have
                 </p>
                 <div className="flex flex-wrap gap-1.5">
                   {offeredSkills.map((skill) => (
@@ -485,7 +483,7 @@ export default function Dashboard() {
               </div>
               <div className="rounded-2xl bg-background/[0.5] p-3">
                 <p className="mb-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">
-                  I Want
+                  I Need
                 </p>
                 <div className="flex flex-wrap gap-1.5">
                   {wantedSkills.map((skill) => (
@@ -505,7 +503,7 @@ export default function Dashboard() {
           <Card className="dashboard-card dashboard-card-hover dashboard-panel border-0">
             <CardHeader className="pb-3">
               <CardTitle className="text-base font-semibold">
-                My Rating
+                My Collaborator Rating
               </CardTitle>
             </CardHeader>
             <CardContent className="flex items-center gap-4">
@@ -520,7 +518,7 @@ export default function Dashboard() {
                 />
                 <p className="mt-1 text-xs text-muted-foreground">
                   Based on {user?.totalSessions ?? completedSessions.length}{" "}
-                  sessions
+                  build sessions
                 </p>
               </div>
             </CardContent>

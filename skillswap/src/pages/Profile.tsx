@@ -112,7 +112,7 @@ export default function Profile() {
           <User className="w-6 h-6 text-primary" />
           My Profile
         </h1>
-        <p className="text-sm text-muted-foreground mt-0.5">Manage your profile, skills and public information.</p>
+        <p className="text-sm text-muted-foreground mt-0.5">Manage your profile, skills and collaboration history.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -218,7 +218,7 @@ export default function Profile() {
             <div className="grid grid-cols-3 gap-2 w-full text-center">
               {[
                 { val: skills.length, label: 'Skills' },
-                { val: user?.totalSessions ?? 0, label: 'Sessions' },
+                { val: user?.totalSessions ?? 0, label: 'Collabs' },
                 { val: `${user?.rating ?? 4.8}★`, label: 'Rating' },
               ].map(({ val, label }) => (
                 <div key={label}>
@@ -235,10 +235,10 @@ export default function Profile() {
           <Tabs defaultValue="offer">
             <TabsList className="h-8">
               <TabsTrigger value="offer" className="text-xs">
-                Skills I Offer ({offeredSkills.length})
+                Skills I Have ({offeredSkills.length})
               </TabsTrigger>
               <TabsTrigger value="want" className="text-xs">
-                Skills I Want ({wantedSkills.length})
+                Skills I Need ({wantedSkills.length})
               </TabsTrigger>
               <TabsTrigger value="reviews" className="text-xs">
                 Reviews ({receivedRatings.length})
@@ -255,7 +255,7 @@ export default function Profile() {
                   <CardContent className="space-y-3">
                     <div className="flex gap-2">
                       <Input
-                        placeholder={`e.g. ${type === 'offer' ? 'React, Python, Design' : 'Machine Learning, Docker'}`}
+                        placeholder={`e.g. ${type === 'offer' ? 'React, Node.js, Figma' : 'Machine Learning, Backend, DevOps'}`}
                         value={newSkill.skillName}
                         onChange={(e) => setNewSkill((p) => ({ ...p, skillName: e.target.value }))}
                         className="h-8 text-sm flex-1"
@@ -303,7 +303,7 @@ export default function Profile() {
                       </div>
                     ) : (
                       <p className="text-sm text-muted-foreground text-center py-4">
-                        No skills added yet. Add skills above to start matching!
+                        No skills added yet. Add skills above to get matched with co-builders!
                       </p>
                     )}
                   </CardContent>
@@ -332,7 +332,7 @@ export default function Profile() {
               ))}
               {receivedRatings.length === 0 && (
                 <p className="text-sm text-muted-foreground py-8 text-center">
-                  No reviews yet. Complete sessions to receive feedback.
+                  No reviews yet. Complete collaboration sessions to receive feedback.
                 </p>
               )}
             </TabsContent>

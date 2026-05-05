@@ -150,7 +150,7 @@ export default function Matches() {
               </div>
               Smart Matches
             </h1>
-            <p className="text-sm text-muted-foreground mt-1">Intelligently matched based on your skill exchange profile.</p>
+            <p className="text-sm text-muted-foreground mt-1">People matched by complementary skills — potential co-builders for your projects.</p>
           </div>
           <div className="flex gap-3">
             <div className="text-center px-4 py-2 rounded-xl bg-primary/10">
@@ -169,7 +169,7 @@ export default function Matches() {
         <div className="flex items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-800 px-4 py-3">
           <Zap className="w-4 h-4 text-amber-500 shrink-0" />
           <p className="text-sm text-amber-700 dark:text-amber-300">
-            Add skills on your <a href="/profile" className="underline font-semibold">Profile</a> to unlock skill-based matching.
+            Add skills on your <a href="/profile" className="underline font-semibold">Profile</a> to get matched with co-builders who have what you need.
           </p>
         </div>
       )}
@@ -202,7 +202,7 @@ export default function Matches() {
             {filter(activeMatches).length === 0 && (
               <div className="col-span-2 py-16 text-center">
                 <Users className="w-10 h-10 mx-auto text-muted-foreground/30 mb-3" />
-                <p className="text-sm text-muted-foreground">{search ? 'No matches found.' : 'No active matches yet. Connect with someone!'}</p>
+                <p className="text-sm text-muted-foreground">{search ? 'No matches found.' : 'No active co-builders yet. Connect with someone!'}</p>
               </div>
             )}
           </div>

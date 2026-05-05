@@ -50,7 +50,7 @@ export default function Leaderboard() {
               </div>
               Leaderboard
             </h1>
-            <p className="text-sm text-muted-foreground mt-1">Top skill exchangers ranked by sessions × rating.</p>
+            <p className="text-sm text-muted-foreground mt-1">Top collaborators ranked by sessions completed and rating.</p>
           </div>
           {myRank > 0 && (
             <div className="text-center px-4 py-2 rounded-xl bg-primary/10">
@@ -64,7 +64,7 @@ export default function Leaderboard() {
       {myRank > 0 && (
         <div className="flex items-center gap-3 rounded-2xl border border-primary/20 bg-primary/5 px-4 py-3">
           <Zap className="w-4 h-4 text-primary shrink-0" />
-          <span className="text-sm">You are ranked <span className="font-bold text-primary">#{myRank}</span> — complete more sessions to climb higher! 🚀</span>
+          <span className="text-sm">You are ranked <span className="font-bold text-primary">#{myRank}</span> — complete more collaboration sessions to climb higher!</span>
         </div>
       )}
 

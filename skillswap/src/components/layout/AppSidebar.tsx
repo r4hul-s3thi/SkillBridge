@@ -69,7 +69,7 @@ export function AppSidebar() {
               <div className="flex flex-col leading-tight min-w-0">
                 <span className="font-bold text-sidebar-foreground text-sm">SkillBridge</span>
                   <span className="flex items-center gap-1.5 text-xs text-sidebar-foreground/50 font-normal">
-                  Peer Learning
+                  Skill Collaboration
                   {onlineCount > 0 && (
                     <span className="flex items-center gap-1 rounded-full bg-emerald-500/20 px-1.5 py-0.5 text-[10px] font-bold text-emerald-500">
                       <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />

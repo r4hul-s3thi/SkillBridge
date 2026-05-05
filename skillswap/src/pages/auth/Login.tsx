@@ -125,22 +125,21 @@ export default function Login() {
           <div className="space-y-4">
             <div className="glass mb-2 inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium text-cyan-200">
               <Sparkles className="h-3 w-3" />
-              Peer-to-peer skill exchange
+              Skill-based collaboration
             </div>
             <h2 className="text-5xl leading-tight font-bold text-white">
-              Exchange skills,
+              Find your missing
               <br />
-              <span className="gradient-text">grow together.</span>
+              <span className="gradient-text">co-builder.</span>
             </h2>
             <p className="max-w-sm text-base leading-relaxed text-slate-300/[0.8]">
-              Connect with peers, teach what you know, and learn what you want -
-              all for free.
+              You know Frontend, need a Backend dev? Post your project, get matched by skills, and build together — for free.
             </p>
           </div>
 
           <div className="flex items-center gap-8">
             {[
-              { val: "2K+", label: "Learners" },
+              { val: "2K+", label: "Builders" },
               { val: "500+", label: "Skills" },
               { val: "4.8+", label: "Avg Rating" },
             ].map(({ val, label }) => (
@@ -157,7 +156,7 @@ export default function Login() {
             {[
               "Smart Matching",
               "Real-time Chat",
-              "Session Scheduling",
+              "Collab Board",
               "Peer Ratings",
             ].map((feature) => (
               <span
@@ -177,9 +176,9 @@ export default function Login() {
             </div>
             <div>
               <p className="text-sm font-medium text-white">
-                Aarav just learned React
+                Aarav & Priya just shipped v1.0
               </p>
-              <p className="text-xs text-white/40">from Priya - 2 min ago</p>
+              <p className="text-xs text-white/40">React + UI/UX collab - 2 min ago</p>
             </div>
             <div className="ml-auto h-2 w-2 shrink-0 animate-pulse rounded-full bg-emerald-300" />
           </div>
@@ -213,7 +212,7 @@ export default function Login() {
                 Welcome back
               </h1>
               <p className="mt-1 text-sm text-slate-300/[0.7]">
-                Sign in to continue your journey
+                Sign in to find your co-builder
               </p>
             </div>
 

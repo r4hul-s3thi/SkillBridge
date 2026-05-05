@@ -134,7 +134,7 @@ export default function Sessions() {
               </div>
               Sessions
             </h1>
-            <p className="text-sm text-muted-foreground mt-1">Schedule and manage your learning sessions.</p>
+            <p className="text-sm text-muted-foreground mt-1">Schedule and manage your collaboration sessions.</p>
           </div>
           <div className="flex items-center gap-3">
             <div className="text-center px-3 py-2 rounded-xl bg-amber-500/10">
@@ -191,7 +191,7 @@ export default function Sessions() {
               {upcoming.length === 0 && (
                 <div className="py-16 text-center">
                   <CalendarClock className="w-10 h-10 mx-auto text-muted-foreground/30 mb-3" />
-                  <p className="text-sm text-muted-foreground">No upcoming sessions. Schedule one!</p>
+                  <p className="text-sm text-muted-foreground">No upcoming sessions. Schedule a build session!</p>
                 </div>
               )}
             </TabsContent>

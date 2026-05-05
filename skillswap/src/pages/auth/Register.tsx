@@ -74,9 +74,9 @@ export default function Register() {
   };
 
   const features = [
-    { icon: '🎯', text: 'Smart matching based on your skill exchange' },
-    { icon: '💬', text: 'Chat and schedule sessions with your peers' },
-    { icon: '⭐', text: 'Build credibility through ratings and reviews' },
+    { icon: '🎯', text: 'Get matched with devs who have the skills you need' },
+    { icon: '🚀', text: 'Post your project on the Collab Board and find co-builders' },
+    { icon: '⭐', text: 'Rate collaborators and build your reputation' },
   ];
 
   return (
@@ -105,11 +105,11 @@ export default function Register() {
         <div className="relative z-10 space-y-8 animate-fade-up-2">
           <div className="space-y-4">
             <h2 className="text-5xl font-bold text-white leading-tight">
-              Start your<br />
-              <span className="gradient-text">learning journey.</span>
+              Build something<br />
+              <span className="gradient-text">together.</span>
             </h2>
             <p className="text-white/50 text-base max-w-sm">
-              Join thousands of learners and mentors exchanging skills every day.
+              You have skills. Others have what you need. Post your project, get matched, and ship it together.
             </p>
           </div>
 
@@ -126,7 +126,7 @@ export default function Register() {
 
         <div className="relative z-10 animate-fade-up-3">
           <div className="glass rounded-2xl p-4 max-w-xs">
-            <p className="text-white/50 text-xs mb-3 uppercase tracking-widest">Active learners</p>
+            <p className="text-white/50 text-xs mb-3 uppercase tracking-widest">Active builders</p>
             <div className="flex -space-x-2">
               {['A', 'P', 'R', 'N', 'V'].map((l, i) => (
                 <div key={i} className="w-8 h-8 rounded-full gradient-bg-animated border-2 border-[#0d1526] flex items-center justify-center text-white text-xs font-bold" style={{ animationDelay: `${i * 0.5}s` }}>{l}</div>
