@@ -2,6 +2,7 @@ services:
   - type: web
     name: skillswap-backend
     runtime: node
+    plan: free
     rootDir: skillswap-backend
     buildCommand: npm install
     startCommand: npm start
@@ -15,11 +16,12 @@ services:
       - key: JWT_EXPIRES_IN
         value: 7d
       - key: FRONTEND_URL
-        sync: false
+        value: https://your-app.vercel.app
       - key: NODE_ENV
         value: production
 
 databases:
   - name: skillswap-db
+    plan: free
     databaseName: skillbridge
     user: skillbridge
