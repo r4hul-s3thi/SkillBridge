@@ -2,12 +2,14 @@ services:
   - type: web
     name: skillswap-backend
     runtime: node
-    rootDir: Skill bridge/skillswap-backend
+    rootDir: skillswap-backend
     buildCommand: npm install
     startCommand: npm start
     envVars:
       - key: DATABASE_URL
-        sync: false
+        fromDatabase:
+          name: skillswap-db
+          property: connectionString
       - key: JWT_SECRET
         generateValue: true
       - key: JWT_EXPIRES_IN
@@ -16,3 +18,8 @@ services:
         sync: false
       - key: NODE_ENV
         value: production
+
+databases:
+  - name: skillswap-db
+    databaseName: skillbridge
+    user: skillbridge

@@ -1,9 +1,7 @@
 <div align="center">
 
-<!-- Animated Banner -->
 <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=200&section=header&text=SkillBridge&fontSize=80&fontColor=fff&animation=twinkling&fontAlignY=35&desc=Exchange%20Skills.%20Grow%20Together.%20For%20Free.&descAlignY=60&descSize=20" width="100%"/>
 
-<!-- Typing SVG -->
 <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=28&pause=1000&color=6366F1&center=true&vCenter=true&width=600&lines=%F0%9F%A4%9D+Teach+what+you+know...;%F0%9F%93%9A+Learn+what+you+want...;%F0%9F%9A%80+SkillBridge+connects+you!" alt="Typing SVG" />
 
 <br/>
@@ -11,7 +9,7 @@
 [![React](https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://typescriptlang.org)
 [![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org)
-[![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://mysql.com)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://postgresql.org)
 [![TailwindCSS](https://img.shields.io/badge/Tailwind_v4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
 [![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev)
 
@@ -19,9 +17,11 @@
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square&logo=github)
 ![Made with Love](https://img.shields.io/badge/Made%20with-%E2%9D%A4%EF%B8%8F-red?style=flat-square)
 ![Hackathon](https://img.shields.io/badge/Built%20for-Hackathon-ff7a59?style=flat-square&logo=devpost)
-![Stars](https://img.shields.io/github/stars/r4hul-s3thi/SkillBridge?style=flat-square&color=yellow&logo=github)
+[![Stars](https://img.shields.io/github/stars/r4hul-s3thi/SkillBridge?style=flat-square&color=yellow&logo=github)](https://github.com/r4hul-s3thi/SkillBridge/stargazers)
 
 <br/>
+
+### 🌐 [Live Demo →](https://skill-bridge-r4hul.vercel.app)
 
 > 💡 *"I'll teach you React if you teach me UI/UX Design"* — that's **SkillBridge**.
 
@@ -29,11 +29,7 @@
 
 ---
 
-<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
-
 ## 🌟 What is SkillBridge?
-
-<img align="right" width="380" src="https://raw.githubusercontent.com/r4hul-s3thi/SkillBridge/main/screenshots/dashboard.png" alt="Dashboard Preview"/>
 
 **SkillBridge** is a full-stack peer-to-peer skill exchange platform where people teach what they know and learn what they want — completely free.
 
@@ -45,72 +41,9 @@ No money. No tutors. Just people helping people grow.
 - 🏆 Climb the **leaderboard** as you grow
 - 🤖 Get guided by an **AI chatbot** assistant
 
-<br clear="right"/>
-
 ---
-
-<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
-
-## 📸 Screenshots
-
-<div align="center">
-
-### 🔐 Authentication
-<img src="https://raw.githubusercontent.com/r4hul-s3thi/SkillBridge/main/screenshots/login.png" width="80%" alt="Login"/>
-
-### 🏠 Dashboard
-<img src="https://raw.githubusercontent.com/r4hul-s3thi/SkillBridge/main/screenshots/dashboard.png" width="80%" alt="Dashboard"/>
-
-### 🤝 Smart Matches
-<img src="https://raw.githubusercontent.com/r4hul-s3thi/SkillBridge/main/screenshots/matches.png" width="80%" alt="Matches"/>
-
-### 💬 Real-time Messaging
-<img src="https://raw.githubusercontent.com/r4hul-s3thi/SkillBridge/main/screenshots/messages.png" width="80%" alt="Messages"/>
-
-<table>
-<tr>
-<td align="center" width="50%">
-
-**📅 Sessions**
-
-<img src="https://raw.githubusercontent.com/r4hul-s3thi/SkillBridge/main/screenshots/sessions.png" width="100%" alt="Sessions"/>
-
-</td>
-<td align="center" width="50%">
-
-**🚀 Collab Board**
-
-<img src="https://raw.githubusercontent.com/r4hul-s3thi/SkillBridge/main/screenshots/collabs.png" width="100%" alt="Collabs"/>
-
-</td>
-</tr>
-<tr>
-<td align="center" width="50%">
-
-**🏆 Leaderboard**
-
-<img src="https://raw.githubusercontent.com/r4hul-s3thi/SkillBridge/main/screenshots/leaderboard.png" width="100%" alt="Leaderboard"/>
-
-</td>
-<td align="center" width="50%">
-
-**👤 Profile**
-
-<img src="https://raw.githubusercontent.com/r4hul-s3thi/SkillBridge/main/screenshots/profile.png" width="100%" alt="Profile"/>
-
-</td>
-</tr>
-</table>
-
-</div>
-
----
-
-<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
 
 ## ✨ Features
-
-<div align="center">
 
 | | Feature | Description |
 |:---:|---|---|
@@ -127,18 +60,11 @@ No money. No tutors. Just people helping people grow.
 | 🔍 | **Skill Search** | Filter matches by name, location or skill |
 | 📊 | **Activity Feed** | Real-time recent activity on your dashboard |
 
-</div>
-
 ---
-
-<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
 
 ## 🛠️ Tech Stack
 
-<div align="center">
-
 ### Frontend
-[![My Skills](https://skillicons.dev/icons?i=react,ts,vite,tailwind&theme=dark)](https://skillicons.dev)
 
 | Tech | Purpose |
 |---|---|
@@ -151,66 +77,59 @@ No money. No tutors. Just people helping people grow.
 | Axios | HTTP client |
 
 ### Backend
-[![My Skills](https://skillicons.dev/icons?i=nodejs,express,mysql&theme=dark)](https://skillicons.dev)
 
 | Tech | Purpose |
 |---|---|
 | Node.js + Express | REST API server |
-| MySQL2 | Relational database |
+| PostgreSQL (via `pg`) | Relational database |
 | JWT | Stateless authentication |
 | Bcrypt | Password hashing |
 | CORS | Cross-origin resource sharing |
 
-</div>
-
 ---
-
-<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
 
 ## 📁 Project Structure
 
 ```
 SkillBridge/
-├── 🎨 skillswap/                    # Frontend (React + TypeScript)
+├── skillswap/                    # Frontend (React + TypeScript)
 │   └── src/
-│       ├── pages/                   # Dashboard, Profile, Matches, Messages,
-│       │                            # Sessions, Ratings, Collabs, Leaderboard
+│       ├── pages/                # Dashboard, Profile, Matches, Messages,
+│       │                         # Sessions, Ratings, Collabs, Leaderboard
 │       ├── components/
-│       │   ├── layout/              # AppLayout, AppSidebar
-│       │   └── shared/              # UserAvatar, ChatBot, StarRating, etc.
-│       ├── services/                # API service files (axios)
-│       ├── store/                   # Zustand stores (auth + app)
-│       └── types/                   # TypeScript interfaces
+│       │   ├── layout/           # AppLayout, AppSidebar
+│       │   └── shared/           # UserAvatar, ChatBot, StarRating, etc.
+│       ├── services/             # API service files (axios)
+│       ├── store/                # Zustand stores (auth + app)
+│       └── types/                # TypeScript interfaces
 │
-└── ⚙️  skillswap-backend/           # Backend (Node.js + Express)
-    ├── routes/                      # auth, skills, matches, sessions,
-    │                                # messages, ratings, collabs, leaderboard
-    ├── middleware/                  # JWT auth middleware
-    ├── utils/                       # generateMatches helper
-    ├── schema.sql                   # Full database schema
-    ├── seed.js                      # Demo data seeder
-    └── index.js                     # Entry point
+└── skillswap-backend/            # Backend (Node.js + Express)
+    ├── routes/                   # auth, skills, matches, sessions,
+    │                             # messages, ratings, collabs, leaderboard
+    ├── middleware/               # JWT auth middleware
+    ├── utils/                    # generateMatches helper
+    ├── schema.sql                # Full database schema
+    ├── seed.js                   # Demo data seeder
+    └── index.js                  # Entry point
 ```
 
 ---
 
-<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
-
-## ⚡ Getting Started
+## ⚡ Getting Started (Local)
 
 ### Prerequisites
 
-![Node](https://img.shields.io/badge/Node.js-v18+-339933?style=flat-square&logo=nodedotjs)
-![MySQL](https://img.shields.io/badge/MySQL-v8+-4479A1?style=flat-square&logo=mysql&logoColor=white)
+- Node.js v18+
+- PostgreSQL v14+
 
-### 1️⃣ Clone the repository
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/r4hul-s3thi/SkillBridge.git
 cd SkillBridge
 ```
 
-### 2️⃣ Setup the Backend
+### 2. Setup the Backend
 
 ```bash
 cd skillswap-backend
@@ -221,24 +140,17 @@ Create a `.env` file inside `skillswap-backend/`:
 
 ```env
 PORT=8080
-DB_HOST=localhost
-DB_PORT=3306
-DB_USER=root
-DB_PASSWORD=your_mysql_password
-DB_NAME=skillbridge
+DATABASE_URL=postgresql://root:your_password@localhost:5432/skillbridge
 JWT_SECRET=your_secret_key
 JWT_EXPIRES_IN=7d
+FRONTEND_URL=http://localhost:5173
+NODE_ENV=development
 ```
 
-Create the database and run the schema:
+Run the schema and seed demo data:
 
 ```bash
-mysql -u root -p < schema.sql
-```
-
-Seed with demo data:
-
-```bash
+psql -U postgres -f schema.sql
 npm run seed
 ```
 
@@ -246,49 +158,78 @@ Start the backend:
 
 ```bash
 node index.js
-# ✅ MySQL connected
+# ✅ PostgreSQL connected
 # 🚀 Server running on http://localhost:8080
 ```
 
-### 3️⃣ Setup the Frontend
+### 3. Setup the Frontend
 
 ```bash
 cd skillswap
 npm install
+```
+
+Create a `.env` file inside `skillswap/`:
+
+```env
+VITE_API_URL=http://localhost:8080/api
+```
+
+```bash
 npm run dev
-```
-
-### 4️⃣ Open in browser
-
-```
-http://localhost:5173
+# Open http://localhost:5173
 ```
 
 ---
 
-<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
+## 🚀 Deployment
+
+### Backend → Render
+
+1. Go to [render.com](https://render.com) → **New Web Service** → connect your GitHub repo
+2. Set **Root Directory** to `skillswap-backend`
+3. Build command: `npm install` | Start command: `npm start`
+4. Add these environment variables in Render dashboard:
+
+| Key | Value |
+|---|---|
+| `DATABASE_URL` | Your Render PostgreSQL connection string |
+| `JWT_SECRET` | A long random secret string |
+| `JWT_EXPIRES_IN` | `7d` |
+| `FRONTEND_URL` | Your Vercel frontend URL (e.g. `https://skill-bridge-r4hul.vercel.app`) |
+| `NODE_ENV` | `production` |
+
+> The `render.yaml` in `skillswap-backend/` is pre-configured for one-click deploy.
+
+### Frontend → Vercel
+
+1. Go to [vercel.com](https://vercel.com) → **New Project** → import your GitHub repo
+2. Set **Root Directory** to `skillswap`
+3. Add this environment variable in Vercel dashboard:
+
+| Key | Value |
+|---|---|
+| `VITE_API_URL` | Your Render backend URL + `/api` (e.g. `https://skillswap-backend.onrender.com/api`) |
+
+4. Deploy — Vercel auto-detects Vite. The `vercel.json` handles SPA routing.
+
+---
 
 ## 👥 Demo Accounts
 
-> 🔑 All demo accounts use the password: **`password123`**
+> All demo accounts use the password: **`password123`**
 
-<div align="center">
-
-| Avatar | Name | Email | Offers | Wants |
-|:---:|---|---|---|---|
-| 🧑‍💻 | Aarav Patel | aarav.patel@example.com | React, JS, Node.js | Python, ML |
-| 👩‍🎨 | Priya Sharma | priya.sharma@example.com | Figma, UI/UX | React |
-| 👨‍💼 | Rahul Singh | rahul.singh@example.com | Java, Spring Boot | Node.js |
-| 👩‍🔬 | Ananya Bose | ananya.bose@example.com | Python, ML, TensorFlow | JavaScript |
-| 👨‍☁️ | Vikram Desai | vikram.desai@example.com | Docker, Kubernetes, AWS | React |
-| 👩‍💻 | Neha Reddy | neha.reddy@example.com | Vue, TypeScript | JavaScript |
-| 👨‍🚀 | Arjun Mehta | arjun.mehta@example.com | AWS, Cloud Architecture | React |
-
-</div>
+| Name | Email | Offers | Wants |
+|---|---|---|---|
+| Aarav Patel | aarav.patel@example.com | React, JS, Node.js | Python, ML |
+| Priya Sharma | priya.sharma@example.com | Figma, UI/UX | React |
+| Rahul Singh | rahul.singh@example.com | Java, Spring Boot | Node.js |
+| Ananya Bose | ananya.bose@example.com | Python, ML, TensorFlow | JavaScript |
+| Vikram Desai | vikram.desai@example.com | Docker, Kubernetes, AWS | React |
+| Neha Reddy | neha.reddy@example.com | Vue, TypeScript | JavaScript |
+| Arjun Mehta | arjun.mehta@example.com | AWS, Cloud Architecture | React |
 
 ---
-
-<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
 
 ## 🔌 API Endpoints
 
@@ -339,27 +280,15 @@ http://localhost:5173
 
 ---
 
-<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
-
 ## 🏆 Leaderboard Scoring
 
-<div align="center">
-
 ```
-╔══════════════════════════════════════════════╗
-║                                              ║
-║   Score = (Rating × 20) + Sessions Done      ║
-║                                              ║
-╚══════════════════════════════════════════════╝
+Score = (Rating × 20) + Sessions Done
 ```
 
 Complete more sessions and maintain a high rating to climb the leaderboard! 🚀
 
-</div>
-
 ---
-
-<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
 
 ## 🤝 Contributing
 
@@ -380,7 +309,6 @@ This project is licensed under the **MIT License**.
 
 ---
 
-<!-- Animated Footer -->
 <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=120&section=footer&animation=twinkling" width="100%"/>
 
 <div align="center">
