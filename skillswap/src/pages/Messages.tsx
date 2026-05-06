@@ -82,7 +82,6 @@ export default function Messages() {
 
     // Optimistically add message
     setMessages((prev) => [...prev, optimistic])
-
     // Save to backend
     try {
       const res = await messageService.sendMessage(selected.participant.id, text)
@@ -92,6 +91,10 @@ export default function Messages() {
     } catch {
       // keep optimistic message
     }
+
+    // Only simulate auto-reply if user is online
+    const online = isOnline(selected.participant.id)
+    if (!online) return
 
     // Simulate auto-reply
     const delay = getReplyDelay()
@@ -108,7 +111,7 @@ export default function Messages() {
       }
       setMessages((prev) => [...prev, reply])
     }, delay)
-  }, [input, selected, user])
+  }, [input, selected, user, isOnline])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value)
@@ -279,6 +282,16 @@ export default function Messages() {
               </div>
             </div>
 
+            {/* Offline banner */}
+            {!isOnline(selected.participant.id) && (
+              <div className="flex items-center gap-2 bg-muted/60 border-b border-border/40 px-4 py-2">
+                <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/40 shrink-0" />
+                <p className="text-xs text-muted-foreground">
+                  {selected.participant.name.split(" ")[0]} is offline — messages will be delivered when they come back.
+                </p>
+              </div>
+            )}
+
             {/* Messages */}
             <ScrollArea className="flex-1 px-3 sm:px-5 py-4">
               <div className="space-y-4">
@@ -293,7 +306,10 @@ export default function Messages() {
                     <MessageSquare className="mx-auto h-10 w-10 opacity-25 mb-3" />
                     <p className="text-sm font-medium">Start the conversation!</p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      Say hello to {selected.participant.name.split(" ")[0]} 👋
+                      {isOnline(selected.participant.id)
+                        ? `Say hello to ${selected.participant.name.split(" ")[0]} 👋`
+                        : `${selected.participant.name.split(" ")[0]} is offline — they'll reply when they're back online.`
+                      }
                     </p>
                   </div>
                 )}
