@@ -267,12 +267,16 @@ async function autoSeed() {
     await db.query('INSERT INTO sessions (id,match_id,requester_id,participant_id,topic,date,duration,status) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)', s);
 
   const messages = [
-    [1,2,1,"Hey! I saw your React skills. I'd love to learn from you!"],
-    [2,1,2,"Hi! Sure, I'd be happy to teach React in exchange for UI/UX tips."],
+    [1,2,1,"Hey! I saw your React skills. I'd love to collaborate!"],
+    [2,1,2,"Hi! Sure, let's build something together. I need UI/UX help."],
     [3,2,1,"That's a great deal! When are you free?"],
     [4,1,2,"I'm free tomorrow afternoon. How about 3pm?"],
     [5,3,1,"I can help you with Spring Boot basics."],
     [6,4,1,"Python for ML sounds great!"],
+    [7,8,1,"Hey Aarav! Saw your React skills. Want to collab on my project?"],
+    [8,1,8,"Hey Rahul! Sure, what are you building?"],
+    [9,8,2,"Priya, love your Figma work. Need a designer for my app!"],
+    [10,8,3,"Rahul, need a backend dev for my project. Interested?"],
   ];
   for (const m of messages)
     await db.query('INSERT INTO messages (id,sender_id,receiver_id,message) VALUES ($1,$2,$3,$4)', m);
