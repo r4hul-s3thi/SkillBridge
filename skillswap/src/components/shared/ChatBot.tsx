@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, Bot, Minimize2, Sparkles } from 'lucide-react';
+import { MessageCircle, X, Send, Bot, Minimize2, Sparkles, Zap } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 import { useAppStore } from '@/store/appStore';
 
@@ -14,63 +14,81 @@ function getTime() {
   return new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
 }
 
-function getBotReply(input: string, userName: string, skills: string[], matches: number, sessions: number): string {
+const GEMINI_KEY = import.meta.env.VITE_GEMINI_API_KEY as string | undefined;
+
+async function getGeminiReply(
+  userMessage: string,
+  context: { userName: string; skills: string[]; matches: number; sessions: number; history: ChatMessage[] }
+): Promise<string> {
+  if (!GEMINI_KEY) throw new Error('No API key');
+
+  const systemPrompt = `You are the SkillBridge Assistant — a helpful, friendly AI embedded in SkillBridge, a peer-to-peer skill exchange platform.
+
+About SkillBridge:
+- Users list skills they OFFER (teach) and skills they WANT (learn)
+- The platform smart-matches users based on skill overlap
+- Users can message matches, schedule learning sessions, post collab projects, rate each other, and climb the leaderboard
+- Pages: Dashboard, Matches, Messages, Sessions, Ratings, Collab Board, Leaderboard, Profile
+
+Current user context:
+- Name: ${context.userName}
+- Skills they offer: ${context.skills.length > 0 ? context.skills.join(', ') : 'none added yet'}
+- Active matches: ${context.matches}
+- Total sessions: ${context.sessions}
+
+Rules:
+- Be concise, friendly, and helpful
+- Answer only questions related to SkillBridge or skill learning/exchange
+- If asked something unrelated, politely redirect to SkillBridge topics
+- Use emojis sparingly but naturally
+- Keep responses under 150 words
+- Format with bullet points when listing steps`;
+
+  const history = context.history.slice(-6).map((m) => ({
+    role: m.role === 'user' ? 'user' : 'model',
+    parts: [{ text: m.text }],
+  }));
+
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        system_instruction: { parts: [{ text: systemPrompt }] },
+        contents: [
+          ...history,
+          { role: 'user', parts: [{ text: userMessage }] },
+        ],
+        generationConfig: { maxOutputTokens: 300, temperature: 0.7 },
+      }),
+    }
+  );
+
+  if (!res.ok) throw new Error(`Gemini error ${res.status}`);
+  const data = await res.json();
+  return data.candidates?.[0]?.content?.parts?.[0]?.text ?? 'Sorry, I could not generate a response.';
+}
+
+function getFallbackReply(input: string, userName: string, skills: string[], matches: number, sessions: number): string {
   const msg = input.toLowerCase().trim();
-
-  if (/^(hi|hello|hey|namaste|hii|helo|yo)\b/.test(msg)) {
-    return `Hey ${userName}! I'm the SkillBridge Assistant.\n\nI can help you with:\n• How to find co-builders\n• Posting a project on Collab Board\n• Scheduling build sessions\n• Managing your skills profile`;
-  }
-
-  if (/who are you|what are you|bot|assistant/.test(msg)) {
-    return `I'm the SkillBridge Assistant! I help you navigate the platform.\n\nSkillBridge is a skill-based collaboration platform — you post what skills you have and what you need, get matched with complementary builders, and build projects together.`;
-  }
-
-  if (/skill|add skill|remove skill|offer|want|have|need/.test(msg)) {
-    const skillList = skills.length > 0 ? `\n\nYour current skills: ${skills.join(', ')}` : '';
-    return `Skills are the core of SkillBridge!${skillList}\n\n**To add skills:**\n1. Go to Profile\n2. Click "Skills I Have" or "Skills I Need"\n3. Add your skill, select level, hit Add\n\nThe more specific your skills, the better your co-builder matches!`;
-  }
-
-  if (/match|matches|compatible|find people|connect|co.?build/.test(msg)) {
-    return `Smart Matching finds people whose skills complement yours!\n\nYou have **${matches} active matches** right now.\n\n**How it works:**\n• You list skills you have (e.g. React, UI/UX)\n• You list skills you need (e.g. Backend, DevOps)\n• The system matches you with people who have what you need and need what you have\n\nGo to Matches to see your co-builder suggestions!`;
-  }
-
-  if (/session|schedule|book|meeting|call|build/.test(msg)) {
-    return `Build Sessions are how you collaborate!\n\nYou have **${sessions} sessions** so far.\n\n**To schedule a session:**\n1. Go to Sessions\n2. Click "Schedule"\n3. Pick a match, set a topic and date\n4. They accept and you build together!`;
-  }
-
-  if (/message|chat|talk|conversation|inbox/.test(msg)) {
-    return `Messages let you talk to your matches in real-time!\n\n**How to use:**\n1. Go to Messages\n2. Select a conversation\n3. Start chatting — messages are instant via Socket.io\n\nTip: Message your match before scheduling a session to align on what you're building.`;
-  }
-
-  if (/collab|project|team|board|post/.test(msg)) {
-    return `The Collab Board is where projects happen!\n\n**How it works:**\n• Post your project — describe what you're building\n• List skills you have and skills you need\n• Other users send join requests\n• You accept and start building together\n\nGo to Collab Board to post your project or find one to join!`;
-  }
-
-  if (/rating|review|feedback|star|rate/.test(msg)) {
-    return `Ratings build your reputation as a collaborator!\n\n• After a session, rate your co-builder 1-5 stars\n• Leave feedback about the collaboration\n• Your average rating shows on your profile\n\nHigh ratings = more people want to build with you!`;
-  }
-
-  if (/profile|bio|photo|picture|avatar|location|edit/.test(msg)) {
-    return `Your profile is your builder identity!\n\n**What to fill in:**\n• Name and Bio — tell others what you build\n• Location\n• Skills I Have — what you bring to a project\n• Skills I Need — what you're looking for in a co-builder\n\nA complete profile gets better matches!`;
-  }
-
-  if (/start|begin|new|how|guide|help|tutorial/.test(msg)) {
-    return `Getting started on SkillBridge is easy!\n\n1. **Complete your profile** — add bio and location\n2. **Add skills** — what you have and what you need\n3. **Browse Matches** — find complementary builders\n4. **Message them** — introduce yourself and your project\n5. **Post on Collab Board** — share your project idea\n6. **Schedule a session** — start building together!`;
-  }
-
-  if (/thanks|thank you|great|awesome|helpful/.test(msg)) {
-    return `Happy to help! Good luck with your project. Go build something great!`;
-  }
-
-  if (/bye|goodbye|ok thanks|ok bye/.test(msg)) {
-    return `See you, ${userName}! Go find your co-builder and ship something awesome!`;
-  }
-
-  const fallbacks = [
-    `Not sure I understood that. You can ask me about:\n• Finding co-builders\n• Posting a project\n• Scheduling sessions\n• Managing your skills`,
-    `Try asking:\n• "How do I find a co-builder?"\n• "How does the Collab Board work?"\n• "How do I add skills?"`,
-  ];
-  return fallbacks[Math.floor(Math.random() * fallbacks.length)];
+  if (/^(hi|hello|hey|namaste)/.test(msg))
+    return `Hey ${userName}! 👋 I'm the SkillBridge Assistant.\n\nI can help you with:\n• Finding skill matches\n• Posting collab projects\n• Scheduling sessions\n• Managing your profile`;
+  if (/skill/.test(msg))
+    return `Skills are the core of SkillBridge!\n\nYour offered skills: ${skills.length > 0 ? skills.join(', ') : 'none yet'}\n\nGo to Profile → add skills you offer and skills you want to learn. Better skills = better matches!`;
+  if (/match/.test(msg))
+    return `You have ${matches} active matches! 🤝\n\nGo to Matches to see people whose skills complement yours. Connect and start learning together.`;
+  if (/session/.test(msg))
+    return `You have ${sessions} sessions so far.\n\nGo to Sessions → Schedule → pick a match, topic, and date. They accept and you learn together!`;
+  if (/collab|project/.test(msg))
+    return `The Collab Board is where projects happen!\n\n• Post your project idea\n• List skills you have and need\n• Accept join requests from interested builders`;
+  if (/message|chat/.test(msg))
+    return `Go to Messages to chat with your matches in real-time. Say hello before scheduling a session!`;
+  if (/rating|review/.test(msg))
+    return `After sessions, rate your peers 1-5 stars. High ratings boost your leaderboard rank!`;
+  if (/leaderboard|rank/.test(msg))
+    return `Score = (Rating × 20) + Sessions Done\n\nComplete more sessions and maintain high ratings to climb the leaderboard! 🏆`;
+  return `I can help with:\n• Finding co-learners (Matches)\n• Posting projects (Collab Board)\n• Scheduling sessions\n• Managing skills (Profile)\n\nWhat would you like to know?`;
 }
 
 export function ChatBot() {
@@ -81,7 +99,7 @@ export function ChatBot() {
     {
       id: 1,
       role: 'bot',
-      text: 'Hey! I\'m the SkillBridge Assistant.\n\nI can help you find co-builders, post projects, and navigate the platform. What do you need?',
+      text: `Hey! I'm the SkillBridge Assistant${GEMINI_KEY ? ' powered by Gemini AI ✨' : ''}.\n\nAsk me anything about the platform — finding matches, posting projects, scheduling sessions, or anything else!`,
       time: getTime(),
     },
   ]);
@@ -94,6 +112,7 @@ export function ChatBot() {
   const offeredSkills = skills.filter((s) => s.type === 'offer').map((s) => s.skillName);
   const activeMatches = matches.filter((m) => m.status === 'active').length;
   const totalSessions = sessions.length;
+  const userName = user?.name?.split(' ')[0] ?? 'there';
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -103,31 +122,47 @@ export function ChatBot() {
     if (open && !minimized) inputRef.current?.focus();
   }, [open, minimized]);
 
-  const sendMessage = () => {
-    if (!input.trim()) return;
-    const text = input.trim();
+  const sendMessage = async (text?: string) => {
+    const msgText = (text ?? input).trim();
+    if (!msgText) return;
     setInput('');
 
-    const userMsg: ChatMessage = { id: Date.now(), role: 'user', text, time: getTime() };
+    const userMsg: ChatMessage = { id: Date.now(), role: 'user', text: msgText, time: getTime() };
     setMessages((prev) => [...prev, userMsg]);
-
     setTyping(true);
-    setTimeout(() => {
-      setTyping(false);
-      const reply = getBotReply(text, user?.name?.split(' ')[0] ?? 'User', offeredSkills, activeMatches, totalSessions);
+
+    try {
+      let reply: string;
+      if (GEMINI_KEY) {
+        reply = await getGeminiReply(msgText, {
+          userName,
+          skills: offeredSkills,
+          matches: activeMatches,
+          sessions: totalSessions,
+          history: messages,
+        });
+      } else {
+        await new Promise((r) => setTimeout(r, 900 + Math.random() * 600));
+        reply = getFallbackReply(msgText, userName, offeredSkills, activeMatches, totalSessions);
+      }
       setMessages((prev) => [...prev, { id: Date.now() + 1, role: 'bot', text: reply, time: getTime() }]);
-    }, 1000 + Math.random() * 800);
+    } catch {
+      await new Promise((r) => setTimeout(r, 600));
+      const reply = getFallbackReply(msgText, userName, offeredSkills, activeMatches, totalSessions);
+      setMessages((prev) => [...prev, { id: Date.now() + 1, role: 'bot', text: reply, time: getTime() }]);
+    } finally {
+      setTyping(false);
+    }
   };
 
   const handleKey = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
   };
 
-  const quickReplies = ['How do I find a co-builder?', 'How does Collab Board work?', 'How do I add skills?', 'How to schedule a session?'];
+  const quickReplies = ['How do I find matches?', 'How does Collab Board work?', 'How to add skills?', 'How to schedule a session?'];
 
   return (
     <>
-      {/* Floating button */}
       {!open && (
         <button
           onClick={() => setOpen(true)}
@@ -139,12 +174,9 @@ export function ChatBot() {
         </button>
       )}
 
-      {/* Chat window */}
       {open && (
         <div
-          className={`fixed bottom-6 right-6 z-50 w-[360px] rounded-2xl shadow-2xl shadow-black/40 border border-white/10 overflow-hidden flex flex-col transition-all duration-300 ${
-            minimized ? 'h-14' : 'h-[520px]'
-          }`}
+          className={`fixed bottom-6 right-6 z-50 w-[360px] rounded-2xl shadow-2xl shadow-black/40 border border-white/10 overflow-hidden flex flex-col transition-all duration-300 ${minimized ? 'h-14' : 'h-[520px]'}`}
           style={{ background: 'linear-gradient(145deg, #0f1729 0%, #0d1120 100%)' }}
         >
           {/* Header */}
@@ -155,7 +187,10 @@ export function ChatBot() {
             <div className="flex-1 min-w-0">
               <p className="text-white text-sm font-semibold flex items-center gap-1.5">
                 SkillBridge Assistant
-                <Sparkles className="w-3 h-3 text-yellow-400" />
+                {GEMINI_KEY
+                  ? <span className="flex items-center gap-1 text-[10px] font-normal bg-indigo-500/30 text-indigo-200 px-1.5 py-0.5 rounded-full"><Zap className="w-2.5 h-2.5" />Gemini AI</span>
+                  : <Sparkles className="w-3 h-3 text-yellow-400" />
+                }
               </p>
               <p className="text-green-400 text-xs flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block animate-pulse" />
@@ -173,7 +208,7 @@ export function ChatBot() {
           {!minimized && (
             <>
               {/* Messages */}
-              <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 scrollbar-thin">
+              <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
                 {messages.map((msg) => (
                   <div key={msg.id} className={`flex gap-2 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                     {msg.role === 'bot' && (
@@ -213,16 +248,7 @@ export function ChatBot() {
                   {quickReplies.map((q) => (
                     <button
                       key={q}
-                      onClick={() => {
-                        const userMsg: ChatMessage = { id: Date.now(), role: 'user', text: q, time: getTime() };
-                        setMessages((prev) => [...prev, userMsg]);
-                        setTyping(true);
-                        setTimeout(() => {
-                          setTyping(false);
-                          const reply = getBotReply(q, user?.name?.split(' ')[0] ?? 'User', offeredSkills, activeMatches, totalSessions);
-                          setMessages((prev) => [...prev, { id: Date.now() + 1, role: 'bot', text: reply, time: getTime() }]);
-                        }, 1000 + Math.random() * 800);
-                      }}
+                      onClick={() => sendMessage(q)}
                       className="text-[11px] px-2.5 py-1.5 rounded-full border border-indigo-500/40 text-indigo-300 hover:bg-indigo-500/20 transition-colors"
                     >
                       {q}
@@ -243,8 +269,8 @@ export function ChatBot() {
                     className="flex-1 bg-transparent text-white text-xs placeholder:text-white/30 outline-none"
                   />
                   <button
-                    onClick={sendMessage}
-                    disabled={!input.trim()}
+                    onClick={() => sendMessage()}
+                    disabled={!input.trim() || typing}
                     className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white disabled:opacity-40 hover:opacity-90 transition-opacity shrink-0"
                   >
                     <Send className="w-3 h-3" />
