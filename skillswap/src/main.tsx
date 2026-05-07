@@ -42,7 +42,7 @@ if (window.matchMedia('(pointer: fine)').matches) {
       dot.style.height = '12px';
       ring.style.width = '44px';
       ring.style.height = '44px';
-      ring.style.borderColor = 'rgba(42,199,182,0.8)';
+      ring.style.borderColor = 'rgba(99,102,241,0.8)';
     }
   });
   document.addEventListener('mouseout', () => {
@@ -50,7 +50,7 @@ if (window.matchMedia('(pointer: fine)').matches) {
     dot.style.height = '7px';
     ring.style.width = '30px';
     ring.style.height = '30px';
-    ring.style.borderColor = 'rgba(42,199,182,0.55)';
+    ring.style.borderColor = 'rgba(99,102,241,0.5)';
   });
 }
 

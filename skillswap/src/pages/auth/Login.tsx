@@ -1,12 +1,10 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { Eye, EyeOff, Github, Sparkles, ArrowRight } from "lucide-react"
+import { Eye, EyeOff, Github, ArrowRight, Zap, Users, Star, Code2 } from "lucide-react"
 import { SkillSwapLogo } from "@/components/shared/SkillSwapLogo"
 import { OAuthModal } from "@/components/shared/OAuthModal"
 import type { OAuthAccount } from "@/components/shared/OAuthModal"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Separator } from "@/components/ui/separator"
 import { useAuthStore } from "@/store/authStore"
 import { authService } from "@/services/authService"
 import { toast } from "sonner"
@@ -15,36 +13,17 @@ import type { AuthUser } from "@/types"
 function GoogleIcon({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
-      <path
-        fill="#4285F4"
-        d="M21.35 11.1H12v2.8h5.35c-.23 1.36-1.22 2.59-2.72 3.34l2.2 1.75c1.62-1.5 2.56-3.69 2.56-6.24 0-.42-.04-.84-.09-1.25z"
-      />
-      <path
-        fill="#34A853"
-        d="M12 22c2.7 0 4.95-.9 6.6-2.45l-2.2-1.75c-1.05.7-2.4 1.1-4.4 1.1-3.4 0-6.26-2.3-7.29-5.4L2 14.9C3.75 18.8 7.6 22 12 22z"
-      />
-      <path
-        fill="#FBBC05"
-        d="M4.71 13.25a7.92 7.92 0 010-2.5L2 9.1a11.98 11.98 0 000 5.8l2.71-1.65z"
-      />
-      <path
-        fill="#EA4335"
-        d="M12 6.5c1.56 0 2.97.55 4.08 1.63l3.06-3.06C16.9 3.2 14.7 2 12 2 7.6 2 3.75 5.2 2 9.1l2.71 1.65C5.74 8.8 8.6 6.5 12 6.5z"
-      />
+      <path fill="#4285F4" d="M21.35 11.1H12v2.8h5.35c-.23 1.36-1.22 2.59-2.72 3.34l2.2 1.75c1.62-1.5 2.56-3.69 2.56-6.24 0-.42-.04-.84-.09-1.25z" />
+      <path fill="#34A853" d="M12 22c2.7 0 4.95-.9 6.6-2.45l-2.2-1.75c-1.05.7-2.4 1.1-4.4 1.1-3.4 0-6.26-2.3-7.29-5.4L2 14.9C3.75 18.8 7.6 22 12 22z" />
+      <path fill="#FBBC05" d="M4.71 13.25a7.92 7.92 0 010-2.5L2 9.1a11.98 11.98 0 000 5.8l2.71-1.65z" />
+      <path fill="#EA4335" d="M12 6.5c1.56 0 2.97.55 4.08 1.63l3.06-3.06C16.9 3.2 14.7 2 12 2 7.6 2 3.75 5.2 2 9.1l2.71 1.65C5.74 8.8 8.6 6.5 12 6.5z" />
     </svg>
   )
 }
 
-async function loginUser(
-  email: string,
-  password: string
-): Promise<{ user: AuthUser; token: string }> {
+async function loginUser(email: string, password: string): Promise<{ user: AuthUser; token: string }> {
   const response = await authService.login(email, password)
   return response.data
-}
-
-function wait(ms: number) {
-  return new Promise((resolve) => window.setTimeout(resolve, ms))
 }
 
 export default function Login() {
@@ -60,14 +39,9 @@ export default function Login() {
   const handleOAuthSelect = async (account: OAuthAccount) => {
     setOauthLoading(true)
     try {
-      const res = await authService.loginWithGoogle({
-        name: account.name,
-        email: account.email,
-        avatar: account.avatar,
-      })
+      const res = await authService.loginWithGoogle({ name: account.name, email: account.email, avatar: account.avatar })
       setAuth(res.data.user, res.data.token)
       toast.success(`Welcome back, ${res.data.user.name}!`)
-      await wait(1200)
       navigate("/dashboard")
     } catch {
       toast.error("Sign in failed. Please try again.")
@@ -79,17 +53,12 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!email || !password) {
-      toast.error("Please fill in all fields")
-      return
-    }
-
+    if (!email || !password) { toast.error("Please fill in all fields"); return }
     setLoading(true)
     try {
       const result = await loginUser(email, password)
       setAuth(result.user, result.token)
       toast.success(`Welcome back, ${result.user.name}!`)
-      await wait(1200)
       navigate("/dashboard")
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } }
@@ -99,129 +68,116 @@ export default function Login() {
     }
   }
 
+  const features = [
+    { icon: Users, text: "Get matched with devs who have skills you need", color: "text-cyan-400" },
+    { icon: Code2, text: "Post your project and find the perfect co-builder", color: "text-violet-400" },
+    { icon: Zap, text: "Real-time chat and session scheduling", color: "text-amber-400" },
+    { icon: Star, text: "Build reputation through peer ratings", color: "text-emerald-400" },
+  ]
+
   return (
-    <div className="login-cosmos flex min-h-screen">
-      <div className="login-beam animate-beam-pulse top-[10%] left-[-8rem] -rotate-12 bg-cyan-400/30" />
-      <div className="login-beam animate-beam-pulse top-[28%] right-[-10rem] rotate-12 bg-orange-400/25 [animation-delay:1.6s]" />
-      <div className="login-orbit-ring animate-slow-spin top-[12%] left-[8%] h-[26rem] w-[26rem]" />
-      <div className="login-orbit-ring animate-slow-spin top-[46%] right-[12%] h-[18rem] w-[18rem] [animation-direction:reverse]" />
-      <div className="gradient-bg-animated absolute inset-0 opacity-15" />
+    <div className="min-h-screen flex bg-[#0a0a0f]">
+      {/* Left panel */}
+      <div className="hidden lg:flex flex-1 flex-col justify-between p-14 relative overflow-hidden border-r border-white/[0.06]">
+        {/* Background */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(99,102,241,0.15),transparent)]" />
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
-      <div className="hero-mesh relative hidden flex-1 flex-col justify-between overflow-hidden p-12 lg:flex">
-        <div className="animate-drift absolute top-14 right-12 h-80 w-80 rounded-full bg-cyan-400/20 blur-3xl" />
-        <div className="animate-float-slow absolute bottom-16 left-10 h-64 w-64 rounded-full bg-orange-400/15 blur-3xl" />
-        <div className="animate-float-delayed absolute top-1/2 left-1/3 h-48 w-48 rounded-full bg-emerald-300/15 blur-2xl" />
+        {/* Dot grid */}
+        <div className="absolute inset-0 opacity-[0.15]" style={{
+          backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.4) 1px, transparent 1px)",
+          backgroundSize: "32px 32px"
+        }} />
 
-        <div className="animate-fade-right relative z-10">
-          <div className="flex items-center gap-3">
-            <SkillSwapLogo size={44} />
-            <span className="text-xl font-bold tracking-tight text-white">
-              SkillBridge
-            </span>
-          </div>
+        {/* Logo */}
+        <div className="relative z-10 flex items-center gap-3">
+          <SkillSwapLogo size={36} />
+          <span className="text-white font-semibold text-lg tracking-tight">SkillBridge</span>
         </div>
 
-        <div className="animate-fade-right relative z-10 space-y-8 [animation-delay:120ms]">
+        {/* Main content */}
+        <div className="relative z-10 space-y-10">
           <div className="space-y-4">
-            <div className="glass mb-2 inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium text-cyan-200">
-              <Sparkles className="h-3 w-3" />
-              Skill-based collaboration
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/60">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              Skill-based collaboration platform
             </div>
-            <h2 className="text-5xl leading-tight font-bold text-white">
-              Find your missing
-              <br />
-              <span className="gradient-text">co-builder.</span>
-            </h2>
-            <p className="max-w-sm text-base leading-relaxed text-slate-300/[0.8]">
-              You know Frontend, need a Backend dev? Post your project, get matched by skills, and build together — for free.
+            <h1 className="text-5xl font-bold text-white leading-[1.1] tracking-tight">
+              Find your<br />
+              <span className="bg-gradient-to-r from-cyan-400 via-violet-400 to-pink-400 bg-clip-text text-transparent">
+                missing piece.
+              </span>
+            </h1>
+            <p className="text-white/50 text-base leading-relaxed max-w-sm">
+              You build the frontend. Someone else handles the backend. Together you ship something real.
             </p>
           </div>
 
-          <div className="flex items-center gap-8">
-            {[
-              { val: "2K+", label: "Builders" },
-              { val: "500+", label: "Skills" },
-              { val: "4.8+", label: "Avg Rating" },
-            ].map(({ val, label }) => (
-              <div key={label} className="text-center">
-                <p className="text-2xl font-bold text-white">{val}</p>
-                <p className="mt-0.5 text-xs tracking-widest text-white/40 uppercase">
-                  {label}
-                </p>
+          <div className="space-y-3">
+            {features.map(({ icon: Icon, text, color }) => (
+              <div key={text} className="flex items-center gap-3">
+                <div className="h-8 w-8 rounded-lg bg-white/5 border border-white/8 flex items-center justify-center shrink-0">
+                  <Icon className={`h-4 w-4 ${color}`} />
+                </div>
+                <p className="text-sm text-white/60">{text}</p>
               </div>
             ))}
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          {/* Stats */}
+          <div className="flex gap-8 pt-2 border-t border-white/8">
             {[
-              "Smart Matching",
-              "Real-time Chat",
-              "Collab Board",
-              "Peer Ratings",
-            ].map((feature) => (
-              <span
-                key={feature}
-                className="glass rounded-full px-3 py-1.5 text-xs text-slate-100/[0.75]"
-              >
-                {feature}
-              </span>
+              { val: "2K+", label: "Builders" },
+              { val: "500+", label: "Skills" },
+              { val: "4.8★", label: "Avg Rating" },
+            ].map(({ val, label }) => (
+              <div key={label}>
+                <p className="text-xl font-bold text-white">{val}</p>
+                <p className="text-xs text-white/30 mt-0.5">{label}</p>
+              </div>
             ))}
           </div>
         </div>
 
-        <div className="animate-scale-in relative z-10 [animation-delay:240ms]">
-          <div className="glow-sweep glass flex max-w-xs items-center gap-3 rounded-2xl p-4">
-            <div className="gradient-bg-animated flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold text-slate-950">
-              A
+        {/* Bottom card */}
+        <div className="relative z-10">
+          <div className="rounded-xl border border-white/8 bg-white/4 p-4 backdrop-blur-sm">
+            <div className="flex items-center gap-3">
+              <div className="h-8 w-8 rounded-full bg-gradient-to-br from-cyan-400 to-violet-500 flex items-center justify-center text-xs font-bold text-white shrink-0">R</div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-white">Rahul just connected with Priya</p>
+                <p className="text-xs text-white/40 mt-0.5">React + UI/UX collab · 2 min ago</p>
+              </div>
+              <span className="h-2 w-2 rounded-full bg-emerald-400 shrink-0 animate-pulse" />
             </div>
-            <div>
-              <p className="text-sm font-medium text-white">
-                Aarav & Priya just shipped v1.0
-              </p>
-              <p className="text-xs text-white/40">React + UI/UX collab - 2 min ago</p>
-            </div>
-            <div className="ml-auto h-2 w-2 shrink-0 animate-pulse rounded-full bg-emerald-300" />
           </div>
         </div>
       </div>
 
-      <div className="relative flex flex-1 items-center justify-center p-6">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#08111d]/40 via-[#10233d]/30 to-[#09101b]/40" />
-        <div className="animate-drift absolute top-[20%] left-[10%] h-72 w-72 rounded-full bg-cyan-500/[0.12] blur-3xl" />
-        <div className="animate-float absolute right-[8%] bottom-[8%] h-80 w-80 rounded-full bg-orange-500/[0.08] blur-3xl" />
-        <div
-          className="animate-pan-grid absolute inset-0 opacity-[0.08]"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.35) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.35) 1px, transparent 1px)",
-            backgroundSize: "48px 48px",
-            maskImage:
-              "radial-gradient(circle at center, black, transparent 82%)",
-          }}
-        />
+      {/* Right panel - Login form */}
+      <div className="flex-1 flex items-center justify-center p-6 relative">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_60%_at_50%_50%,rgba(99,102,241,0.06),transparent)]" />
 
-        <div className="relative z-10 w-full max-w-sm">
-          <div className="animate-fade-up mb-8 flex items-center gap-2 lg:hidden">
-            <SkillSwapLogo size={32} />
-            <span className="text-lg font-bold text-white">SkillBridge</span>
+        <div className="relative z-10 w-full max-w-[380px]">
+          {/* Mobile logo */}
+          <div className="flex items-center gap-2.5 mb-8 lg:hidden">
+            <SkillSwapLogo size={28} />
+            <span className="font-semibold text-white">SkillBridge</span>
           </div>
 
-          <div className="animate-scale-in animate-card-breath glass rounded-[28px] border-white/[0.12] p-8 shadow-2xl shadow-cyan-950/30">
-            <div className="mb-6">
-              <h1 className="animate-fade-up text-2xl font-bold text-white">
-                Welcome back
-              </h1>
-              <p className="mt-1 text-sm text-slate-300/[0.7]">
-                Sign in to find your co-builder
-              </p>
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-2xl font-bold text-white">Sign in</h2>
+              <p className="text-sm text-white/40 mt-1">New here? <Link to="/register" className="text-violet-400 hover:text-violet-300 transition-colors">Create an account</Link></p>
             </div>
 
-            <div className="animate-fade-up-1 mb-5 grid grid-cols-2 gap-3">
+            {/* OAuth buttons */}
+            <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
                 onClick={() => setOauthModal("google")}
                 disabled={oauthLoading}
-                className="touch-surface touch-feedback animate-border-glow flex h-10 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.06] text-sm font-medium text-white/80 transition-all duration-200 hover:-translate-y-1 hover:border-cyan-300/30 hover:bg-cyan-300/10 disabled:opacity-50"
+                className="flex h-10 items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/5 text-sm font-medium text-white/80 transition-all hover:bg-white/10 hover:border-white/20 disabled:opacity-50 active:scale-95"
               >
                 <GoogleIcon className="h-4 w-4" />
                 Google
@@ -230,75 +186,52 @@ export default function Login() {
                 type="button"
                 onClick={() => setOauthModal("github")}
                 disabled={oauthLoading}
-                className="touch-surface touch-feedback flex h-10 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.06] text-sm font-medium text-white/80 transition-all duration-200 hover:-translate-y-1 hover:border-orange-300/30 hover:bg-orange-300/10 disabled:opacity-50"
+                className="flex h-10 items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/5 text-sm font-medium text-white/80 transition-all hover:bg-white/10 hover:border-white/20 disabled:opacity-50 active:scale-95"
               >
                 <Github className="h-4 w-4" />
                 GitHub
               </button>
             </div>
 
-            <div className="relative mb-5">
-              <div className="absolute inset-0 flex items-center">
-                <Separator className="w-full bg-white/10" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span
-                  className="px-2 text-white/30"
-                  style={{ background: "transparent" }}
-                >
-                  or continue with email
-                </span>
-              </div>
+            <div className="flex items-center gap-3">
+              <div className="flex-1 h-px bg-white/8" />
+              <span className="text-xs text-white/25">or</span>
+              <div className="flex-1 h-px bg-white/8" />
             </div>
 
+            {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="animate-fade-up-2 space-y-1.5">
-                <Label
-                  htmlFor="email"
-                  className="text-xs font-medium tracking-wide text-white/60 uppercase"
-                >
-                  Email
-                </Label>
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-white/50 uppercase tracking-wider">Email</label>
                 <Input
-                  id="email"
                   type="email"
                   placeholder="you@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   autoComplete="email"
-                  className="animate-border-glow touch-feedback h-11 rounded-xl border-white/10 bg-white/5 text-white transition-all placeholder:text-white/25 focus:border-cyan-300/60 focus:bg-white/8"
+                  className="h-11 rounded-lg border-white/10 bg-white/5 text-white placeholder:text-white/20 focus:border-violet-500/60 focus:bg-white/8 transition-all"
                 />
               </div>
 
-              <div className="animate-fade-up-3 space-y-1.5">
-                <Label
-                  htmlFor="password"
-                  className="text-xs font-medium tracking-wide text-white/60 uppercase"
-                >
-                  Password
-                </Label>
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-white/50 uppercase tracking-wider">Password</label>
                 <div className="relative">
                   <Input
-                    id="password"
                     type={showPassword ? "text" : "password"}
-                    placeholder="........"
+                    placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     autoComplete="current-password"
-                    className="animate-border-glow touch-feedback h-11 rounded-xl border-white/10 bg-white/5 pr-10 text-white transition-all placeholder:text-white/25 focus:border-cyan-300/60"
+                    className="h-11 rounded-lg border-white/10 bg-white/5 pr-10 text-white placeholder:text-white/20 focus:border-violet-500/60 transition-all"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute top-1/2 right-3 -translate-y-1/2 text-white/30 transition-colors hover:text-white/70"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 hover:text-white/60 transition-colors"
                   >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
               </div>
@@ -306,33 +239,25 @@ export default function Login() {
               <button
                 type="submit"
                 disabled={loading}
-                className="touch-surface touch-feedback gradient-bg-animated animate-pulse-glow animate-fade-up-4 mt-2 flex h-11 w-full items-center justify-center gap-2 rounded-xl text-sm font-semibold text-slate-950 transition-all duration-200 hover:scale-[1.02] hover:opacity-95 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+                className="w-full h-11 rounded-lg bg-violet-600 hover:bg-violet-500 text-white text-sm font-semibold flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed shadow-lg shadow-violet-500/20"
               >
                 {loading ? (
                   <span className="flex items-center gap-2">
-                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-slate-900/20 border-t-slate-900" />
-                    Logging you in...
+                    <span className="h-4 w-4 rounded-full border-2 border-white/20 border-t-white animate-spin" />
+                    Signing in...
                   </span>
                 ) : (
                   <span className="flex items-center gap-2">
-                    Sign In <ArrowRight className="animate-float-x h-4 w-4" />
+                    Sign In <ArrowRight className="h-4 w-4" />
                   </span>
                 )}
               </button>
             </form>
 
-            <p className="mt-5 text-center text-sm text-white/40">
-              Don't have an account?{" "}
-              <Link
-                to="/register"
-                className="font-medium text-cyan-300 transition-colors hover:text-orange-200"
-              >
-                Sign Up
-              </Link>
+            <p className="text-center text-xs text-white/20">
+              By signing in, you agree to our terms of service
             </p>
           </div>
-
-
         </div>
       </div>
 
