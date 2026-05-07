@@ -22,50 +22,53 @@ async function getGeminiReply(
 ): Promise<string> {
   if (!GEMINI_KEY) throw new Error('No API key');
 
-  const systemPrompt = `You are the SkillBridge Assistant — a helpful, friendly AI embedded in SkillBridge, a peer-to-peer skill exchange platform.
+  const systemPrompt = `You are the SkillBridge Assistant — a helpful AI embedded in SkillBridge, a skill-based collaboration platform where developers find co-builders for projects.
 
 About SkillBridge:
-- Users list skills they OFFER (teach) and skills they WANT (learn)
-- The platform smart-matches users based on skill overlap
-- Users can message matches, schedule learning sessions, post collab projects, rate each other, and climb the leaderboard
+- Users list skills they HAVE and skills they NEED
+- Smart-matched with complementary builders
+- Can message matches, schedule build sessions, post collab projects, rate collaborators, climb leaderboard
 - Pages: Dashboard, Matches, Messages, Sessions, Ratings, Collab Board, Leaderboard, Profile
 
-Current user context:
-- Name: ${context.userName}
-- Skills they offer: ${context.skills.length > 0 ? context.skills.join(', ') : 'none added yet'}
-- Active matches: ${context.matches}
-- Total sessions: ${context.sessions}
+Current user: ${context.userName}
+Their skills: ${context.skills.length > 0 ? context.skills.join(', ') : 'none added yet'}
+Active matches: ${context.matches} | Sessions: ${context.sessions}
 
-Rules:
-- Be concise, friendly, and helpful
-- Answer only questions related to SkillBridge or skill learning/exchange
-- If asked something unrelated, politely redirect to SkillBridge topics
-- Use emojis sparingly but naturally
-- Keep responses under 150 words
-- Format with bullet points when listing steps`;
+Be concise, friendly, helpful. Answer ANY question the user asks — not just SkillBridge topics. If it's a general coding/tech question, answer it. Keep responses under 200 words. Use bullet points for steps.`;
 
-  const history = context.history.slice(-6).map((m) => ({
-    role: m.role === 'user' ? 'user' : 'model',
-    parts: [{ text: m.text }],
-  }));
+  // Build contents with system prompt as first user turn (works across all Gemini versions)
+  const contents: { role: string; parts: { text: string }[] }[] = [
+    { role: 'user', parts: [{ text: systemPrompt }] },
+    { role: 'model', parts: [{ text: 'Got it! I am the SkillBridge Assistant. How can I help you?' }] },
+  ];
+
+  // Add conversation history
+  context.history.slice(-8).forEach((m) => {
+    contents.push({
+      role: m.role === 'user' ? 'user' : 'model',
+      parts: [{ text: m.text }],
+    });
+  });
+
+  // Add current message
+  contents.push({ role: 'user', parts: [{ text: userMessage }] });
 
   const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        system_instruction: { parts: [{ text: systemPrompt }] },
-        contents: [
-          ...history,
-          { role: 'user', parts: [{ text: userMessage }] },
-        ],
-        generationConfig: { maxOutputTokens: 300, temperature: 0.7 },
+        contents,
+        generationConfig: { maxOutputTokens: 400, temperature: 0.8 },
       }),
     }
   );
 
-  if (!res.ok) throw new Error(`Gemini error ${res.status}`);
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(`Gemini ${res.status}: ${errText}`);
+  }
   const data = await res.json();
   return data.candidates?.[0]?.content?.parts?.[0]?.text ?? 'Sorry, I could not generate a response.';
 }
@@ -146,7 +149,8 @@ export function ChatBot() {
         reply = getFallbackReply(msgText, userName, offeredSkills, activeMatches, totalSessions);
       }
       setMessages((prev) => [...prev, { id: Date.now() + 1, role: 'bot', text: reply, time: getTime() }]);
-    } catch {
+    } catch (err) {
+      console.error('Gemini error:', err);
       await new Promise((r) => setTimeout(r, 600));
       const reply = getFallbackReply(msgText, userName, offeredSkills, activeMatches, totalSessions);
       setMessages((prev) => [...prev, { id: Date.now() + 1, role: 'bot', text: reply, time: getTime() }]);
